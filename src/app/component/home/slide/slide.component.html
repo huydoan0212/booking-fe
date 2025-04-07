@@ -1,0 +1,11 @@
+<div class="swiper mySwiper">
+  <div class="swiper-wrapper">
+    <div class="swiper-slide" *ngFor="let slide of slides">
+      <img [src]="slide.img" alt="Slide" width="100%" height="auto" />
+    </div>
+  </div>
+  <!-- Pagination và Navigation -->
+  <div class="swiper-pagination"></div>
+  <div class="swiper-button-prev"></div>
+  <div class="swiper-button-next"></div>
+</div>

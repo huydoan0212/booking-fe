@@ -13,6 +13,7 @@ export class CinemaService {
   _http: HttpClient;
 
   constructor(_http: HttpClient) {
+    this._http = _http;
   }
 
   getAllCinema() {

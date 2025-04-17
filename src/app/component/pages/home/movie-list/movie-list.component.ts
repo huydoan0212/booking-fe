@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MovieCardComponent } from '../card-movie/movie-card.component';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { MOCK_MOVIES } from '../../../mock/mock-movies';
+import { MOCK_MOVIES } from '../../../../mock/mock-movies';
 import { Router } from '@angular/router';
 @Component({
   selector: 'app-movie-list',

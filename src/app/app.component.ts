@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {HeaderComponent} from './+shell/ui/header/header.component';
 import {HttpClient} from '@angular/common/http';
-import {SlideComponent} from './component/pages/slide/slide.component';
-import {QuickBookingComponent} from './component/pages/quick-booking/quick-booking.component';
-import {MovieCardComponent} from './component/pages/card-movie/movie-card.component';
-import {MovieListComponent} from './component/pages/movie-list/movie-list.component';
+import {SlideComponent} from './component/pages/home/slide/slide.component';
+import {QuickBookingComponent} from './component/pages/home/quick-booking/quick-booking.component';
+import {MovieCardComponent} from './component/pages/home/card-movie/movie-card.component';
+import {MovieListComponent} from './component/pages/home/movie-list/movie-list.component';
 import {MovieDetailComponent} from './component/pages/movie-detail/movie-detail.component';
-import {HomeComponent} from './component/pages/home/home.component';
+import {HomeComponent} from './component/pages/home/home/home.component';
 
 
 

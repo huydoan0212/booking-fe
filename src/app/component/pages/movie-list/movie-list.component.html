@@ -1,0 +1,76 @@
+<div class="tw-flex tw-space-x-4 tw-mx-auto tw-max-w-[1400px] tw-p-30px tw-text-xl">
+  <div class="tw-font-bold">PHIM</div>
+
+  <div class="tw-flex tw-space-x-4">
+    <div
+      class="tw-cursor-pointer"
+      [ngClass]="{
+      'tw-text-[#034ea2] tw-font-semibold': activeTab === 'dangChieu',
+      'tw-text-[#777777]': activeTab !== 'dangChieu'
+    }"
+      (click)="activeTab = 'dangChieu'"
+    >
+    <span
+      [ngClass]="{
+        'tw-border-b-2 tw-border-[#034ea2] ': activeTab === 'dangChieu'
+      }"
+    >
+      Đang chiếu
+    </span>
+    </div>
+    <div
+      class="tw-cursor-pointer"
+      [ngClass]="{
+      'tw-text-[#034ea2] tw-font-semibold': activeTab === 'sapChieu',
+      'tw-text-[#777777]': activeTab !== 'sapChieu'
+    }"
+      (click)="activeTab = 'sapChieu'"
+    >
+    <span
+      [ngClass]="{
+        'tw-border-b-2 tw-border-[#034ea2] ': activeTab === 'sapChieu'
+      }"
+    >
+      Sắp chiếu
+    </span>
+    </div>
+
+    <div
+      class="tw-cursor-pointer"
+      [ngClass]="{
+      'tw-text-[#034ea2] tw-font-semibold': activeTab === 'imax',
+      'tw-text-[#777777]': activeTab !== 'imax'
+    }"
+      (click)="activeTab = 'imax'"
+    >
+    <span
+      [ngClass]="{
+        'tw-border-b-2 tw-border-[#034ea2] ': activeTab === 'imax'
+      }"
+    >
+      Phim IMAX
+    </span>
+    </div>
+  </div>
+
+
+  <div class="tw-flex tw-items-center tw-text-[#034ea2]">
+    <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 512 512">
+      <path fill="#034ea2"
+            d="M256 0c17.7 0 32 14.3 32 32l0 34.7C368.4 80.1 431.9 143.6 445.3 224l34.7 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-34.7 0C431.9 368.4 368.4 431.9 288 445.3l0 34.7c0 17.7-14.3 32-32 32s-32-14.3-32-32l0-34.7C143.6 431.9 80.1 368.4 66.7 288L32 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l34.7 0C80.1 143.6 143.6 80.1 224 66.7L224 32c0-17.7 14.3-32 32-32zM128 256a128 128 0 1 0 256 0 128 128 0 1 0 -256 0zm128-80a80 80 0 1 1 0 160 80 80 0 1 1 0-160z"/>
+    </svg>
+    <span class="tw-ml-2">Toàn quốc</span>
+  </div>
+</div>
+
+<div class="tw-grid tw-grid-cols-[repeat(auto-fill,_minmax(250px,_1fr))] tw-gap-6 tw-max-w-screen-xl tw-mx-auto">
+  <ng-container *ngFor="let movie of movies | paginate: { itemsPerPage: 8, currentPage: page }">
+    <div (click)="goToDetail(movie)" class="tw-cursor-pointer">
+      <app-movie-card [movie]="movie"></app-movie-card>
+    </div>
+  </ng-container>
+</div>
+
+<div class="tw-flex tw-justify-center tw-mt-6 tw-text-xl">
+  <pagination-controls (pageChange)="page = $event"></pagination-controls>
+</div>

@@ -1,0 +1,22 @@
+<div class="tw-flex tw-flex-col tw-items-center tw-w-full tw-max-w-[300px]">
+  <div class="movie-card tw-relative tw-rounded-[12px] tw-overflow-hidden tw-cursor-pointer tw-w-full">
+    <img
+      [src]="movie.imageLandscape"
+      [alt]="movie.name"
+      class="tw-w-full tw-block tw-rounded-[12px] tw-transition-all tw-duration-300 tw-ease-in-out"
+    />
+    <div class="overlay">
+      <div class="btn buy">Mua vé</div>
+      <div class="btn trailer">Trailer</div>
+    </div>
+    <div class="rate tw-absolute tw-bottom-[50px] tw-right-2 tw-bg-black/70 tw-text-white tw-px-2 tw-py-1 tw-rounded-md tw-font-bold tw-text-base tw-z-10">
+      {{ movie.rate}}
+    </div>
+    <div class="age tw-text-base tw-font-bold tw-absolute tw-bottom-2 tw-right-2 tw-bg-[#F58020] tw-text-white tw-px-2 tw-py-1 tw-rounded-md">
+      {{ movie.age }}
+    </div>
+  </div>
+  <div class="tw-text-lg tw-font-bold tw-tracking-wide tw-mt-2 tw-text-center">
+    {{ movie.name }}
+  </div>
+</div>

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MovieCardComponent } from '../card-movie/movie-card.component';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { MOCK_MOVIES } from '../../../../mock/mock-movies';
+import { MOCK_MOVIES } from '../../../mock/mock-movies';
 import { Router } from '@angular/router';
 @Component({
   selector: 'app-movie-list',
@@ -16,7 +16,6 @@ export class MovieListComponent {
   activeTab: string = 'dangChieu';
   page = 1;
   allMovies = MOCK_MOVIES;
-
   get movies() {
     const today = new Date();
 
@@ -36,7 +35,6 @@ export class MovieListComponent {
     }
 
     if (this.activeTab === 'imax') {
-      // ví dụ giả sử phim IMAX có flag riêng, nếu không có thì lọc theo slug chứa "imax" hoặc danh mục
       return this.allMovies.filter((movie) =>
         movie.categories?.some((cat: string) => cat.toLowerCase().includes('imax'))
       );

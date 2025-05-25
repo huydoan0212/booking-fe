@@ -91,13 +91,12 @@
     </div>
   </div>
   <div class="tw-flex tw-flex-col md:tw-flex-row tw-gap-10 tw-mt-8">
-    <!-- Nội dung phim bên trái -->
     <div class="tw-flex-1">
       <div class="tw-text-lg tw-font-bold tw-tracking-wide">Nội Dung Phim</div>
       <div class="tw-text-sm">{{ movie.description }}</div>
+      <div class="tw-text-lg tw-font-bold tw-tracking-wide">Lịch chiếu</div>
+      <app-show-times></app-show-times>
     </div>
-
-    <!-- Phim đang chiếu bên phải -->
     <div class="tw-w-full lg:tw-w-[300px] lg:tw-mt-[-320px] tw-hidden lg:tw-block">
       <div class="tw-font-bold tw-tracking-wide tw-text-lg tw-mb-2">PHIM ĐANG CHIẾU</div>
       <ng-container *ngFor="let movie of allMovies">
@@ -106,7 +105,7 @@
         </div>
       </ng-container>
     </div>
-
-
+    <div>
+    </div>
   </div>
 </div>

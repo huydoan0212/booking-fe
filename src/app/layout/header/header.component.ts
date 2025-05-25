@@ -1,5 +1,5 @@
   import { Component, OnInit } from '@angular/core';
-  import { CinemaApi } from '../../../../service/cinema/model/cinema.model';
+  import { CinemaApi } from '../../../service/cinema/model/cinema.model';
   import {NgClass, NgForOf, NgIf} from '@angular/common';
   import { Router } from '@angular/router';
   @Component({

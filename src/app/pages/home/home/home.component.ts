@@ -1,24 +1,25 @@
-import { Component } from '@angular/core';
-import {NgClass, NgForOf} from '@angular/common';
+import { Component, AfterViewInit } from '@angular/core';
+import { NgClass, NgForOf } from '@angular/common';
 import Swiper from 'swiper';
-import {MovieCardComponent} from '../../../shared/ui/components/card-movie/movie-card.component';
-import {NgxPaginationModule} from 'ngx-pagination';
-import {Router} from '@angular/router';
-import {MOCK_MOVIES} from '../../../mock/mock-movies';
+import { MovieCardComponent } from '../../../shared/ui/components/card-movie/movie-card.component';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { Router } from '@angular/router';
+import { MOCK_MOVIES } from '../../../mock/mock-movies';
+import {Autoplay, Navigation, Pagination} from 'swiper/modules';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
+  standalone: true,
   imports: [
     NgForOf,
     MovieCardComponent,
     NgxPaginationModule,
     NgClass
-  ],
-  standalone: true
+  ]
 })
-export class HomeComponent {
+export class HomeComponent implements AfterViewInit {
   slides = [
     { img: 'assets/images/slide1.jpg' },
     { img: 'assets/images/slide2.jpg' },
@@ -28,34 +29,36 @@ export class HomeComponent {
     { img: 'assets/images/slide6.jpg' },
   ];
 
-  ngAfterViewInit() {
-    new Swiper('.mySwiper', {
-      slidesPerView: 1.5,          // Hiển thị 1.5 slide cùng lúc
-      spaceBetween: 50,            // Khoảng cách giữa các slide
-      loop: true,                  // Vòng lặp qua các slide
-      centeredSlides: true,        // Căn giữa slide hiện tại
-      autoplay: {
-        delay: 3000                // Tự động chuyển slide sau mỗi 3 giây
-      },
-      pagination: {
-        el: '.swiper-pagination',  // Chỉ định phần tử chứa pagination
-        clickable: true            // Cho phép nhấp vào các điểm phân trang
-      },
-      navigation: {
-        nextEl: '.swiper-button-next',  // Chỉ định nút next
-        prevEl: '.swiper-button-prev',  // Chỉ định nút prev
-      },
-      effect: 'fade',              // Hiệu ứng chuyển đổi mờ dần
-      speed: 800                   // Thời gian chuyển đổi (800ms)
-    });
-  }
-  constructor(private router: Router) {}
   activeTab: string = 'dangChieu';
   page = 1;
   allMovies = MOCK_MOVIES;
+
+  constructor(private router: Router) {}
+
+  ngAfterViewInit(): void {
+    // Initialize Swiper
+    new Swiper('.mySwiper', {
+      modules: [Navigation, Pagination, Autoplay],
+      slidesPerView: 1.5,
+      spaceBetween: 50,
+      loop: true,
+      centeredSlides: true,
+      autoplay: {
+        delay:2000,
+      },
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+    });
+  }
+
   get movies() {
     const today = new Date();
-
     if (this.activeTab === 'dangChieu') {
       return this.allMovies.filter((movie) => {
         const start = new Date(movie.startDate);
@@ -73,14 +76,16 @@ export class HomeComponent {
 
     if (this.activeTab === 'imax') {
       return this.allMovies.filter((movie) =>
-        movie.categories?.some((cat: string) => cat.toLowerCase().includes('imax'))
+        movie.categories?.some((cat: string) =>
+          cat.toLowerCase().includes('imax')
+        )
       );
     }
 
     return this.allMovies;
   }
+
   goToDetail(movie: any) {
     this.router.navigate(['/movie', movie.id]);
   }
-
 }

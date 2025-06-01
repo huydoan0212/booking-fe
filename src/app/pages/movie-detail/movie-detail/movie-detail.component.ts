@@ -7,9 +7,9 @@ import {MovieCardComponent} from '../../../shared/ui/components/card-movie/movie
 import {NgxPaginationModule} from 'ngx-pagination';
 import { Router } from '@angular/router';
 import {ShowtimesComponent} from '../showtimes/showtimes.component';
-import {Movie} from '../../../../service/movie/model/movie.model';
 import {MovieService} from '../../../../service/movie/api/movie.service';
 import {Subject, takeUntil} from 'rxjs';
+import {MovieApi} from '../../../../service/movie/model/movie.model';
 @Component({
   selector: 'app-movie-detail',
   templateUrl: './movie-detail.component.html',
@@ -33,8 +33,8 @@ export class MovieDetailComponent implements OnInit {
     this.getMovies();
   }
 
-  movieDetail: Movie = {} as Movie;
-  movies: Movie[] = [];
+  movieDetail: MovieApi.Response = {} as MovieApi.Response;
+  movies: MovieApi.Response[] = [];
   getMovieId(): void {
     this.activatedRoute.paramMap.subscribe({
       next: (p) => {

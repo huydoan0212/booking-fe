@@ -5,8 +5,8 @@ import { MovieCardComponent } from '../../../shared/ui/components/card-movie/mov
 import { NgxPaginationModule } from 'ngx-pagination';
 import { Router } from '@angular/router';
 import {Autoplay, Navigation, Pagination} from 'swiper/modules';
-import {Movie, MovieResponse} from '../../../../service/movie/model/movie.model';
 import {MovieService} from '../../../../service/movie/api/movie.service';
+import {MovieApi} from '../../../../service/movie/model/movie.model';
 
 @Component({
   selector: 'app-home',
@@ -35,7 +35,7 @@ export class HomeComponent implements AfterViewInit, OnInit{
   page: number = 1;
   take: number = 8;
   sortBy: string = 'name';
-  movies: Movie[] = [];
+  movies: MovieApi.Response[] = [];
   hasNextPage: boolean = false;
 
   constructor(private router: Router) {}

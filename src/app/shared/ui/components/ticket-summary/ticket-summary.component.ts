@@ -6,6 +6,7 @@ import {CommonModule} from '@angular/common';
   templateUrl: './ticket-summary.component.html',
   styleUrls: ['./ticket-summary.component.scss'],
   imports: [CommonModule],
+  standalone: true
 })
 export class TicketSummaryComponent implements OnInit, OnDestroy {
   totalSeconds = 6 * 60;

@@ -1,0 +1,64 @@
+<div class="tw-flex tw-flex-col lg:tw-flex-row tw-items-start lg:tw-items-center tw-gap-4">
+  <!-- Date picker container -->
+  <div class="tw-flex tw-items-center tw-gap-2 tw-w-full">
+    <!-- Left button -->
+    <button class="tw-p-2 tw-rounded-full hover:tw-bg-gray-100" (click)="scrollLeft()">
+      <svg xmlns="http://www.w3.org/2000/svg" height="14" width="8.75" viewBox="0 0 320 512">
+        <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/>
+      </svg>
+    </button>
+
+    <!-- Dates list (scrollable) -->
+    <div #dayList class="tw-flex tw-gap-2 tw-overflow-x-auto tw-scroll-smooth tw-scrollbar-hide tw-w-full tw-max-w-[520px] tw-py-2">
+      <div
+        *ngFor="let day of days"
+        class="tw-flex tw-flex-col tw-items-center tw-min-w-[95px] tw-px-4 tw-py-2 tw-rounded-md tw-cursor-pointer tw-transition-colors hover:tw-bg-gray-100"
+        [class.tw-bg-blue-50]="!day.isSelected"
+        [class.tw-bg-[#034ea2]]="day.isSelected"
+        [class.tw-text-white]="day.isSelected"
+        (click)="selectDay(day)">
+        <div class="tw-text-sm tw-font-medium">{{ day.weekday }}</div>
+        <div class="tw-text-base tw-mt-1">{{ day.date }}</div>
+      </div>
+    </div>
+
+    <!-- Right button -->
+    <button class="tw-p-2 tw-rounded-full hover:tw-bg-gray-100" (click)="scrollRight()">
+      <svg xmlns="http://www.w3.org/2000/svg" height="14" width="8.75" viewBox="0 0 320 512">
+        <path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Dropdowns -->
+  <div class="tw-flex tw-gap-2 tw-w-full lg:tw-w-auto">
+    <select class="tw-border tw-rounded-md tw-border-[#d3d3d3] tw-px-3 tw-py-2 tw-text-gray-700 tw-w-full lg:tw-w-auto tw-cursor-pointer">
+      <option>Toàn quốc</option>
+      <option>Hà Nội</option>
+      <option>TP.HCM</option>
+    </select>
+
+    <select class="tw-border tw-rounded-md tw-border-[#d3d3d3] tw-px-3 tw-py-2 tw-text-gray-700 tw-w-full lg:tw-w-auto tw-cursor-pointer">
+      <option>Tất cả rạp</option>
+      <option>Galaxy Tân Bình</option>
+      <option>Galaxy Tân Bình</option>
+      <option>Galaxy Tân Bình</option>
+    </select>
+  </div>
+</div>
+<div class="tw-pt-30px">
+  <h2 class="text-xl tw-pb-2">Galaxy Nguyễn Du</h2>
+  <div class="tw-flex tw-items-center tw-space-x-6">
+    <p class="text-gray-600 tw-pr-4px">2D Phụ Đề</p>
+    <button
+      *ngFor="let time of showtimes"
+      (click)="selectTime(time)"
+      class="tw-px-4 tw-py-2 tw-rounded-md tw-border tw-border-[#d3d3d3] tw-bg-white tw-text-black hover:tw-bg-[#034ea2] hover:tw-text-white transition duration-300"
+    >
+      {{ time }}
+    </button>
+  </div>
+</div>
+
+
+

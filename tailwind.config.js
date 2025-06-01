@@ -29,7 +29,14 @@ module.exports = {
     colors: {
       white: "#ffffff",
       black: "#000000",
-      orange: "#f97316"
+      orange: "#f97316",
+      customDark: '#2E2E2E',
+      'orange-brand': '#f58202',
+      softBlue: '#588ECA',
+      deepBlue: '#034EA2',
+      lightGray: '#D0D0D0',
+      'bg-light': '#F9F9F9',
+      softYellow: '#F2C94C',
     },
     fontFamily: {
       "roboto-black": ["Roboto-Black", "sans-serif"],

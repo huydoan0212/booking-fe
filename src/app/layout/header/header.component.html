@@ -1,0 +1,262 @@
+<header class="tw-relative tw-flex tw-items-center tw-justify-between tw-bg-white tw-shadow-md tw-py-16px tw-px-24px">
+  <div class="tw-flex tw-items-center" (click)="goToHome()">
+    <img class="tw-w-100px tw-h-auto" src="../../../assets/images/galaxy-logo.png" alt="logo">
+  </div>
+
+  <div class="tw-flex tw-gap-35px">
+    <img src="../../../assets/images/btn-ticket.png" alt="buy-ticket" class="xl:tw-w-140px tw-w-100px">
+    <nav class="tw-hidden lg:tw-flex tw-items-center tw-gap-24px">
+      <div *ngFor="let menuItem of menuItems" class="tw-flex tw-items-center tw-gap-2 group hover:tw-text-orange">
+        <ul class="tw-whitespace-nowrap tw-font-roboto-medium tw-text-16px tw-cursor-pointer tw-transition-colors"
+            [ngClass]="{'tw-pr-8px': menuItem.withPadding}">
+          {{ menuItem.label }}
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+  <div class="tw-flex tw-items-center tw-gap-16px">
+    <!-- Nút tìm kiếm -->
+    <div class="relative tw-flex tw-items-center">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="tw-w-6 tw-h-6 tw-text-gray-700 hover:tw-text-primary tw-cursor-pointer"
+        (click)="toggleSearch()"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+        />
+      </svg>
+    </div>
+
+    <!-- Nút đăng nhập -->
+    <button
+      (click)="toggleLoginModal()"
+      class="tw-bg-secondary tw-font-roboto-bold tw-px-16px tw-py-8px tw-rounded-8px tw-transition-transform hover:tw-scale-105">
+      Đăng nhập
+    </button>
+
+    <!-- Menu toggle icon -->
+    <button (click)="toggleMenu()" class="tw-flex lg:tw-hidden tw-text-black tw-text-24px tw-cursor-pointer">
+      ☰
+    </button>
+  </div>
+  <!-- Ô tìm kiếm -->
+  <div
+    *ngIf="showSearch"
+    class="tw-absolute tw-top-full tw-right-[10%] tw-border-[0.5px] tw--mt-6 tw-flex tw-items-center tw-bg-white tw-border tw-border-customDark tw-rounded tw-shadow-md tw-z-50 tw-px-2 tw-py-1 tw-transition-all tw-duration-300"
+  >
+    <input
+      type="text"
+      placeholder="Tìm kiếm..."
+      #searchInput
+      class="tw-outline-none tw-text-sm tw-transition-all tw-duration-300 tw-w-[120px] focus:tw-w-[300px]"
+    />
+    <button (click)="toggleSearch()" class="tw-ml-2 tw-text-gray-500 hover:tw-text-red-500 tw-text-lg">
+      ×
+    </button>
+  </div>
+</header>
+
+<!-- Overlay mobile menu -->
+<div *ngIf="isMenuOpen" (click)="toggleMenu()"
+     class="tw-bg-black tw-opacity-15 tw-w-full tw-h-full tw-fixed tw-top-0 tw-left-0 tw-z-40">
+</div>
+
+<!-- Sidebar menu -->
+<div
+  class="tw-fixed tw-top-0 tw-right-0 tw-w-72 tw-h-screen tw-bg-white tw-z-50 tw-transition-transform tw-duration-300 tw-ease-in-out"
+  [ngClass]="isMenuOpen ? 'tw-translate-x-0' : 'tw-translate-x-full'">
+  <div class="tw-flex tw-items-center tw-justify-between tw-p-5 tw-shadow-sm">
+    <h2 class="tw-font-bold tw-text-16px">Menu</h2>
+    <button class="tw-text-2xl tw-font-bold tw-cursor-pointer" (click)="toggleMenu()">×</button>
+  </div>
+  <nav class="tw-flex tw-flex-col tw-gap-4 tw-p-4">
+    <button class="tw-bg-primary tw-text-white tw-font-roboto-bold tw-px-16px tw-py-8px tw-rounded-8px">Mua vé</button>
+    <ul class="tw-text-black tw-font-roboto-medium hover:tw-text-primary tw-cursor-pointer">Phim</ul>
+    <ul class="tw-text-black tw-font-roboto-medium hover:tw-text-primary tw-cursor-pointer">Rạp/Giá vé</ul>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+         stroke-width="1.5" stroke="currentColor"
+         class="tw-w-6 tw-h-6 tw-text-gray-700 hover:tw-text-primary tw-cursor-pointer">
+      <path stroke-linecap="round" stroke-linejoin="round"
+            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/>
+    </svg>
+    <button (click)="toggleLoginModal()" class="tw-bg-secondary tw-text-white tw-font-roboto-bold tw-px-16px tw-py-8px tw-rounded-8px">
+      Đăng nhập
+    </button>
+    <button class="tw-text-blue-600 tw-font-bold">THAM GIA G STAR</button>
+  </nav>
+</div>
+
+<div *ngIf="isMenuOpen" (click)="toggleMenu()"
+     class="tw-bg-black tw-opacity-15 tw-w-full tw-h-full tw-fixed tw-top-0 tw-left-0 tw-bottom-0 tw-right-0 tw-z-40">
+</div>
+
+<div
+  class="tw-fixed tw-top-0 tw-right-0 tw-w-72 tw-h-screen tw-bg-white tw-z-50 tw-transition-transform tw-duration-300 tw-ease-in-out"
+  [ngClass]="isMenuOpen ? 'tw-translate-x-0' : 'tw-translate-x-full'">
+  <div class="tw-flex tw-items-center tw-justify-between tw-p-5 tw-shadow-sm">
+    <h2 class="tw-font-bold tw-text-16px">Menu</h2>
+    <button class="tw-text-2xl tw-font-bold tw-cursor-pointer" (click)="toggleMenu()">×</button>
+  </div>
+  <nav class="tw-flex tw-flex-col tw-gap-4 tw-p-4">
+    <button class="tw-bg-primary tw-text-white tw-font-roboto-bold tw-px-16px tw-py-8px tw-rounded-8px">
+      Mua vé
+    </button>
+    <ul class="tw-text-black tw-font-roboto-medium hover:tw-text-primary tw-cursor-pointer">
+      Phim
+    </ul>
+    <ul class="tw-text-black tw-font-roboto-medium hover:tw-text-primary tw-cursor-pointer">
+      Rạp/Giá vé
+    </ul>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+      class="tw-w-24px tw-h-24px tw-text-gray-700 hover:tw-text-primary tw-cursor-pointer"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+      />
+    </svg>
+    <button (click)="toggleLoginModal()" class="tw-bg-secondary tw-text-white tw-font-roboto-bold tw-px-16px tw-py-8px tw-rounded-8px">
+      Đăng nhập
+    </button>
+    <button class="tw-text-blue-600 tw-font-bold">THAM GIA G STAR</button>
+  </nav>
+</div>
+<div *ngIf="isLoginModalOpen"
+     class="tw-fixed tw-inset-0 tw-bg-black tw-bg-opacity-50 tw-flex tw-items-center tw-justify-center tw-z-50">
+  <div class="tw-bg-white tw-p-8 tw-rounded-lg tw-shadow-xl tw-w-full tw-max-w-md">
+
+    <div class="tw-relative">
+      <button
+        (click)="toggleLoginModal()"
+        class="tw-absolute tw-top-0 tw-right-0 tw-text-gray-500 hover:tw-text-gray-700 tw-text-2xl">
+        &times;
+      </button>
+    </div>
+
+    <div class="tw-flex tw-justify-center">
+      <img src="./assets/images/login.png" alt="Login">
+    </div>
+    <div class="tw-flex tw-justify-center tw-items-center tw-mb-6">
+      <h2 class="tw-text-lg tw-font-bold tw-text-customDark">Đăng Nhập Tài Khoản </h2>
+    </div>
+
+    <form (ngSubmit)="onLoginSubmit()">
+      <div class="tw-mb-4">
+        <label for="email" class="tw-block tw-text-sm tw-font-roboto-medium tw-text-gray-700 tw-mb-1">Email</label>
+        <input type="text" id="email" name="email" [(ngModel)]="loginCredentials.email" placeholder="Nhập Email"
+               class="tw-w-full tw-px-4 tw-py-2 tw-border-[0.5px] tw-border-gray-300 tw-rounded-md focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-primary"
+               required>
+      </div>
+      <div class="tw-mb-6">
+        <label for="password" class="tw-block tw-text-sm tw-font-roboto-medium tw-text-gray-700 tw-mb-1">Mật khẩu</label>
+        <input type="password" id="password" name="password" [(ngModel)]="loginCredentials.password" placeholder="Nhập Mật Khẩu"
+               class="tw-w-full tw-px-4 tw-py-2 tw-border-[0.5px] tw-border-gray-300 tw-rounded-md focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-primary"
+               required>
+      </div>
+      <button type="submit"
+              class="tw-w-full tw-bg-orange hover:tw-bg-orange-brand tw-text-white tw-font-roboto-bold tw-py-2 tw-px-4 tw-rounded-md tw-transition-colors">
+        Đăng nhập
+      </button>
+      <div class="tw-flex tw-items-center tw-justify-between tw-mb-6 tw-pt-10px">
+        <a href="#" class="tw-text-sm tw-text-primary hover:tw-underline tw-font-roboto-medium">Quên mật khẩu?</a>
+      </div>
+    </form>
+    <p class="tw-mt-6 tw-text-center tw-text-sm tw-text-gray-600">
+      Bạn chưa có tài khoản?
+    </p>
+    <button
+      type="button"
+      class="tw-w-full tw-bg-white tw-border-[0.5px] tw-border-orange tw-text-orange-brand
+      hover:tw-bg-orange-brand hover:tw-text-white tw-font-roboto-bold tw-py-2 tw-px-4 tw-rounded-md
+      tw-transition-colors"
+      (click)=openRegisterModal()>
+      Đăng kí
+    </button>
+  </div>
+</div>
+<div *ngIf="isRegisterModalOpen"
+     class="tw-fixed tw-inset-0 tw-bg-black tw-bg-opacity-50 tw-flex tw-items-center tw-justify-center tw-z-50">
+  <div class="tw-bg-white tw-p-8 tw-rounded-lg tw-shadow-xl tw-w-full tw-max-w-md">
+
+    <div class="tw-relative">
+      <button
+        (click)="toggleRegisterModal()"
+        class="tw-absolute tw-top-0 tw-right-0 tw-text-gray-500 hover:tw-text-gray-700 tw-text-2xl">
+        &times;
+      </button>
+    </div>
+
+    <div class="tw-flex tw-justify-center">
+      <img src="./assets/images/login.png" alt="Login">
+    </div>
+    <div class="tw-flex tw-justify-center tw-items-center tw-mb-6">
+      <h2 class="tw-text-lg tw-font-bold tw-text-customDark">Đăng Ký Tài Khoản</h2>
+    </div>
+
+    <form >
+      <div class="tw-mb-2">
+        <label for="" class="tw-block tw-text-sm tw-font-roboto-medium tw-text-gray-700 tw-mb-1">Họ và tên</label>
+        <input type="text" id="" name=""
+               placeholder="Nhập Họ và tên"
+               class="tw-w-full tw-px-4 tw-py-2 tw-border-[0.5px] tw-border-gray-300 tw-rounded-md focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-primary"
+               required>
+      </div>
+      <div class="tw-mb-2">
+        <label for="email" class="tw-block tw-text-sm tw-font-roboto-medium tw-text-gray-700 tw-mb-1">Email</label>
+        <input type="text" id="" name=""
+               placeholder="Nhập Email"
+               class="tw-w-full tw-px-4 tw-py-2 tw-border-[0.5px] tw-border-gray-300 tw-rounded-md focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-primary"
+               required>
+      </div>
+      <div class="tw-mb-2">
+        <label for="" class="tw-block tw-text-sm tw-font-roboto-medium tw-text-gray-700 tw-mb-1">Số điện thoại</label>
+        <input type="text" id="" name=""
+               placeholder="Nhập Số điện thoại"
+               class="tw-w-full tw-px-4 tw-py-2 tw-border-[0.5px] tw-border-gray-300 tw-rounded-md focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-primary"
+               required>
+      </div>
+      <div class="tw-mb-6">
+        <label for="password" class="tw-block tw-text-sm tw-font-roboto-medium tw-text-gray-700 tw-mb-1">Mật khẩu</label>
+        <input type="password" id="password" name="password" [(ngModel)]="loginCredentials.password" placeholder="Nhập Mật Khẩu"
+               class="tw-w-full tw-px-4 tw-py-2 tw-border-[0.5px] tw-border-gray-300 tw-rounded-md focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-primary"
+               required>
+      </div>
+      <div class="tw-mb-6">
+        <label for="password" class="tw-block tw-text-sm tw-font-roboto-medium tw-text-gray-700 tw-mb-1">Nhập Lại Mật khẩu</label>
+        <input type="password" id="password" name="password" [(ngModel)]="loginCredentials.password" placeholder="Nhập Mật Khẩu"
+               class="tw-w-full tw-px-4 tw-py-2 tw-border-[0.5px] tw-border-gray-300 tw-rounded-md focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-primary"
+               required>
+      </div>
+      <button type="submit"
+              class="tw-w-full tw-bg-orange hover:tw-bg-orange-brand tw-text-white tw-font-roboto-bold tw-py-2 tw-px-4 tw-rounded-md tw-transition-colors">
+        Đăng Ký
+      </button>
+      <div class="tw-flex tw-items-center tw-justify-between tw-mb-1 tw-pt-10px">
+        <a href="#" class="tw-text-sm tw-text-primary hover:tw-underline tw-font-roboto-medium">Quên mật khẩu?</a>
+      </div>
+    </form>
+    <p class="tw-text-center tw-text-sm tw-text-gray-600">
+      Bạn chưa có tài khoản?
+    </p>
+    <button
+      type="button"
+      (click)="toggleLoginModal()"
+      class="tw-w-full tw-bg-white tw-border-[0.5px] tw-border-orange tw-text-orange-brand hover:tw-bg-orange-brand hover:tw-text-white tw-font-roboto-bold tw-py-2 tw-px-4 tw-rounded-md tw-transition-colors">
+      Đăng Nhập
+    </button>
+  </div>
+</div>

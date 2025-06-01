@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MOCK_MOVIES } from '../../../mock/mock-movies';
 import { CommonModule } from '@angular/common';
 import { DatePipe } from '@angular/common';
 import {NowShowingMoviesComponent} from '../../../shared/ui/components/now-showing-movies/now-showing-movies.component';
@@ -8,31 +7,70 @@ import {MovieCardComponent} from '../../../shared/ui/components/card-movie/movie
 import {NgxPaginationModule} from 'ngx-pagination';
 import { Router } from '@angular/router';
 import {ShowtimesComponent} from '../showtimes/showtimes.component';
+import {Movie} from '../../../../service/movie/model/movie.model';
+import {MovieService} from '../../../../service/movie/api/movie.service';
+import {Subject, takeUntil} from 'rxjs';
 @Component({
   selector: 'app-movie-detail',
   templateUrl: './movie-detail.component.html',
   styleUrls: ['./movie-detail.component.scss'],
-  imports: [CommonModule, NowShowingMoviesComponent, NgxPaginationModule, ShowtimesComponent],
+  imports: [CommonModule, NgxPaginationModule, ShowtimesComponent, NowShowingMoviesComponent],
   standalone: true,
   providers: [DatePipe]
 })
 export class MovieDetailComponent implements OnInit {
-  movie: any;
 
+  private destroy$ = new Subject<void>();
+  private readonly movieService = inject(MovieService);
+  private readonly activatedRoute = inject(ActivatedRoute);
   constructor(
-    private route: ActivatedRoute,
-    private datePipe: DatePipe, // Khai báo DatePipe trong constructor
+    private datePipe: DatePipe,
     private router: Router
   ) {}
 
-  ngOnInit() {
-    this.route.paramMap.subscribe(paramMap => {
-      const movieId = paramMap.get('id');
-      this.movie = MOCK_MOVIES.find(m => m.id === movieId);
+  ngOnInit(): void {
+    this.getMovieId();
+    this.getMovies();
+  }
+
+  movieDetail: Movie = {} as Movie;
+  movies: Movie[] = [];
+  getMovieId(): void {
+    this.activatedRoute.paramMap.subscribe({
+      next: (p) => {
+        let movieID = p.get('id');
+        this.getMovieDetails(movieID!)
+      },
     });
   }
+
+  getMovieDetails(id: string): void {
+    this.movieService
+      .getMovieDetail(id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          this.movieDetail = res;
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
+  }
+  getMovies() {
+    this.movieService.getMovies('name ~ \'*\'', 1, 6, 'name')
+      .subscribe({
+        next: (res: any) => {
+          this.movies = res.responseData.rows;
+        },
+        error: (err) => {
+          console.error('Error loading movies', err);
+        }
+      });
+  }
   get actorList(): string[] {
-    return this.movie.actors
+    return this.movieDetail.actors
       .split(',')
       .map((actor: string) => actor.trim());
   }
@@ -40,7 +78,6 @@ export class MovieDetailComponent implements OnInit {
   getFormattedDate(date: string): string {
     return this.datePipe.transform(date, 'dd/MM/yyyy')!;
   }
-  allMovies = MOCK_MOVIES;
   goToDetail(movie: any) {
     this.router.navigate(['/movie', movie.id]);
   }

@@ -37,7 +37,7 @@
       </button>
     </div>
     <!--  seat-->
-    <div class="tw-bg-white tw-max-w-[794px] tw-mt-[15px] tw-rounded-xl tw-p-4">
+    <div class="tw-bg-white tw-max-w-[794px] tw-mt-[15px] tw-rounded-xl tw-p-4 ">
       <div *ngFor="let row of rows" class="tw-mb-4 tw-flex tw-items-center">
         <div class="tw-font-bold tw-w-6 tw-text-center">
           {{ row }}
@@ -58,9 +58,22 @@
       </div>
       <div class="tw-text-lightGray tw-text-xl tw-text-center">Màn hình</div>
       <div class="tw-h-2 tw-bg-orange tw-w-full tw-rounded"></div>
+       <div class="tw-flex tw-p-7 tw-space-x-4 tw-items-center tw-justify-center">
+         <div class="tw-px-3 tw-py-3 tw-bg-lightGray tw-rounded-lg "></div>
+         <div class="tw-text-sm">Ghế đã bán</div>
+         <div class="tw-px-3 tw-py-3 tw-bg-orange-brand tw-rounded-lg "></div>
+         <div class="tw-text-sm">Ghế đang chọn</div>
+         <div class="tw-px-3 tw-py-3 tw-bg-white tw-rounded-lg tw-border tw-border-softYellow "></div>
+         <div class="tw-text-sm">Ghế VIP</div>
+         <div class="tw-px-3 tw-py-3 tw-bg-white tw-rounded-lg tw-border tw-border-lightGray"></div>
+         <div class="tw-text-sm">Ghế đơn</div>
+         <div class="tw-px-8 tw-py-3 tw-bg-white tw-rounded-lg tw-border tw-border-deepBlue"></div>
+         <div class="tw-text-sm">Ghế đôi</div>
+     </div>
     </div>
   </div>
   <!-- Thông tin phim -->
   <app-ticket-summary></app-ticket-summary>
 </div>
 </body>
+

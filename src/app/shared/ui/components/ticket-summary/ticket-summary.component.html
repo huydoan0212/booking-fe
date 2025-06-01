@@ -1,4 +1,12 @@
-<div class="tw-bg-white tw-max-w-[400px] tw-rounded-xl tw-shadow-md  tw-mt-[25px] tw-h-[480px]">
+<div class="tw-flex tw-items-center tw-justify-center tw-space-x-2 tw-text-lg">
+  <div>
+    Thời gian giữ ghế:
+  </div>
+  <div class="tw-font-bold tw-text-orange-brand">
+    {{ minutes }}:{{ seconds < 10 ? '0' + seconds : seconds }}
+  </div>
+</div>
+<div class="tw-bg-white tw-max-w-[400px] tw-rounded-xl tw-shadow-md  tw-mt-[5px] tw-h-auto">
   <div class="tw-h-1.5 tw-bg-orange tw-w-full tw-rounded-xl"></div>
   <div class="tw-flex tw-items-center">
     <img src="https://cdn.galaxycine.vn/media/2025/4/10/tim-xac-500_1744259393564.jpg"
@@ -43,4 +51,8 @@
       100.000<span class="tw-underline">đ</span>
     </div>
   </div>
+</div>
+<div class="tw-flex tw-justify-end tw-space-x-4 tw-mt-3">
+  <button class="tw-px-4 tw-py-2 tw-text-orange-brand tw-mr-8">Quay lại</button>
+  <button class="tw-px-16 tw-py-2 tw-bg-orange-brand tw-text-white tw-rounded">Tiếp tục</button>
 </div>

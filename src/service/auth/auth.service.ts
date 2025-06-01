@@ -13,6 +13,7 @@ export class AuthService {
   ) {}
   userData: any = {};
   sendLoginForm(data: object): Observable<any> {
+    console.log(data);
     return this.httpClient.post(
       `${environment.API_DOMAIN}/api/auth/login`,
       data

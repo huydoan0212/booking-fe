@@ -100,8 +100,6 @@
     </span>
       </div>
     </div>
-
-
     <div class="tw-flex tw-items-center tw-text-[#034ea2]">
       <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 512 512">
         <path fill="#034ea2"
@@ -112,14 +110,29 @@
   </div>
 
   <div class="tw-grid tw-grid-cols-[repeat(auto-fill,_minmax(250px,_1fr))] tw-gap-6 tw-max-w-screen-xl tw-px-6 tw-mx-auto sm:tw-grid-cols-1 md:tw-grid-cols-[repeat(auto-fill,_minmax(250px,_1fr))]">
-    <ng-container *ngFor="let movie of movies | paginate: { itemsPerPage: 8, currentPage: page }">
+    <div *ngFor="let movie of movies">
       <div (click)="goToDetail(movie)" class="tw-cursor-pointer">
         <app-movie-card [movie]="movie"></app-movie-card>
       </div>
-    </ng-container>
+    </div>
   </div>
-  <div class="tw-flex tw-justify-center tw-mt-6 tw-text-xl">
-    <pagination-controls (pageChange)="page = $event"></pagination-controls>
+  <div class="tw-flex tw-justify-center tw-gap-4 tw-mt-6">
+    <button
+      (click)="prevPage()"
+      [disabled]="page <= 1"
+      class="tw-px-4 tw-py-2 tw-bg-orange tw-text-white tw-rounded-md tw-shadow-md tw-transition
+             hover:tw-bg-orange-brand tw-cursor-pointer"
+    >
+      Trước
+    </button>
+    <span class="tw-flex tw-items-center tw-font-medium">Trang {{page}}</span>
+    <button
+      (click)="nextPage()"
+      [disabled]="!hasNextPage"
+      class="tw-px-4 tw-py-2 tw-bg-orange tw-text-white tw-rounded-md tw-shadow-md tw-transition
+           hover:tw-bg-orange-brand tw-cursor-pointer"
+    >
+      Sau
+    </button>
   </div>
-
 </div>

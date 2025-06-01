@@ -1,7 +1,8 @@
-  import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+  import {Component, ElementRef, inject, OnInit, ViewChild} from '@angular/core';
   import {NgClass, NgForOf, NgIf} from '@angular/common';
-  import { Router } from '@angular/router';
+  import {Router, RouterLink} from '@angular/router';
   import {FormsModule} from '@angular/forms';
+  import {AuthService} from '../../../service/auth/auth.service';
   @Component({
     selector: 'app-header',
     standalone: true,
@@ -15,7 +16,9 @@
     ]
   })
   export class HeaderComponent implements OnInit {
-    constructor(private router: Router) {}
+    ngOnInit(): void {
+
+    }
     isMenuOpen = false;
     menuItems = [
       { label: 'Phim', withPadding: true },
@@ -24,6 +27,30 @@
     isLoginModalOpen = false;
     isRegisterModalOpen = false;
     showSearch = false;
+
+    private readonly authService = inject(AuthService);
+    private readonly router = inject(Router);
+
+    loginCredentials = {
+      email: '',
+      password: '',
+    };
+
+    onLoginSubmit(): void {
+      if (!this.loginCredentials.email || !this.loginCredentials.password) {
+        alert('Vui lòng nhập đầy đủ email và mật khẩu.');
+        return;
+      }
+      this.authService.sendLoginForm(this.loginCredentials).subscribe({
+        next: (response) => {
+          this.authService.saveUserInfo()
+          this.router.navigate(['/home']);
+        },
+        error: (error) => {
+          console.error('Login failed', error);
+        },
+      });
+    }
 
     @ViewChild('searchInput') searchInputRef!: ElementRef;
 
@@ -59,15 +86,6 @@
       this.isRegisterModalOpen = true;
       this.isLoginModalOpen = false;
     }
-
-
-    onLoginSubmit(): void {
-
-    }
-    ngOnInit() {
-
-    }
-    loginCredentials: any;
     goToHome() {
       this.router.navigate(['/home']);
     }

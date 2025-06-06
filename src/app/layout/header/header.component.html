@@ -6,12 +6,12 @@
   <div class="tw-flex tw-gap-35px">
     <img src="../../../assets/images/btn-ticket.png" alt="buy-ticket" class="xl:tw-w-140px tw-w-100px">
     <nav class="tw-hidden lg:tw-flex tw-items-center tw-gap-24px">
-      <div *ngFor="let menuItem of menuItems" class="tw-flex tw-items-center tw-gap-2 group hover:tw-text-orange">
-        <ul class="tw-whitespace-nowrap tw-font-roboto-medium tw-text-16px tw-cursor-pointer tw-transition-colors"
-            [ngClass]="{'tw-pr-8px': menuItem.withPadding}">
-          {{ menuItem.label }}
-        </ul>
-      </div>
+<!--      <div *ngFor="let menuItem of menuItems" class="tw-flex tw-items-center tw-gap-2 group hover:tw-text-orange">-->
+<!--        <ul class="tw-whitespace-nowrap tw-font-roboto-medium tw-text-16px tw-cursor-pointer tw-transition-colors"-->
+<!--            [ngClass]="{'tw-pr-8px': menuItem.withPadding}">-->
+<!--          {{ menuItem.label }}-->
+<!--        </ul>-->
+<!--      </div>-->
     </nav>
   </div>
 
@@ -35,14 +35,12 @@
       </svg>
     </div>
 
-    <!-- Nút đăng nhập -->
     <button
-      (click)="toggleLoginModal()"
+      (click)="openLoginModal()"
       class="tw-bg-secondary tw-font-roboto-bold tw-px-16px tw-py-8px tw-rounded-8px tw-transition-transform hover:tw-scale-105">
       Đăng nhập
     </button>
 
-    <!-- Menu toggle icon -->
     <button (click)="toggleMenu()" class="tw-flex lg:tw-hidden tw-text-black tw-text-24px tw-cursor-pointer">
       ☰
     </button>
@@ -87,7 +85,8 @@
       <path stroke-linecap="round" stroke-linejoin="round"
             d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/>
     </svg>
-    <button (click)="toggleLoginModal()" class="tw-bg-secondary tw-text-white tw-font-roboto-bold tw-px-16px tw-py-8px tw-rounded-8px">
+    <button (click)="openLoginModal()"
+            class="tw-bg-secondary tw-text-white tw-font-roboto-bold tw-px-16px tw-py-8px tw-rounded-8px">
       Đăng nhập
     </button>
     <button class="tw-text-blue-600 tw-font-bold">THAM GIA G STAR</button>
@@ -129,7 +128,8 @@
         d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
       />
     </svg>
-    <button (click)="toggleLoginModal()" class="tw-bg-secondary tw-text-white tw-font-roboto-bold tw-px-16px tw-py-8px tw-rounded-8px">
+    <button (click)="openLoginModal()"
+            class="tw-bg-secondary tw-text-white tw-font-roboto-bold tw-px-16px tw-py-8px tw-rounded-8px">
       Đăng nhập
     </button>
     <button class="tw-text-blue-600 tw-font-bold">THAM GIA G STAR</button>
@@ -141,7 +141,7 @@
 
     <div class="tw-relative">
       <button
-        (click)="toggleLoginModal()"
+        (click)="closeAllModals()"
         class="tw-absolute tw-top-0 tw-right-0 tw-text-gray-500 hover:tw-text-gray-700 tw-text-2xl">
         &times;
       </button>
@@ -154,27 +154,52 @@
       <h2 class="tw-text-lg tw-font-bold tw-text-customDark">Đăng Nhập Tài Khoản </h2>
     </div>
 
-    <form (ngSubmit)="onLoginSubmit()">
+    <form #loginForm="ngForm" (ngSubmit)="onLoginSubmit()">
       <div class="tw-mb-4">
         <label for="email" class="tw-block tw-text-sm tw-font-roboto-medium tw-text-gray-700 tw-mb-1">Email</label>
         <input type="text" id="email" name="email" [(ngModel)]="loginCredentials.username" placeholder="Nhập Email"
                class="tw-w-full tw-px-4 tw-py-2 tw-border-[0.5px] tw-border-gray-300 tw-rounded-md focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-primary"
-               required>
+               required
+               email
+               #email="ngModel">
+        <div *ngIf="email.invalid && (email.dirty || email.touched)"
+             class="tw-text-red tw-text-sm tw-mt-1">
+          <div *ngIf="email.errors?.['required']">
+            Email không được để trống.
+          </div>
+          <div *ngIf="email.errors?.['email']">
+            Email không đúng định dạng.
+          </div>
+        </div>
       </div>
       <div class="tw-mb-6">
-        <label for="password" class="tw-block tw-text-sm tw-font-roboto-medium tw-text-gray-700 tw-mb-1">Mật khẩu</label>
-        <input type="password" id="password" name="password" [(ngModel)]="loginCredentials.password" placeholder="Nhập Mật Khẩu"
+        <label for="password" class="tw-block tw-text-sm tw-font-roboto-medium tw-text-gray-700 tw-mb-1">Mật
+          khẩu</label>
+        <input type="password" id="password" name="password"
+               [(ngModel)]="loginCredentials.password"
+               placeholder="Nhập Mật Khẩu"
                class="tw-w-full tw-px-4 tw-py-2 tw-border-[0.5px] tw-border-gray-300 tw-rounded-md focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-primary"
-               required>
+               password
+               required
+               #password="ngModel"
+          >
+        <div *ngIf="password.invalid && (password.dirty || password.touched)"
+             class="tw-text-red tw-text-sm tw-mt-1">
+          <div *ngIf="password.errors?.['required']">
+            Mật khẩu không được để trống.
+          </div>
+        </div>
       </div>
       <button type="submit"
+              [disabled]="loginForm.invalid"
               class="tw-w-full tw-bg-orange hover:tw-bg-orange-brand tw-text-white tw-font-roboto-bold tw-py-2 tw-px-4 tw-rounded-md tw-transition-colors">
         Đăng nhập
       </button>
       <div class="tw-flex tw-items-center tw-justify-between tw-mb-6 tw-pt-10px">
-        <a href="#" class="tw-text-sm tw-text-primary hover:tw-underline tw-font-roboto-medium">Quên mật khẩu?</a>
+        <a (click)="openForgotModal()" class="tw-text-sm tw-text-primary hover:tw-underline tw-font-roboto-medium">Quên mật khẩu?</a>
       </div>
     </form>
+
     <p class="tw-mt-6 tw-text-center tw-text-sm tw-text-gray-600">
       Bạn chưa có tài khoản?
     </p>
@@ -191,72 +216,237 @@
 <div *ngIf="isRegisterModalOpen"
      class="tw-fixed tw-inset-0 tw-bg-black tw-bg-opacity-50 tw-flex tw-items-center tw-justify-center tw-z-50">
   <div class="tw-bg-white tw-p-8 tw-rounded-lg tw-shadow-xl tw-w-full tw-max-w-md">
-
     <div class="tw-relative">
       <button
-        (click)="toggleRegisterModal()"
+        (click)="closeAllModals()"
         class="tw-absolute tw-top-0 tw-right-0 tw-text-gray-500 hover:tw-text-gray-700 tw-text-2xl">
         &times;
       </button>
     </div>
-
     <div class="tw-flex tw-justify-center">
       <img src="./assets/images/login.png" alt="Login">
     </div>
     <div class="tw-flex tw-justify-center tw-items-center tw-mb-6">
       <h2 class="tw-text-lg tw-font-bold tw-text-customDark">Đăng Ký Tài Khoản</h2>
     </div>
-
-    <form >
+    <form #registerForm ="ngForm" (ngSubmit)="onRegisterSubmit()">
       <div class="tw-mb-2">
         <label for="" class="tw-block tw-text-sm tw-font-roboto-medium tw-text-gray-700 tw-mb-1">Họ và tên</label>
-        <input type="text" id="" name=""
+        <input type="text" id="" name="name" [(ngModel)]="registerCredentials.name"
                placeholder="Nhập Họ và tên"
                class="tw-w-full tw-px-4 tw-py-2 tw-border-[0.5px] tw-border-gray-300 tw-rounded-md focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-primary"
-               required>
+               required
+               #name ="ngModel"
+        >
+        <div *ngIf="name.invalid && name.touched"
+             class="tw-text-red tw-text-sm tw-mt-1">
+          <div *ngIf="name.errors?.['required']">
+            Tên không được để trống.
+          </div>
+        </div>
       </div>
       <div class="tw-mb-2">
         <label for="email" class="tw-block tw-text-sm tw-font-roboto-medium tw-text-gray-700 tw-mb-1">Email</label>
-        <input type="text" id="" name=""
+        <input type="text" id="userNameRegister" name="userNameRegister" [(ngModel)]="registerCredentials.username"
                placeholder="Nhập Email"
                class="tw-w-full tw-px-4 tw-py-2 tw-border-[0.5px] tw-border-gray-300 tw-rounded-md focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-primary"
-               required>
+               required
+               email
+               #email = "ngModel"
+        >
+        <div *ngIf="email.invalid && (email.dirty || email.touched)"
+             class="tw-text-red tw-text-sm tw-mt-1">
+          <div *ngIf="email.errors?.['required']">
+            Email không được để trống.
+          </div>
+          <div *ngIf="email.errors?.['email']">
+            Email không đúng định dạng.
+          </div>
+        </div>
       </div>
+
       <div class="tw-mb-2">
-        <label for="" class="tw-block tw-text-sm tw-font-roboto-medium tw-text-gray-700 tw-mb-1">Số điện thoại</label>
-        <input type="text" id="" name=""
-               placeholder="Nhập Số điện thoại"
+        <label for="password" class="tw-block tw-text-sm tw-font-roboto-medium tw-text-gray-700 tw-mb-1">
+          Mật khẩu
+        </label>
+        <input type="password" id="password" name="password"
+               placeholder="Nhập Mật Khẩu"
+               [(ngModel)]="registerCredentials.password"
                class="tw-w-full tw-px-4 tw-py-2 tw-border-[0.5px] tw-border-gray-300 tw-rounded-md focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-primary"
-               required>
+               required minlength="6"
+               #password="ngModel"
+        >
+        <div *ngIf="password.invalid && (password.dirty || password.touched)"
+             class="tw-text-red tw-text-sm tw-mt-1">
+          <div *ngIf="password.errors?.['required']">Mật khẩu không được để trống.</div>
+          <div *ngIf="password.errors?.['minlength']">Mật khẩu phải có ít nhất 6 ký tự.</div>
+        </div>
       </div>
+
       <div class="tw-mb-6">
-        <label for="password" class="tw-block tw-text-sm tw-font-roboto-medium tw-text-gray-700 tw-mb-1">Mật khẩu</label>
-        <input type="password" id="password" name="password"  placeholder="Nhập Mật Khẩu"
+        <label for="confirmPassword" class="tw-block tw-text-sm tw-font-roboto-medium tw-text-gray-700 tw-mb-1">
+          Nhập Lại Mật khẩu
+        </label>
+        <input type="password" id="confirmPassword" name="confirmPassword"
+               placeholder="Nhập Lại Mật Khẩu"
+               [(ngModel)]="registerCredentials.confirmPassword"
                class="tw-w-full tw-px-4 tw-py-2 tw-border-[0.5px] tw-border-gray-300 tw-rounded-md focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-primary"
-               required>
+               required
+               #confirmPassword="ngModel"
+        >
+        <div *ngIf="confirmPassword.invalid && (confirmPassword.dirty || confirmPassword.touched)"
+             class="tw-text-red tw-text-sm tw-mt-1">
+          <div *ngIf="confirmPassword.errors?.['required']">Vui lòng nhập lại mật khẩu.</div>
+        </div>
+        <div *ngIf="registerCredentials.confirmPassword !== registerCredentials.password && confirmPassword.touched"
+             class="tw-text-red tw-text-sm tw-mt-1">
+          Mật khẩu nhập lại không khớp.
+        </div>
       </div>
-      <div class="tw-mb-6">
-        <label for="password" class="tw-block tw-text-sm tw-font-roboto-medium tw-text-gray-700 tw-mb-1">Nhập Lại Mật khẩu</label>
-        <input type="password" id="password" name="password"  placeholder="Nhập Mật Khẩu"
-               class="tw-w-full tw-px-4 tw-py-2 tw-border-[0.5px] tw-border-gray-300 tw-rounded-md focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-primary"
-               required>
-      </div>
-      <button type="submit"
+      <button type="submit" [disabled]="registerForm.invalid"
               class="tw-w-full tw-bg-orange hover:tw-bg-orange-brand tw-text-white tw-font-roboto-bold tw-py-2 tw-px-4 tw-rounded-md tw-transition-colors">
         Đăng Ký
       </button>
-      <div class="tw-flex tw-items-center tw-justify-between tw-mb-1 tw-pt-10px">
-        <a href="#" class="tw-text-sm tw-text-primary hover:tw-underline tw-font-roboto-medium">Quên mật khẩu?</a>
-      </div>
     </form>
+    <div class="tw-flex tw-items-center tw-justify-between tw-mb-1 tw-pt-10px">
+      <a href="#" class="tw-text-sm tw-text-primary hover:tw-underline tw-font-roboto-medium">Quên mật khẩu?</a>
+    </div>
     <p class="tw-text-center tw-text-sm tw-text-gray-600">
       Bạn chưa có tài khoản?
     </p>
     <button
       type="button"
-      (click)="toggleLoginModal()"
+      (click)="openLoginModal()"
       class="tw-w-full tw-bg-white tw-border-[0.5px] tw-border-orange tw-text-orange-brand hover:tw-bg-orange-brand hover:tw-text-white tw-font-roboto-bold tw-py-2 tw-px-4 tw-rounded-md tw-transition-colors">
       Đăng Nhập
     </button>
   </div>
 </div>
+<div *ngIf="isOtpModalOpen"
+     class="tw-fixed tw-inset-0 tw-bg-black tw-bg-opacity-50 tw-flex tw-items-center tw-justify-center tw-z-50">
+  <div class=" tw-bg-white tw-p-6 tw-rounded-lg tw-shadow-xl tw-w-full tw-max-w-md">
+    <div class="tw-relative">
+      <button
+        (click)="closeAllModals()"
+        class="tw-absolute tw-top-0 tw-right-0 tw-text-gray-500 hover:tw-text-gray-700 tw-text-2xl">
+        &times;
+      </button>
+    </div>
+    <h2 class="tw-text-lg tw-font-bold tw-text-center tw-mb-4">Xác Minh OTP</h2>
+    <form #otpForm="ngForm" (ngSubmit)="onOtpSubmit()">
+      <input type="text"
+             name="otp"
+             [(ngModel)]="otpCode"
+             required
+             #otp="ngModel"
+             placeholder="Nhập mã OTP"
+             class="tw-w-full tw-p-2 tw-border tw-rounded-md tw-mb-1 tw-border-lightGray" />
+
+      <div *ngIf="otp.invalid && (otp.dirty || otp.touched)" class="tw-text-red tw-text-sm tw-mb-3">
+        <div *ngIf="otp.errors?.['required']">Vui lòng nhập mã OTP.</div>
+        {{ otpErrorMessage }}
+      </div>
+      <button type="submit"
+              [disabled]="otpForm.invalid"
+              class="tw-w-full tw-bg-orange tw-text-white tw-py-2 tw-rounded-md hover:tw-bg-orange-brand">
+        Xác minh
+      </button>
+    </form>
+  </div>
+</div>
+<div *ngIf="isOtpModalOpen"
+     class="tw-fixed tw-inset-0 tw-bg-black tw-bg-opacity-50 tw-flex tw-items-center tw-justify-center tw-z-50">
+  <div class=" tw-bg-white tw-p-6 tw-rounded-lg tw-shadow-xl tw-w-full tw-max-w-md">
+    <div class="tw-relative">
+      <button
+        (click)="closeAllModals()"
+        class="tw-absolute tw-top-0 tw-right-0 tw-text-gray-500 hover:tw-text-gray-700 tw-text-2xl">
+        &times;
+      </button>
+    </div>
+    <h2 class="tw-text-lg tw-font-bold tw-text-center tw-mb-4">Xác Minh OTP</h2>
+    <form #otpForm="ngForm" (ngSubmit)="onOtpSubmit()">
+      <input type="text"
+             name="otp"
+             [(ngModel)]="otpCode"
+             required
+             #otp="ngModel"
+             placeholder="Nhập mã OTP"
+             class="tw-w-full tw-p-2 tw-border tw-rounded-md tw-mb-1 tw-border-lightGray" />
+
+      <div *ngIf="otp.invalid && (otp.dirty || otp.touched)" class="tw-text-red tw-text-sm tw-mb-3">
+        <div *ngIf="otp.errors?.['required']">Vui lòng nhập mã OTP.</div>
+        {{ otpErrorMessage }}
+      </div>
+      <button type="submit"
+              [disabled]="otpForm.invalid"
+              class="tw-w-full tw-bg-orange tw-text-white tw-py-2 tw-rounded-md hover:tw-bg-orange-brand">
+        Xác minh
+      </button>
+    </form>
+  </div>
+</div>
+<div *ngIf="isForgotModalOpen"
+     class="tw-fixed tw-inset-0 tw-bg-black tw-bg-opacity-50 tw-flex tw-items-center tw-justify-center tw-z-50">
+  <div class=" tw-bg-white tw-p-6 tw-rounded-lg tw-shadow-xl tw-w-full tw-max-w-md">
+    <div class="tw-relative">
+      <button
+        (click)="closeAllModals()"
+        class="tw-absolute tw-top-0 tw-right-0 tw-text-gray-500 hover:tw-text-gray-700 tw-text-2xl">
+        &times;
+      </button>
+    </div>
+    <h2 class="tw-text-lg tw-font-bold tw-text-center tw-mb-4">Vui lòng nhập email</h2>
+    <form #emailForm="ngForm" (ngSubmit)="onForgotPassword()">
+      <input type="emailForgot"
+             name="emailForgot"
+             [(ngModel)]="emailForgot"
+             required
+             #otp="ngModel"
+             placeholder="Nhập Email"
+             class="tw-w-full tw-p-2 tw-border tw-rounded-md tw-mb-1 tw-border-lightGray" />
+
+      <div *ngIf="otp.invalid && (otp.dirty || otp.touched)" class="tw-text-red tw-text-sm tw-mb-3">
+        <div *ngIf="otp.errors?.['required']">Vui lòng nhập email.</div>
+      </div>
+      <button type="submit"
+              [disabled]="emailForm.invalid"
+              class="tw-w-full tw-bg-orange tw-text-white tw-py-2 tw-rounded-md hover:tw-bg-orange-brand">
+        Gửi mã OTP
+      </button>
+    </form>
+  </div>
+</div>
+<div *ngIf="isOtpForgotModalOpen"
+     class="tw-fixed tw-inset-0 tw-bg-black tw-bg-opacity-50 tw-flex tw-items-center tw-justify-center tw-z-50">
+  <div class=" tw-bg-white tw-p-6 tw-rounded-lg tw-shadow-xl tw-w-full tw-max-w-md">
+    <div class="tw-relative">
+      <button
+        (click)="closeAllModals()"
+        class="tw-absolute tw-top-0 tw-right-0 tw-text-gray-500 hover:tw-text-gray-700 tw-text-2xl">
+        &times;
+      </button>
+    </div>
+    <h2 class="tw-text-lg tw-font-bold tw-text-center tw-mb-4">Xác Minh OTP</h2>
+    <form #otpForm="ngForm" (ngSubmit)="onOtpForgotSubmit()">
+      <input type="text"
+             name="otp"
+             [(ngModel)]="otpCode"
+             required
+             #otp="ngModel"
+             placeholder="Nhập mã OTP"
+             class="tw-w-full tw-p-2 tw-border tw-rounded-md tw-mb-1 tw-border-lightGray" />
+
+      <div *ngIf="otp.invalid && (otp.dirty || otp.touched)" class="tw-text-red tw-text-sm tw-mb-3">
+        <div *ngIf="otp.errors?.['required']">Vui lòng nhập mã OTP.</div>
+        {{ otpErrorMessage }}
+      </div>
+      <button type="submit"
+              [disabled]="otpForm.invalid"
+              class="tw-w-full tw-bg-orange tw-text-white tw-py-2 tw-rounded-md hover:tw-bg-orange-brand">
+        Xác minh
+      </button>
+    </form>
+  </div>
+</div>
+

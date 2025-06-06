@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -9,34 +9,57 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './showtimes.component.html',
   styleUrls: ['./showtimes.component.css']
 })
-export class ShowtimesComponent {
+export class ShowtimesComponent implements OnInit {
   @ViewChild('dayList') dayList!: ElementRef;
 
-  days = [
-    { weekday: 'Hôm Nay', date: '20/04', isSelected: true },
-    { weekday: 'Thứ Ba', date: '21/04', isSelected: false },
-    { weekday: 'Thứ Tư', date: '22/04', isSelected: false },
-    { weekday: 'Thứ Năm', date: '23/04', isSelected: false },
-    { weekday: 'Thứ Sáu', date: '24/04', isSelected: false },
-    { weekday: 'Thứ Bảy', date: '25/04', isSelected: false },
-    { weekday: 'Chủ Nhật', date: '26/04', isSelected: false },
-  ];
+  public days: { weekday: string; date: string; isSelected: boolean }[] = [];
+  public showtimes: string[] = ['09:30', '11:30', '12:30', '14:00', '15:00'];
 
-  scrollLeft() {
-    this.dayList.nativeElement.scrollBy({ left: -96, behavior: 'smooth' });
+  ngOnInit(): void {
+    this.generateDays();
   }
 
-  scrollRight() {
-    this.dayList.nativeElement.scrollBy({ left: 120, behavior: 'smooth' });
+  generateDays(): void {
+    const weekdays = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+    const today = new Date();
+
+    this.days = Array.from({ length: 7 }, (_, i) => {
+      const date = new Date(today);
+      date.setDate(today.getDate() + i);
+
+      const isToday = i === 0;
+      const weekday = isToday ? 'Hôm Nay' : weekdays[date.getDay()];
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+
+      return {
+        weekday,
+        date: `${day}/${month}`,
+        isSelected: isToday
+      };
+    });
   }
 
-  selectDay(selectedDay: any) {
+  scrollLeft(): void {
+    if (this.dayList?.nativeElement) {
+      this.dayList.nativeElement.scrollBy({ left: -96, behavior: 'smooth' });
+    }
+  }
+
+  scrollRight(): void {
+    if (this.dayList?.nativeElement) {
+      this.dayList.nativeElement.scrollBy({ left: 120, behavior: 'smooth' });
+    }
+  }
+
+  selectDay(selectedDay: any): void {
     this.days.forEach(day => day.isSelected = false);
     selectedDay.isSelected = true;
   }
-  showtimes: string[] = ['09:30', '11:30', '12:30', '14:00', '15:00'];
-  selectTime(time: string) {
+
+  selectTime(time: string): void {
     console.log('Selected showtime:', time);
-    // Bạn có thể điều hướng hoặc xử lý logic tiếp theo ở đây
+    // TODO: xử lý tiếp theo nếu cần
   }
 }
+

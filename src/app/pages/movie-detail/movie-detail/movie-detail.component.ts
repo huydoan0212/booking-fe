@@ -33,7 +33,7 @@ export class MovieDetailComponent implements OnInit {
     this.getMovies();
   }
 
-  movieDetail: MovieApi.Response = {} as MovieApi.Response;
+  movieDetail: MovieApi.Response | null = null;
   movies: MovieApi.Response[] = [];
   getMovieId(): void {
     this.activatedRoute.paramMap.subscribe({
@@ -50,7 +50,7 @@ export class MovieDetailComponent implements OnInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (res) => {
-          this.movieDetail = res;
+          this.movieDetail = res.responseData;
           window.scrollTo({ top: 0, behavior: 'smooth' });
         },
         error: (err) => {
@@ -69,16 +69,17 @@ export class MovieDetailComponent implements OnInit {
         }
       });
   }
+
   get actorList(): string[] {
-    return this.movieDetail.actors
-      .split(',')
-      .map((actor: string) => actor.trim());
+    return this.movieDetail?.actors?.split(',') || [];
   }
 
-  getFormattedDate(date: string): string {
-    return this.datePipe.transform(date, 'dd/MM/yyyy')!;
+  getFormattedDate(date: string | null | undefined): string {
+    return date ? this.datePipe.transform(date, 'dd/MM/yyyy') ?? '' : '';
   }
+
   goToDetail(movie: any) {
     this.router.navigate(['/movie', movie.id]);
   }
+
 }

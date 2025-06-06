@@ -1,11 +1,8 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '../../../environments/environment.development';
-import {Observable} from 'rxjs';
-import { map } from 'rxjs/operators';
 import {MovieApi} from '../model/movie.model';
 import {ResponseResult} from '../../../app/shared/data-access/interface/response.type';
-
 @Injectable({
   providedIn: 'root'
 })
@@ -25,7 +22,4 @@ export class MovieService {
   getMovieDetail(id: string | null) {
     return this.httpClient.get<ResponseResult<MovieApi.Response>>(`${environment.API_DOMAIN}/api/movie/${id}`)
   }
-
-
-
 }

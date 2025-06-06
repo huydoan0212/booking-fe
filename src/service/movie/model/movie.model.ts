@@ -41,7 +41,9 @@ export namespace MovieApi {
     director: string;
     producers: string;
     country: string;
-    categories: CategoryApi.Response[];   // danh sách category kèm id, name, slug, description
-    createdAt: string;        // ISO‐8601, ví dụ "2025-06-01T08:30:00Z"
+    startDate: string;
+    endDate: string;
+    categories: CategoryApi.Response[];
+    createdAt: string;
   }
 }

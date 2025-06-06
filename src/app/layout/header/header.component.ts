@@ -9,55 +9,78 @@ import { AuthService } from '../../../service/auth/auth.service';
   standalone: true,
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
-  imports: [
-    NgClass,
-    NgForOf,
-    NgIf,
-    FormsModule,
-  ]
+  imports: [NgClass, NgIf, FormsModule]
 })
 export class HeaderComponent {
   isMenuOpen = false;
-  isLoginModalOpen = false;
-  isRegisterModalOpen = false;
   showSearch = false;
 
-  menuItems = [
-    { label: 'Phim', withPadding: true },
-    { label: 'Rạp/Giá vé', withPadding: false }
-  ];
+  isLoginModalOpen = false;
+  isRegisterModalOpen = false;
+  isOtpModalOpen = false;
+  isForgotModalOpen = false;
+  isOtpForgotModalOpen = false;
 
   loginCredentials = {
     username: '',
     password: '',
   };
 
+  registerCredentials = {
+    name: '',
+    username: '',
+    idNumber: '',
+    gender: '1',
+    dob: '2024-12-31',
+    password: '',
+    confirmPassword: ''
+  };
+
+  otpCode: string = '';
+  otpUsername = '';
+  otpErrorMessage: string = '';
+  emailForgot: string = '';
+
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
   @ViewChild('searchInput') searchInputRef!: ElementRef;
 
-  toggleMenu(): void {
-    this.isMenuOpen = !this.isMenuOpen;
+  closeAllModals(): void {
+    this.isLoginModalOpen = false;
+    this.isRegisterModalOpen = false;
+    this.isOtpModalOpen = false;
+    this.isForgotModalOpen = false;
+    this.isOtpForgotModalOpen = false;
   }
 
-  toggleLoginModal(): void {
-    this.isLoginModalOpen = !this.isLoginModalOpen;
-    if (this.isLoginModalOpen) {
-      this.isRegisterModalOpen = false;
-    }
-  }
-
-  toggleRegisterModal(): void {
-    this.isRegisterModalOpen = !this.isRegisterModalOpen;
-    if (this.isRegisterModalOpen) {
-      this.isLoginModalOpen = false;
-    }
+  openLoginModal(): void {
+    this.closeAllModals();
+    this.isLoginModalOpen = true;
   }
 
   openRegisterModal(): void {
+    this.closeAllModals();
     this.isRegisterModalOpen = true;
-    this.isLoginModalOpen = false;
+  }
+
+  openOtpModal(): void {
+    this.closeAllModals();
+    this.isOtpModalOpen = true;
+  }
+
+  openForgotModal(): void {
+    this.closeAllModals();
+    this.isForgotModalOpen = true;
+  }
+
+  openOtpForgotModal(): void {
+    this.closeAllModals();
+    this.isOtpForgotModalOpen = true;
+  }
+
+  toggleMenu(): void {
+    this.isMenuOpen = !this.isMenuOpen;
   }
 
   toggleSearch(): void {
@@ -69,19 +92,20 @@ export class HeaderComponent {
     }
   }
 
-  onLoginSubmit(): void {
-    const { username, password } = this.loginCredentials;
-    if (!username || !password) {
-      alert('Vui lòng nhập đầy đủ email và mật khẩu.');
-      return;
-    }
+  goToHome(): void {
+    this.router.navigate(['/home']);
+  }
 
+  generateRandom7DigitString(): string {
+    return Math.floor(1000000 + Math.random() * 9000000).toString();
+  }
+
+  onLoginSubmit(): void {
     this.authService.sendLoginForm(this.loginCredentials).subscribe({
       next: (response) => {
-        console.log(this.loginCredentials);
         this.authService.saveUserInfo();
         this.router.navigate(['/home']);
-        this.isLoginModalOpen = false;
+        this.closeAllModals();
         console.log('Login success', response);
       },
       error: (error) => {
@@ -90,7 +114,60 @@ export class HeaderComponent {
     });
   }
 
-  goToHome(): void {
-    this.router.navigate(['/home']);
+  onRegisterSubmit(): void {
+    this.registerCredentials.idNumber = this.generateRandom7DigitString();
+    this.authService.sendRegisterForm(this.registerCredentials).subscribe({
+      next: (response) => {
+        this.otpUsername = this.registerCredentials.username;
+        this.openOtpModal();
+        console.log('Register success', response);
+      },
+      error: (error) => {
+        console.error('Register failed', error);
+      }
+    });
   }
+
+  onOtpSubmit(): void {
+    this.authService.sendOTPForm(this.otpUsername, this.otpCode, 'REGISTER').subscribe({
+      next: (response) => {
+        this.openLoginModal();
+        this.otpCode = '';
+        this.otpErrorMessage = '';
+        console.log('OTP success', response);
+      },
+      error: (error) => {
+        console.error('OTP failed', error);
+        this.otpErrorMessage = 'Sai mã xác minh. Vui lòng thử lại.';
+      }
+    });
+  }
+
+  onForgotPassword(): void {
+    this.authService.sendForgotPassword(this.emailForgot).subscribe({
+      next: (response) => {
+        this.openOtpForgotModal();
+        console.log('ForgotPassword success', response);
+      },
+      error: (error) => {
+        console.error('ForgotPassword failed', error);
+      }
+    });
+  }
+
+  onOtpForgotSubmit(): void {
+    this.authService.sendOTPForm(this.emailForgot, this.otpCode, 'FORGOT_PASSWORD').subscribe({
+      next: (response) => {
+        this.closeAllModals(); // Có thể điều hướng sang trang nhập mật khẩu mới
+        this.otpCode = '';
+        this.otpErrorMessage = '';
+        console.log('OTP (forgot) success', response);
+      },
+      error: (error) => {
+        console.error('OTP (forgot) failed', error);
+        this.otpErrorMessage = 'Sai mã xác minh. Vui lòng thử lại.';
+      }
+    });
+  }
+
 }

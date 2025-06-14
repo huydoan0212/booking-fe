@@ -20,6 +20,7 @@ export class HeaderComponent {
   isOtpModalOpen = false;
   isForgotModalOpen = false;
   isOtpForgotModalOpen = false;
+  isResetPasswordModalOpen = false;
 
   loginCredentials = {
     username: '',
@@ -40,6 +41,11 @@ export class HeaderComponent {
   otpUsername = '';
   otpErrorMessage: string = '';
   emailForgot: string = '';
+  tokenForgot: string = '';
+  newPassword: string = '';
+  confirmNewPassword: string = '';
+  passwordMismatch: boolean = false;
+
 
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
@@ -52,6 +58,7 @@ export class HeaderComponent {
     this.isOtpModalOpen = false;
     this.isForgotModalOpen = false;
     this.isOtpForgotModalOpen = false;
+    this.isResetPasswordModalOpen = false;
   }
 
   openLoginModal(): void {
@@ -77,6 +84,11 @@ export class HeaderComponent {
   openOtpForgotModal(): void {
     this.closeAllModals();
     this.isOtpForgotModalOpen = true;
+  }
+
+  openResetPasswordModal(): void {
+    this.closeAllModals();
+    this.isResetPasswordModalOpen = true;
   }
 
   toggleMenu(): void {
@@ -158,16 +170,36 @@ export class HeaderComponent {
   onOtpForgotSubmit(): void {
     this.authService.sendOTPForm(this.emailForgot, this.otpCode, 'FORGOT_PASSWORD').subscribe({
       next: (response) => {
-        this.closeAllModals(); // Có thể điều hướng sang trang nhập mật khẩu mới
+        this.closeAllModals();
         this.otpCode = '';
         this.otpErrorMessage = '';
-        console.log('OTP (forgot) success', response);
+        this.tokenForgot = response.responseData.token;
+        this.openResetPasswordModal();
+        console.log('OTP (forgot) success', this.tokenForgot);
       },
       error: (error) => {
         console.error('OTP (forgot) failed', error);
         this.otpErrorMessage = 'Sai mã xác minh. Vui lòng thử lại.';
       }
     });
+  }
+
+  onResetPasswordSubmit(): void {
+    if (this.newPassword !== this.confirmNewPassword) {
+      this.passwordMismatch = true;
+      return;
+    }
+    this.passwordMismatch = false;
+    this.authService.sendResetPassword(this.tokenForgot, this.newPassword, this.confirmNewPassword).subscribe({
+      next: (response) => {
+        this.openLoginModal();
+        console.log('Reset password success', response);
+      },
+      error: (error) => {
+        console.error('Reset password failed', error);
+      }
+    })
+
   }
 
 }

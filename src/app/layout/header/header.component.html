@@ -199,7 +199,6 @@
         <a (click)="openForgotModal()" class="tw-text-sm tw-text-primary hover:tw-underline tw-font-roboto-medium">Quên mật khẩu?</a>
       </div>
     </form>
-
     <p class="tw-mt-6 tw-text-center tw-text-sm tw-text-gray-600">
       Bạn chưa có tài khoản?
     </p>
@@ -309,7 +308,7 @@
       </button>
     </form>
     <div class="tw-flex tw-items-center tw-justify-between tw-mb-1 tw-pt-10px">
-      <a href="#" class="tw-text-sm tw-text-primary hover:tw-underline tw-font-roboto-medium">Quên mật khẩu?</a>
+      <a (click)="openForgotModal()"  class="tw-text-sm tw-text-primary hover:tw-underline tw-font-roboto-medium">Quên mật khẩu?</a>
     </div>
     <p class="tw-text-center tw-text-sm tw-text-gray-600">
       Bạn chưa có tài khoản?
@@ -447,6 +446,69 @@
         Xác minh
       </button>
     </form>
+  </div>
+</div>
+<div *ngIf="isResetPasswordModalOpen"
+     class="tw-fixed tw-inset-0 tw-bg-black tw-bg-opacity-50 tw-flex tw-items-center tw-justify-center tw-z-50">
+  <div class="tw-bg-white tw-p-6 tw-rounded-lg tw-shadow-xl tw-w-full tw-max-w-md">
+    <div class="tw-relative">
+      <button
+        (click)="closeAllModals()"
+        class="tw-absolute tw-top-0 tw-right-0 tw-text-gray-500 hover:tw-text-gray-700 tw-text-2xl">
+        &times;
+      </button>
+    </div>
+    <h2 class="tw-text-lg tw-font-bold tw-text-center tw-mb-4">Đặt Lại Mật Khẩu</h2>
+    <form #resetPasswordForm="ngForm" (ngSubmit)="onResetPasswordSubmit()">
+
+      <!-- Mật khẩu mới -->
+      <input type="password"
+             name="newPassword"
+             [(ngModel)]="newPassword"
+             required
+             minlength="6"
+             #newPasswordModel="ngModel"
+             placeholder="Mật khẩu mới"
+             class="tw-w-full tw-p-2 tw-border tw-rounded-md tw-mb-1 tw-border-lightGray" />
+
+      <div *ngIf="newPasswordModel.invalid && (newPasswordModel.dirty || newPasswordModel.touched)"
+           class="tw-text-red tw-text-sm tw-mb-3">
+        <div *ngIf="newPasswordModel.errors?.['required']">Vui lòng nhập mật khẩu mới.</div>
+        <div *ngIf="newPasswordModel.errors?.['minlength']">
+          Mật khẩu phải có ít nhất 6 ký tự.
+        </div>
+      </div>
+
+      <!-- Xác nhận mật khẩu -->
+      <input type="password"
+             name="confirmNewPassword"
+             [(ngModel)]="confirmNewPassword"
+             required
+             minlength="6"
+             #confirmNewPasswordModel="ngModel"
+             placeholder="Xác nhận mật khẩu mới"
+             class="tw-w-full tw-p-2 tw-border tw-rounded-md tw-mb-1 tw-border-lightGray" />
+
+      <div *ngIf="confirmNewPasswordModel.invalid && (confirmNewPasswordModel.dirty || confirmNewPasswordModel.touched)"
+           class="tw-text-red tw-text-sm tw-mb-1">
+        <div *ngIf="confirmNewPasswordModel.errors?.['required']">Vui lòng xác nhận mật khẩu.</div>
+        <div *ngIf="confirmNewPasswordModel.errors?.['minlength']">
+          Mật khẩu phải có ít nhất 6 ký tự.
+        </div>
+      </div>
+
+      <!-- Kiểm tra không khớp -->
+      <div *ngIf="passwordMismatch" class="tw-text-red tw-text-sm tw-mb-3">
+        Mật khẩu xác nhận không khớp.
+      </div>
+
+      <button type="submit"
+              [disabled]="resetPasswordForm.invalid"
+              class="tw-w-full tw-bg-orange tw-text-white tw-py-2 tw-rounded-md hover:tw-bg-orange-brand">
+        Đặt lại mật khẩu
+      </button>
+    </form>
+
   </div>
 </div>
 

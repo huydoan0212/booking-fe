@@ -1,6 +1,8 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {Component, ElementRef, inject, OnInit, ViewChild} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import {ShowtimeService} from '../../../../service/showtime/api/showtime.service';
+import {ShowTimeApi} from '../../../../service/showtime/model/showtime.model';
 
 @Component({
   selector: 'app-show-times',
@@ -12,11 +14,14 @@ import { FormsModule } from '@angular/forms';
 export class ShowtimesComponent implements OnInit {
   @ViewChild('dayList') dayList!: ElementRef;
 
+  private showTimeList: ShowTimeApi.Response[] = [];
+
   public days: { weekday: string; date: string; isSelected: boolean }[] = [];
   public showtimes: string[] = ['09:30', '11:30', '12:30', '14:00', '15:00'];
-
+  private readonly showtimeService = inject(ShowtimeService);
   ngOnInit(): void {
     this.generateDays();
+    this.searchShowTime('3e4e6db0-70e0-4616-bd2f-4c20d8590400',1, 1);
   }
 
   generateDays(): void {
@@ -39,6 +44,20 @@ export class ShowtimesComponent implements OnInit {
       };
     });
   }
+  searchShowTime(movieId: string, page: number, take: number){
+    this.showtimeService.searchShowTime(movieId, page, take).subscribe({
+        next: result => {
+          this.showTimeList = result.responseData.rows
+          console.log(this.showTimeList);
+        },
+      error: error => {
+          console.log(error);
+      }
+      }
+    )
+  }
+
+
 
   scrollLeft(): void {
     if (this.dayList?.nativeElement) {
@@ -59,7 +78,6 @@ export class ShowtimesComponent implements OnInit {
 
   selectTime(time: string): void {
     console.log('Selected showtime:', time);
-    // TODO: xử lý tiếp theo nếu cần
   }
 }
 

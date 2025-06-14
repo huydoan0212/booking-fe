@@ -39,6 +39,20 @@ export class AuthService {
     );
   }
 
+  sendResetPassword(token: string, password: string, confirmPassword: string): Observable<any> {
+    const body = {
+      token,
+      password,
+      confirmPassword
+    };
+
+    return this.httpClient.post(
+      `${environment.API_DOMAIN}/api/user/reset-password`,
+      body
+    );
+  }
+
+
   saveUserInfo() {
     if (localStorage.getItem('token') !== null) {
       this.userData = jwtDecode(localStorage.getItem('token')!);

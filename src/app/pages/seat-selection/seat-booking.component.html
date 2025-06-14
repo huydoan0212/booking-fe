@@ -48,13 +48,17 @@
             class="tw-w-7 tw-h-6 tw-flex tw-items-center tw-justify-center
         tw-border-[1px] tw-border-lightGray tw-rounded tw-cursor-pointer
         tw-select-none tw-bg-white hover:tw-bg-orange hover:tw-text-white hover:tw-border-none "
+            [ngClass]="{
+        'tw-opacity-50 tw-pointer-events-none': isSeatBooked(row, seatNumber),
+        'tw-bg-white hover:tw-bg-orange hover:tw-text-white hover:tw-border-none': !isSeatBooked(row, seatNumber)
+      }"
           >
             {{ seatNumber }}
           </div>
         </div>
-        <div class="tw-font-bold tw-w-6 tw-text-center">
-          {{ row }}
-        </div>
+<!--        <div class="tw-font-bold tw-w-6 tw-text-center">-->
+<!--          {{ row }}-->
+<!--        </div>-->
       </div>
       <div class="tw-text-lightGray tw-text-xl tw-text-center">Màn hình</div>
       <div class="tw-h-2 tw-bg-orange tw-w-full tw-rounded"></div>

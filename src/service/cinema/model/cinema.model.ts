@@ -1,3 +1,5 @@
+import {CinemaHallApi} from '../../cinemaHall/model/cinemalHall.model';
+
 export namespace CinemaApi {
   export interface Request {
     name: string;
@@ -13,7 +15,7 @@ export namespace CinemaApi {
   }
 
   export interface Response {
-    id: number;
+    id: string;
     name: string;
     slug: string;
     latitude: number;
@@ -24,6 +26,7 @@ export namespace CinemaApi {
     imagePortrait: string;
     imgUrls: string[];
     sortOrder: number;
+    cinemaHalls: CinemaHallApi.Response[];
     createdAt: string;
   }
 }

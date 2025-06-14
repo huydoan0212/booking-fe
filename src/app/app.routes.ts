@@ -3,6 +3,7 @@
   import {FoodComboSelectionComponent} from './pages/food-combo-selection/food-combo-selection.component';
   import {CheckoutComponent} from './pages/checkout/checkout.component';
   import {ProfileComponent} from './pages/profile/profile.component';
+  import {SearchMovieComponent} from './pages/search-movie/search-movie.component';
   import {HomeComponent} from './pages/home/home/home.component';
   import {MovieDetailComponent} from './pages/movie-detail/movie-detail/movie-detail.component';
   export const routes: Routes = [
@@ -32,6 +33,9 @@
     {
       path: 'profile',
       component: ProfileComponent,
+    },
+    {
+      path:'search',
+      component: SearchMovieComponent,
     }
-
   ];

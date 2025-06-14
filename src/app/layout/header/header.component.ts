@@ -1,5 +1,5 @@
-import { Component, ElementRef, inject, ViewChild } from '@angular/core';
-import { NgClass, NgForOf, NgIf } from '@angular/common';
+import {Component, ElementRef, inject, OnInit, PLATFORM_ID, ViewChild} from '@angular/core';
+import {isPlatformBrowser, NgClass, NgForOf, NgIf} from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../service/auth/auth.service';
@@ -11,7 +11,20 @@ import { AuthService } from '../../../service/auth/auth.service';
   styleUrls: ['./header.component.scss'],
   imports: [NgClass, NgIf, FormsModule]
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
+  ngOnInit(): void {
+
+  }
+
+  onSearch(query: string): void {
+    const trimmed = query.trim();
+    if (trimmed) {
+      this.router.navigate(['/search'], {
+        queryParams: { q: trimmed }
+      });
+    }
+  }
+
   isMenuOpen = false;
   showSearch = false;
 
@@ -21,6 +34,16 @@ export class HeaderComponent {
   isForgotModalOpen = false;
   isOtpForgotModalOpen = false;
   isResetPasswordModalOpen = false;
+
+  // lấy token từ localStorage
+  private readonly pLATFORM_ID = inject(PLATFORM_ID);
+  getToken(): string | null {
+    if (isPlatformBrowser(this.pLATFORM_ID)) {
+      return localStorage.getItem('token');
+    } else {
+      return null;
+    }
+  }
 
   loginCredentials = {
     username: '',
@@ -51,6 +74,8 @@ export class HeaderComponent {
   private readonly router = inject(Router);
 
   @ViewChild('searchInput') searchInputRef!: ElementRef;
+
+
 
   closeAllModals(): void {
     this.isLoginModalOpen = false;

@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
+import {Component, inject, OnInit} from '@angular/core';
+import {ActivatedRoute, Router, Routes} from '@angular/router';
 import {TicketService} from '../../../service/ticket/api/ticket.service';
 import {LockTicket, TicketApi} from '../../../service/ticket/model/ticket.model';
 import {StompService} from '../../service/stomp.service';
@@ -15,8 +15,10 @@ import {Message} from '@stomp/stompjs';
   imports: [CommonModule, TicketSummaryComponent]
 })
 export class SeatBookingComponent implements OnInit {
+  private readonly activatedRoute = inject(ActivatedRoute);
+
   userId = '79d8db34-7d87-4d7e-a5f1-af6b87f49c65';
-  showtimeId = 'b5f0b94b-2b39-4591-b7f2-d0eaa39d6b88';
+  showtimeId!: string;
 
   // Danh sách vé lấy từ backend
   tickets: TicketApi.Response[] = [];
@@ -40,6 +42,18 @@ export class SeatBookingComponent implements OnInit {
   ngOnInit(): void {
     this.loadTickets();
     this.connectWebSocket();
+// 1. Lấy showtimeId từ URL trước
+    this.activatedRoute.paramMap.subscribe(params => {
+      const id = params.get('id');
+      if (id) {
+        this.showtimeId = id;
+        // 2. Sau khi có id mới load và connect
+        this.loadTickets();
+        this.connectWebSocket();
+      } else {
+        console.error('No showtimeId in URL');
+      }
+    });
     // this.checkLockTicketOnServer();
   }
 
@@ -57,20 +71,20 @@ export class SeatBookingComponent implements OnInit {
         (message: Message) => {
           const payload = JSON.parse(message.body);
           const ticketId: string = payload.ticketId;
-          const status: string   = payload.status;   // "LOCKED" | "UNLOCKED" | "UNLOCK_TIMEOUT" | "BOOKED"
-          const owner: string    = payload.userId;   // user hành động
+          const status: string = payload.status;   // "LOCKED" | "UNLOCKED" | "UNLOCK_TIMEOUT" | "BOOKED"
+          const owner: string = payload.userId;   // user hành động
 
           // **Update UI ngay ở đây** (không gọi thêm subscribe)
           switch (status) {
             case 'LOCKED':
               if (owner === this.userId) {
-                this.seatStatusMap[ticketId] = { status: 'LOCKED_BY_ME', lockedBy: owner };
+                this.seatStatusMap[ticketId] = {status: 'LOCKED_BY_ME', lockedBy: owner};
               } else {
-                this.seatStatusMap[ticketId] = { status: 'LOCKED', lockedBy: owner };
+                this.seatStatusMap[ticketId] = {status: 'LOCKED', lockedBy: owner};
               }
               break;
             case 'UNLOCKED':
-              this.seatStatusMap[ticketId] = { status: 'AVAILABLE' };
+              this.seatStatusMap[ticketId] = {status: 'AVAILABLE'};
               break;
             case 'UNLOCK_TIMEOUT':
               if (owner === this.userId) {
@@ -78,11 +92,11 @@ export class SeatBookingComponent implements OnInit {
                 this.router.navigateByUrl('/');
                 return;
               } else {
-                this.seatStatusMap[ticketId] = { status: 'AVAILABLE' };
+                this.seatStatusMap[ticketId] = {status: 'AVAILABLE'};
               }
               break;
             case 'BOOKED':
-              this.seatStatusMap[ticketId] = { status: 'BOOKED' };
+              this.seatStatusMap[ticketId] = {status: 'BOOKED'};
               break;
           }
 
@@ -95,9 +109,9 @@ export class SeatBookingComponent implements OnInit {
       this.stompService.subscribeUserQueue((message: Message) => {
         const payload = JSON.parse(message.body);
         const ticketId: string = payload.ticketId;
-        const owner: string    = payload.owner;
+        const owner: string = payload.owner;
         alert(`Ghế ${ticketId} đã bị người khác chọn (user ${owner}). Vui lòng chọn ghế khác.`);
-        this.seatStatusMap[ticketId] = { status: 'AVAILABLE' };
+        this.seatStatusMap[ticketId] = {status: 'AVAILABLE'};
       });
     };
   }
@@ -190,7 +204,7 @@ export class SeatBookingComponent implements OnInit {
 
     if (info.status === 'AVAILABLE') {
       // 1. Cập nhật UI: AVAILABLE → LOCKED_BY_ME
-      this.seatStatusMap[ticketId] = { status: 'LOCKED_BY_ME', lockedBy: this.userId };
+      this.seatStatusMap[ticketId] = {status: 'LOCKED_BY_ME', lockedBy: this.userId};
       this.mySelected.add(ticketId);
       console.log('Sau khi gán, seatStatusMap[ticketId]=', this.seatStatusMap[ticketId]);
       // 2. Gọi thẳng lock-seat
@@ -199,10 +213,9 @@ export class SeatBookingComponent implements OnInit {
         ticketId: ticketId,
         userId: this.userId
       });
-    }
-    else if (info.status === 'LOCKED_BY_ME') {
+    } else if (info.status === 'LOCKED_BY_ME') {
       // 1. Cập nhật UI: LOCKED_BY_ME → AVAILABLE
-      this.seatStatusMap[ticketId] = { status: 'AVAILABLE' };
+      this.seatStatusMap[ticketId] = {status: 'AVAILABLE'};
       this.mySelected.delete(ticketId);
       console.log('Sau khi gán, seatStatusMap[ticketId]=', this.seatStatusMap[ticketId]);
 

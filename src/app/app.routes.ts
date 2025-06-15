@@ -18,7 +18,7 @@
     { path: 'movie/:id',
       component: MovieDetailComponent },
     {
-      path: 'seat-booking',
+      path: 'seat-booking/:id',
       component: SeatBookingComponent,
     },
     {

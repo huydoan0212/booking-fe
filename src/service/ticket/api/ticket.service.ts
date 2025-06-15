@@ -14,7 +14,8 @@ import {StompService} from '../../../app/service/stomp.service';
 export class TicketService {
   constructor(private _http: HttpClient, private stompService: StompService) {
   }
-  getTicketByShowTimeId(showTimeId: string) {
+
+    getTicketByShowTimeId(showTimeId: string | null) {
     return this._http.get<ResponseResult<TicketApi.Response[]>>(`${environment.API_DOMAIN}/ticket/showTime/${showTimeId}`,
       {
         context: new HttpContext().set(REQUIRE_AUTH, false),
@@ -26,7 +27,7 @@ export class TicketService {
     return this._http.post<void>(`${environment.API_DOMAIN}/ticket/start-hold`, req);
   }
 
-  sendLockSeat(req: LockTicket.Request): void {
+  sendLockSeat(req: { showTimeId: string | null; userId: string; ticketId: string }): void {
     console.log(req.showTimeId)
     this.stompService.send('/app/lock-seat', {
       showTimeId: req.showTimeId,
@@ -35,7 +36,7 @@ export class TicketService {
     });
   }
 
-  sendUnlockSeat(req: LockTicket.Request): void {
+  sendUnlockSeat(req: { showTimeId: string | null; userId: string; ticketId: string }): void {
     this.stompService.send('/app/unlock-seat', {
       showtimeId: req.showTimeId,
       ticketId: req.ticketId,

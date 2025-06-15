@@ -58,9 +58,12 @@
 <div class="tw-pt-30px" *ngIf="selectedDay">
   <ng-container *ngIf="cinemas.length; else noCinemas">
 
-    <!-- Chọn list sẽ lặp: tất cả hay một -->
+    <!-- Nếu chọn 'Tất cả rạp', lặp từ phần tử thứ nhất trở đi -->
     <ng-container *ngFor="let cinemaName of
-         (selectedCinema === 'Tất cả rạp' ? cinemas : [selectedCinema])">
+         (selectedCinema === 'Tất cả rạp'
+            ? cinemas.slice(1)
+            : [selectedCinema]
+         )">
 
       <div class="tw-mb-6">
         <h2 class="tw-text-xl tw-pb-2 tw-font-bold">{{ cinemaName }}</h2>
@@ -69,7 +72,7 @@
           <div class="tw-flex tw-items-center tw-space-x-6">
             <button
               *ngFor="let show of getShowtimesForCinema(cinemaName)"
-              (click)="selectTime(show)"
+              (click)="selectTime(show); goToBooking(show.id)"
               class="tw-px-4 tw-py-2 tw-rounded-md tw-border tw-border-[#d3d3d3] tw-bg-white tw-text-black hover:tw-bg-[#034ea2] hover:tw-text-white transition duration-300"
             >
               {{ show.time }}
@@ -95,5 +98,6 @@
     <p class="tw-text-gray-500">Không có showtime nào.</p>
   </ng-template>
 </div>
+
 
 

@@ -4,6 +4,8 @@ import {FormsModule} from '@angular/forms';
 import {ShowtimeService} from '../../../../service/showtime/api/showtime.service';
 import {ShowTimeApi} from '../../../../service/showtime/model/showtime.model';
 import {ResponseResult, Rows} from '../../../shared/data-access/interface/response.type';
+import {routes} from '../../../app.routes';
+import {Router} from '@angular/router';
 
 interface ShowtimeDisplay {
   id: string;
@@ -29,6 +31,8 @@ interface DayWithShowtimes {
   styleUrls: ['./showtimes.component.css']
 })
 export class ShowtimesComponent implements OnInit {
+  constructor(private routes: Router) {
+  }
   @ViewChild('dayList', { static: true }) dayList!: ElementRef;
 
   public days: DayWithShowtimes[] = [];
@@ -158,5 +162,9 @@ export class ShowtimesComponent implements OnInit {
         ? true
         : s.cinemaName === cinemaName
       );
+  }
+  /** Thay thế selectTime bằng goToBooking */
+  goToBooking(showId: string): void {
+    this.routes.navigate(['/seat-booking', showId]);
   }
 }

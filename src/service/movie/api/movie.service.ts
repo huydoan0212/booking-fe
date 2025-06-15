@@ -3,12 +3,16 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '../../../environments/environment.development';
 import {MovieApi} from '../model/movie.model';
 import {ResponseResult} from '../../../app/shared/data-access/interface/response.type';
+import {Observable} from 'rxjs';
+import {ShowTimeApi} from '../../showtime/model/showtime.model';
+
 @Injectable({
   providedIn: 'root'
 })
 export class MovieService {
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) {
+  }
 
   getMovies(filter: string, page: number, take: number, sortBy: string) {
     const params = new HttpParams()
@@ -17,9 +21,47 @@ export class MovieService {
       .set('take', take.toString())
       .set('sortBy', sortBy);
 
-    return this.httpClient.get(`${environment.API_DOMAIN}/movie/search`, { params });
+    return this.httpClient.get(`${environment.API_DOMAIN}/movie/search`, {params});
   }
+
   getMovieDetail(id: string | null) {
     return this.httpClient.get<ResponseResult<MovieApi.Response>>(`${environment.API_DOMAIN}/movie/${id}`)
   }
+
+  searchMovies(name: string = '', page: number, take: number, sortDirection: string): Observable<any> {
+    const filter = name ? `name ~ '${name}'` : '';
+
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('take', take.toString())
+      .set('sortDirection', sortDirection);
+
+    if (filter) {
+      params = params.set('filter', filter);
+    }
+
+    return this.httpClient.get(`${environment.API_DOMAIN}/movie/search`, {params});
+  }
+
+  getMoviesByCategory(
+    categoryId: string = '',
+    page: number,
+    take: number,
+    sortDirection: string
+  ): Observable<any> {
+    const filter = categoryId ? `categories.id='${categoryId}'` : '';
+
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('take', take.toString())
+      .set('sortDirection', sortDirection);
+
+    if (filter) {
+      params = params.set('filter', filter);
+    }
+
+    return this.httpClient.get(`${environment.API_DOMAIN}/movie/search`, {params});
+  }
+
+
 }

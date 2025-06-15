@@ -6,16 +6,32 @@
             d="M21 21l-4.35-4.35M10 18a8 8 0 100-16 8 8 0 000 16z" />
     </svg>
     <p class="tw-text-xl tw-font-semibold">Không tìm thấy phim nào</p>
-    <p class="tw-text-sm tw-text-gray-400">Hãy thử lại với từ khóa khác nhé!</p>
-  </div>
-  <div *ngIf="movies.length > 0" class="tw-mb-4 tw-text-lg tw-font-semibold tw-text-customDark">
-    Kết quả tìm kiếm cho từ khóa: "<span class="tw-text-orange">{{ name }}</span>"
+    <p class="tw-text-sm tw-text-gray-400">Hãy thử lại với thể loại khác nhé!</p>
   </div>
   <div *ngIf="movies.length > 0" class="tw-grid tw-grid-cols-[repeat(auto-fill,_minmax(250px,_1fr))] tw-gap-6">
     <div *ngFor="let movie of movies">
-      <div (click)="goToDetail(movie)" class="tw-cursor-pointer hover:tw-shadow-lg tw-transition tw-rounded-xl tw-bg-white">
+      <div (click)="goToDetail(movie)" class="tw-cursor-pointer">
         <app-movie-card [movie]="movie"></app-movie-card>
       </div>
     </div>
   </div>
+</div>
+<div class="tw-flex tw-justify-center tw-gap-4 tw-mt-6 tw-mb-4">
+  <button
+    (click)="prevPage()"
+    [disabled]="page <= 1"
+    class="tw-px-4 tw-py-2 tw-bg-orange tw-text-white tw-rounded-md tw-shadow-md tw-transition
+             hover:tw-bg-orange-brand tw-cursor-pointer"
+  >
+    Trước
+  </button>
+  <span class="tw-flex tw-items-center tw-font-medium">Trang {{page}}</span>
+  <button
+    (click)="nextPage()"
+    [disabled]="!hasNextPage"
+    class="tw-px-4 tw-py-2 tw-bg-orange tw-text-white tw-rounded-md tw-shadow-md tw-transition
+           hover:tw-bg-orange-brand tw-cursor-pointer"
+  >
+    Sau
+  </button>
 </div>

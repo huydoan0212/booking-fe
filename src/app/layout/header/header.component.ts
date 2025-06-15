@@ -1,21 +1,46 @@
 import {Component, ElementRef, inject, OnInit, PLATFORM_ID, ViewChild} from '@angular/core';
-import {isPlatformBrowser, NgClass, NgForOf, NgIf} from '@angular/common';
-import { Router } from '@angular/router';
+import {CommonModule, isPlatformBrowser, NgClass, NgForOf, NgIf} from '@angular/common';
+import {Router, RouterLink} from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../service/auth/auth.service';
+import {CategoryService} from '../../../service/category/api/category.service';
+import {CategoryApi} from '../../../service/category/model/category.model';
+import {Rows} from '../../shared/data-access/interface/response.type';
 
 @Component({
   selector: 'app-header',
   standalone: true,
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
-  imports: [NgClass, NgIf, FormsModule]
+  imports: [NgClass, NgIf, FormsModule, RouterLink, NgForOf, CommonModule]
 })
 export class HeaderComponent implements OnInit {
+  private readonly authService = inject(AuthService);
+  private readonly categoryService = inject(CategoryService);
+  private readonly router = inject(Router);
+  categories: CategoryApi.Response[] = [];
   ngOnInit(): void {
-
+    this.getCategories()
+  }
+  dropdownOpen = false;
+  toggleDropdown(): void {
+    this.dropdownOpen = !this.dropdownOpen;
   }
 
+  onCategorySelect(category: CategoryApi.Response): void {
+    this.router.navigate(['/movies-by-category', category.id]);
+  }
+
+  getCategories(): void {
+    this.categoryService.getAllCategories().subscribe({
+      next: (data) => {
+        this.categories = data ?? [];
+      },
+      error: (error) => {
+        console.error('Lỗi khi lấy thể loại:', error);
+      }
+    });
+  }
   onSearch(query: string): void {
     const trimmed = query.trim();
     if (trimmed) {
@@ -68,10 +93,6 @@ export class HeaderComponent implements OnInit {
   newPassword: string = '';
   confirmNewPassword: string = '';
   passwordMismatch: boolean = false;
-
-
-  private readonly authService = inject(AuthService);
-  private readonly router = inject(Router);
 
   @ViewChild('searchInput') searchInputRef!: ElementRef;
 
@@ -136,38 +157,51 @@ export class HeaderComponent implements OnInit {
   generateRandom7DigitString(): string {
     return Math.floor(1000000 + Math.random() * 9000000).toString();
   }
-
+  isLoading = false;
   onLoginSubmit(): void {
+    this.isLoading = true;
     this.authService.sendLoginForm(this.loginCredentials).subscribe({
       next: (response) => {
-        this.authService.saveUserInfo();
+        const token = response?.responseData?.token;
+        this.isLoading = false;
+        if (token) {
+          localStorage.setItem('token', token);
+          this.authService.saveUserInfo();
+        }
         this.router.navigate(['/home']);
         this.closeAllModals();
         console.log('Login success', response);
       },
       error: (error) => {
         console.error('Login failed', error);
+        this.isLoading = false;
       }
     });
   }
 
+
   onRegisterSubmit(): void {
+    this.isLoading = true;
     this.registerCredentials.idNumber = this.generateRandom7DigitString();
     this.authService.sendRegisterForm(this.registerCredentials).subscribe({
       next: (response) => {
+        this.isLoading = false;
         this.otpUsername = this.registerCredentials.username;
         this.openOtpModal();
         console.log('Register success', response);
       },
       error: (error) => {
         console.error('Register failed', error);
+        this.isLoading = false;
       }
     });
   }
 
   onOtpSubmit(): void {
+    this.isLoading = true;
     this.authService.sendOTPForm(this.otpUsername, this.otpCode, 'REGISTER').subscribe({
       next: (response) => {
+        this.isLoading = false;
         this.openLoginModal();
         this.otpCode = '';
         this.otpErrorMessage = '';
@@ -176,25 +210,31 @@ export class HeaderComponent implements OnInit {
       error: (error) => {
         console.error('OTP failed', error);
         this.otpErrorMessage = 'Sai mã xác minh. Vui lòng thử lại.';
+        this.isLoading = false;
       }
     });
   }
 
   onForgotPassword(): void {
+    this.isLoading = true;
     this.authService.sendForgotPassword(this.emailForgot).subscribe({
       next: (response) => {
+        this.isLoading = false;
         this.openOtpForgotModal();
         console.log('ForgotPassword success', response);
       },
       error: (error) => {
         console.error('ForgotPassword failed', error);
+        this.isLoading = false;
       }
     });
   }
 
   onOtpForgotSubmit(): void {
+    this.isLoading = true;
     this.authService.sendOTPForm(this.emailForgot, this.otpCode, 'FORGOT_PASSWORD').subscribe({
       next: (response) => {
+        this.isLoading = false;
         this.closeAllModals();
         this.otpCode = '';
         this.otpErrorMessage = '';
@@ -203,6 +243,7 @@ export class HeaderComponent implements OnInit {
         console.log('OTP (forgot) success', this.tokenForgot);
       },
       error: (error) => {
+        this.isLoading = false;
         console.error('OTP (forgot) failed', error);
         this.otpErrorMessage = 'Sai mã xác minh. Vui lòng thử lại.';
       }
@@ -210,6 +251,7 @@ export class HeaderComponent implements OnInit {
   }
 
   onResetPasswordSubmit(): void {
+    this.isLoading = true;
     if (this.newPassword !== this.confirmNewPassword) {
       this.passwordMismatch = true;
       return;
@@ -217,11 +259,13 @@ export class HeaderComponent implements OnInit {
     this.passwordMismatch = false;
     this.authService.sendResetPassword(this.tokenForgot, this.newPassword, this.confirmNewPassword).subscribe({
       next: (response) => {
+        this.isLoading = false;
         this.openLoginModal();
         console.log('Reset password success', response);
       },
       error: (error) => {
         console.error('Reset password failed', error);
+        this.isLoading = false;
       }
     })
 

@@ -14,53 +14,60 @@
 
   <!-- Quick Booking Section -->
 
-  <div class="tw-flex tw-items-center tw-gap-4 tw-bg-white tw-max-w-[1200px] tw-h-[48px] tw-my-[10px] tw-mx-auto tw-rounded-lg tw-shadow-md px-2">
-    <!-- Step 1: Active -->
-    <div class="tw-flex tw-items-center tw-gap-1 tw-text-[#333] tw-font-medium tw-mr-auto">
-      <div class="tw-w-5 tw-h-5 tw-rounded-full tw-bg-orange-500 tw-text-white tw-text-xs tw-font-bold tw-flex tw-items-center tw-justify-center">1</div>
-      <span class="tw-text-sm">Chọn Phim</span>
+<!--  <div class="tw-flex tw-items-center tw-gap-4 tw-bg-white tw-max-w-[1200px] tw-h-[48px] tw-my-[10px] tw-mx-auto tw-rounded-lg tw-shadow-md px-2">-->
+<!--    &lt;!&ndash; Step 1: Active &ndash;&gt;-->
+<!--    <div class="tw-flex tw-items-center tw-gap-1 tw-text-[#333] tw-font-medium tw-mr-auto">-->
+<!--      <div class="tw-w-5 tw-h-5 tw-rounded-full tw-bg-orange-500 tw-text-white tw-text-xs tw-font-bold tw-flex tw-items-center tw-justify-center">1</div>-->
+<!--      <span class="tw-text-sm">Chọn Phim</span>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Step 2 &ndash;&gt;-->
+<!--    <div class="tw-flex tw-items-center tw-gap-1 tw-text-[#bbb] tw-mr-auto">-->
+<!--      <div class="tw-w-5 tw-h-5 tw-rounded-full tw-bg-orange-500 tw-text-white tw-text-xs tw-font-bold tw-flex tw-items-center tw-justify-center">2</div>-->
+<!--      <span class="tw-text-sm">Chọn Rạp</span>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Step 3 &ndash;&gt;-->
+<!--    <div class="tw-flex tw-items-center tw-gap-1 tw-text-[#bbb] tw-mr-auto">-->
+<!--      <div class="tw-w-5 tw-h-5 tw-rounded-full tw-bg-orange-500 tw-text-white tw-text-xs tw-font-bold tw-flex tw-items-center tw-justify-center">3</div>-->
+<!--      <span class="tw-text-sm">Chọn Ngày</span>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Step 4 &ndash;&gt;-->
+<!--    <div class="tw-flex tw-items-center tw-gap-1 tw-text-[#bbb] tw-mr-auto">-->
+<!--      <div class="tw-w-5 tw-h-5 tw-rounded-full tw-bg-orange-500 tw-text-white tw-text-xs tw-font-bold tw-flex tw-items-center tw-justify-center">4</div>-->
+<!--      <span class="tw-text-sm">Chọn Suất</span>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Button &ndash;&gt;-->
+<!--    <button class="tw-bg-[#fcae7a] tw-h-full tw-w-[180px] tw-text-[#555] tw-font-medium tw-text-base tw-rounded tw-cursor-pointer">-->
+<!--      Mua vé nhanh-->
+<!--    </button>-->
+<!--  </div>-->
+
+  <div class="tw-flex tw-space-x-4 tw-mx-auto tw-max-w-[1200px] tw-p-30px tw-text-xl">
+    <div
+      class="tw-font-bold tw-cursor-pointer"
+      [ngClass]="{
+    'tw-text-[#034ea2] tw-font-semibold': !isFiltered,
+    'tw-text-[#777777]': isFiltered
+  }"
+      (click)="showAllMovies()"
+    >
+      PHIM
     </div>
-
-    <!-- Step 2 -->
-    <div class="tw-flex tw-items-center tw-gap-1 tw-text-[#bbb] tw-mr-auto">
-      <div class="tw-w-5 tw-h-5 tw-rounded-full tw-bg-orange-500 tw-text-white tw-text-xs tw-font-bold tw-flex tw-items-center tw-justify-center">2</div>
-      <span class="tw-text-sm">Chọn Rạp</span>
-    </div>
-
-    <!-- Step 3 -->
-    <div class="tw-flex tw-items-center tw-gap-1 tw-text-[#bbb] tw-mr-auto">
-      <div class="tw-w-5 tw-h-5 tw-rounded-full tw-bg-orange-500 tw-text-white tw-text-xs tw-font-bold tw-flex tw-items-center tw-justify-center">3</div>
-      <span class="tw-text-sm">Chọn Ngày</span>
-    </div>
-
-    <!-- Step 4 -->
-    <div class="tw-flex tw-items-center tw-gap-1 tw-text-[#bbb] tw-mr-auto">
-      <div class="tw-w-5 tw-h-5 tw-rounded-full tw-bg-orange-500 tw-text-white tw-text-xs tw-font-bold tw-flex tw-items-center tw-justify-center">4</div>
-      <span class="tw-text-sm">Chọn Suất</span>
-    </div>
-
-    <!-- Button -->
-    <button class="tw-bg-[#fcae7a] tw-h-full tw-w-[180px] tw-text-[#555] tw-font-medium tw-text-base tw-rounded tw-cursor-pointer">
-      Mua vé nhanh
-    </button>
-  </div>
-
-
-
-  <div class="tw-flex tw-space-x-4 tw-mx-auto tw-max-w-[1200px] tw-p-30px tw-text-lg">
-    <div class="tw-font-bold ">PHIM</div>
-    <div class="tw-flex tw-space-x-4">
+    <div class="tw-flex tw-space-x-4 mb-4">
       <div
         class="tw-cursor-pointer"
         [ngClass]="{
       'tw-text-[#034ea2] tw-font-semibold': activeTab === 'dangChieu',
       'tw-text-[#777777]': activeTab !== 'dangChieu'
     }"
-        (click)="activeTab = 'dangChieu'"
+        (click)="filterMoviesByTab('dangChieu')"
       >
     <span
       [ngClass]="{
-        'tw-border-b-2 tw-border-[#034ea2] ': activeTab === 'dangChieu'
+        'tw-border-b-2 tw-border-[#034ea2]': activeTab === 'dangChieu'
       }"
     >
       Đang chiếu
@@ -72,34 +79,18 @@
       'tw-text-[#034ea2] tw-font-semibold': activeTab === 'sapChieu',
       'tw-text-[#777777]': activeTab !== 'sapChieu'
     }"
-        (click)="activeTab = 'sapChieu'"
+        (click)="filterMoviesByTab('sapChieu')"
       >
     <span
       [ngClass]="{
-        'tw-border-b-2 tw-border-[#034ea2] ': activeTab === 'sapChieu'
+        'tw-border-b-2 tw-border-[#034ea2]': activeTab === 'sapChieu'
       }"
     >
       Sắp chiếu
     </span>
       </div>
-
-      <div
-        class="tw-cursor-pointer"
-        [ngClass]="{
-      'tw-text-[#034ea2] tw-font-semibold': activeTab === 'imax',
-      'tw-text-[#777777]': activeTab !== 'imax'
-    }"
-        (click)="activeTab = 'imax'"
-      >
-    <span
-      [ngClass]="{
-        'tw-border-b-2 tw-border-[#034ea2] ': activeTab === 'imax'
-      }"
-    >
-      Phim IMAX
-    </span>
-      </div>
     </div>
+
     <div class="tw-flex tw-items-center tw-text-[#034ea2]">
       <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 512 512">
         <path fill="#034ea2"
@@ -110,13 +101,14 @@
   </div>
 
   <div class="tw-grid tw-grid-cols-[repeat(auto-fill,_minmax(250px,_1fr))] tw-gap-6 tw-max-w-screen-xl tw-px-6 tw-mx-auto sm:tw-grid-cols-1 md:tw-grid-cols-[repeat(auto-fill,_minmax(250px,_1fr))]">
-    <div *ngFor="let movie of movies">
-      <div (click)="goToDetail(movie)" class="tw-cursor-pointer">
-        <app-movie-card [movie]="movie"></app-movie-card>
-      </div>
-    </div>
+    <app-movie-card
+      *ngFor="let movie of filteredMovies"
+      [movie]="movie"
+      (click)="goToDetail(movie)"
+    ></app-movie-card>
+
   </div>
-  <div class="tw-flex tw-justify-center tw-gap-4 tw-mt-6">
+  <div class="tw-flex tw-justify-center tw-gap-4 tw-mt-6 tw-mb-4">
     <button
       (click)="prevPage()"
       [disabled]="page <= 1"

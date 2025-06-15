@@ -1,8 +1,25 @@
 import {Component, ElementRef, inject, OnInit, ViewChild} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
 import {ShowtimeService} from '../../../../service/showtime/api/showtime.service';
 import {ShowTimeApi} from '../../../../service/showtime/model/showtime.model';
+import {ResponseResult, Rows} from '../../../shared/data-access/interface/response.type';
+
+interface ShowtimeDisplay {
+  id: string;
+  time: string;
+  language: string;
+  subtitle: string;
+  screenFormat: string;
+  cinemaName: string;
+}
+
+interface DayWithShowtimes {
+  date: Date;
+  weekday: string;
+  isSelected: boolean;
+  showtimes: ShowtimeDisplay[];
+}
 
 @Component({
   selector: 'app-show-times',
@@ -12,72 +29,134 @@ import {ShowTimeApi} from '../../../../service/showtime/model/showtime.model';
   styleUrls: ['./showtimes.component.css']
 })
 export class ShowtimesComponent implements OnInit {
-  @ViewChild('dayList') dayList!: ElementRef;
+  @ViewChild('dayList', { static: true }) dayList!: ElementRef;
 
-  private showTimeList: ShowTimeApi.Response[] = [];
+  public days: DayWithShowtimes[] = [];
+  public selectedDay!: DayWithShowtimes;
 
-  public days: { weekday: string; date: string; isSelected: boolean }[] = [];
-  public showtimes: string[] = ['09:30', '11:30', '12:30', '14:00', '15:00'];
+  /** Danh sách rạp thực sự có showtime */
+  public cinemas: string[] = ['Tất cả rạp','Galaxy Nguyễn Du','Galaxy Sala','Galaxy Tân Bình','Galaxy Kinh Dương Vương',
+    'Galaxy Quang Trung','Galaxy Bến Tre','Galaxy Mipec Long Biên','Galaxy Đà Nẵng',
+    'Galaxy Cà Mau','Galaxy Trung Chánh','Galaxy Huỳnh Tấn Phát','Galaxy Vinh',
+    'Galaxy Hải Phòng','Galaxy Nguyễn Văn Quá','Galaxy Buôn Ma Thuột',
+    'Galaxy Long Xuyên','Galaxy Co.opXtra Linh Trung','Galaxy Nha Trang Center',
+    'Galaxy Trường Chinh','Galaxy GO! Mall Bà Rịa','Galaxy Aeon Mall Huế',
+    'Galaxy Parc Mall Q8'];
+  /** 'Tất cả rạp' hoặc tên rạp cụ thể */
+  public selectedCinema = 'Tất cả rạp';
+
+  private rawShowTimes: ShowTimeApi.Response[] = [];
   private readonly showtimeService = inject(ShowtimeService);
+
+  private readonly movieId = 'c060c5fa-0d30-4476-9e1d-fa8ced95fcb4';
+  private readonly page = 1;
+  private readonly take = 200;
+
   ngOnInit(): void {
-    this.generateDays();
-    this.searchShowTime('3e4e6db0-70e0-4616-bd2f-4c20d8590400',1, 1);
+    this.initDays();
+    this.selectedDay = this.days[0];
+    this.loadShowTimes();
   }
 
-  generateDays(): void {
-    const weekdays = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+  private initDays(): void {
+    const weekdays = ['Chủ Nhật','Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy'];
     const today = new Date();
-
-    this.days = Array.from({ length: 7 }, (_, i) => {
-      const date = new Date(today);
-      date.setDate(today.getDate() + i);
-
-      const isToday = i === 0;
-      const weekday = isToday ? 'Hôm Nay' : weekdays[date.getDay()];
-      const day = String(date.getDate()).padStart(2, '0');
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-
+    this.days = Array.from({ length: 8 }, (_, i) => {
+      const d = new Date(today);
+      d.setDate(today.getDate() + i);
       return {
-        weekday,
-        date: `${day}/${month}`,
-        isSelected: isToday
+        date: d,
+        weekday: i === 0 ? 'Hôm Nay' : weekdays[d.getDay()],
+        isSelected: i === 0,
+        showtimes: []
       };
     });
   }
-  searchShowTime(movieId: string, page: number, take: number){
-    this.showtimeService.searchShowTime(movieId, page, take).subscribe({
-        next: result => {
-          this.showTimeList = result.responseData.rows
-          console.log(this.showTimeList);
+
+  private loadShowTimes(): void {
+    this.showtimeService
+      .searchShowTime(
+        this.movieId,
+        this.page,
+        this.take,
+        '', // bỏ location filter
+        ''  // bỏ cinemaName filter
+      )
+      .subscribe({
+        next: (res: ResponseResult<Rows<ShowTimeApi.Response>>) => {
+          this.rawShowTimes = res.responseData?.rows ?? [];
+          this.mapShowTimesToDays();
+          // this.buildCinemaList();
+          this.selectedCinema = 'Tất cả rạp';
         },
-      error: error => {
-          console.log(error);
-      }
-      }
-    )
+        error: err => console.error('Fetch showtimes error', err)
+      });
   }
 
+  private mapShowTimesToDays(): void {
+    this.days.forEach(d => d.showtimes = []);
+    this.rawShowTimes.forEach(st => {
+      const dt = new Date(st.showTime);
+      const bucket = this.days.find(day =>
+        day.date.getFullYear() === dt.getFullYear() &&
+        day.date.getMonth()    === dt.getMonth() &&
+        day.date.getDate()     === dt.getDate()
+      );
+      if (!bucket) return;
+      const hh = String(dt.getHours()).padStart(2,'0');
+      const mm = String(dt.getMinutes()).padStart(2,'0');
+      bucket.showtimes.push({
+        id: st.id,
+        time: `${hh}:${mm}`,
+        language: st.language,
+        subtitle: st.subtitle,
+        screenFormat: st.screenFormat,
+        cinemaName: st.cinemaHall.cinema.name   // từ response
+      });
+    });
+    this.days.forEach(d =>
+      d.showtimes.sort((a,b) => a.time.localeCompare(b.time))
+    );
+  }
 
+  /** Tập hợp unique cinemaName từ tất cả showtimes */
+  // private buildCinemaList(): void {
+  //   const set = new Set<string>();
+  //   this.rawShowTimes.forEach(st =>
+  //     set.add(st.cinemaHall.cinema.name)
+  //   );
+  //   this.cinemas = ['Tất cả rạp', ...Array.from(set)];
+  // }
 
   scrollLeft(): void {
-    if (this.dayList?.nativeElement) {
-      this.dayList.nativeElement.scrollBy({ left: -96, behavior: 'smooth' });
-    }
+    this.dayList.nativeElement.scrollBy({ left: -96, behavior: 'smooth' });
   }
-
   scrollRight(): void {
-    if (this.dayList?.nativeElement) {
-      this.dayList.nativeElement.scrollBy({ left: 120, behavior: 'smooth' });
-    }
+    this.dayList.nativeElement.scrollBy({ left: 120, behavior: 'smooth' });
   }
 
-  selectDay(selectedDay: any): void {
-    this.days.forEach(day => day.isSelected = false);
-    selectedDay.isSelected = true;
+  selectDay(day: DayWithShowtimes): void {
+    this.days.forEach(d => d.isSelected = false);
+    day.isSelected = true;
+    this.selectedDay = day;
   }
 
-  selectTime(time: string): void {
-    console.log('Selected showtime:', time);
+  selectTime(show: ShowtimeDisplay): void {
+    console.log('Chọn suất:', show);
+    console.log('Rạp:', this.selectedCinema);
+  }
+
+  onCinemaChange(cinema: string): void {
+    this.selectedCinema = cinema;
+    // không gọi lại API, chỉ thay đổi hiển thị ở template
+  }
+
+  /** Lọc showtimes cho 1 rạp cụ thể hay tất cả */
+  getShowtimesForCinema(cinemaName: string): ShowtimeDisplay[] {
+    return this.selectedDay.showtimes
+      .filter(s => cinemaName === 'Tất cả rạp'
+        ? true
+        : s.cinemaName === cinemaName
+      );
   }
 }
-

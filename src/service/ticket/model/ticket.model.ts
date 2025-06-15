@@ -24,3 +24,16 @@ export namespace TicketApi {
     createdAt: string;
   }
 }
+export namespace StartHold {
+  export interface Request {
+    showTimeId: string;
+    userId: string;
+  }
+}
+export namespace LockTicket {
+  export interface Request {
+    showTimeId: string;
+    ticketId: string;
+    userId: string;
+  }
+}

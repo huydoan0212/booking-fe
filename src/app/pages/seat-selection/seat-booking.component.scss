@@ -1,0 +1,53 @@
+///* ==========================
+//   seat-booking.component.css
+//   ========================== */
+//
+///* Base chung cho mọi ô ghế */
+//.seat {
+//  @apply tw-flex tw-items-center tw-justify-center tw-rounded tw-select-none;
+//  /* Chiều cao cố định 1 hàng: 1.5rem = 24px (tw-h-6), chiều rộng 1 ô: 1.75rem = 28px (tw-w-7) */
+//  @apply tw-w-7 tw-h-6;
+//  @apply tw-px-3 tw-py-3 tw-bg-white tw-rounded-lg tw-border tw-border-lightGray;
+//  cursor: pointer;
+//}
+//
+///* ==========================
+//   Trạng thái ghế
+//   ========================== */
+///* 1) Ghế Đã bán (BOOKED) */
+//.booked {
+//  @apply tw-bg-lightGray tw-opacity-50 tw-pointer-events-none;
+//}
+//
+///* 2) Ghế Bị khóa bởi người khác (LOCKED) */
+//.locked {
+//  @apply tw-bg-red-300 tw-opacity-75 tw-pointer-events-none;
+//}
+//
+///* 3) Ghế đang chọn (LOCKED_BY_ME) */
+//.selected {
+//  @apply tw-bg-orange-brand tw-text-white;
+//}
+//
+///* 4) Ghế có thể chọn (AVAILABLE) */
+//.available {
+//  @apply tw-bg-white hover:tw-bg-orange hover:tw-text-white hover:tw-border-none;
+//}
+//
+///* ==========================
+//   Phân loại VIP / COUPLE / Standard (đơn)
+//   ========================== */
+///* VIP: viền softYellow */
+//.vip {
+//  @apply tw-border-softYellow;
+//}
+//
+///* GHẾ ĐÔI (COUPLE): viền deepBlue, width gấp đôi (khi apply trong template) */
+//.couple {
+//  @apply tw-border-deepBlue;
+//}
+//
+///* Standard (đơn) mặc định: viền lightGray */
+//.standard {
+//  @apply tw-border-lightGray;
+//}

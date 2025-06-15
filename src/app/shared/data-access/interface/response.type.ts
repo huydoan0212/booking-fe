@@ -5,7 +5,7 @@ export interface ResponseResult<T> {
   status: number | null;
   violations: T | null;
   path: string;
-  timestamp: number;
+  timestamp: string;
 }
 export interface Rows<T> {
   rows: T[];

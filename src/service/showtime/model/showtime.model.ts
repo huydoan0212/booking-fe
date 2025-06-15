@@ -17,7 +17,7 @@ export namespace ShowTimeApi {
     language: string;
     subtitle: string;
     screenFormat: string;
-    movie: MovieApi.Response;               // Reuse MovieApi.Response
+    // movie: MovieApi.Response;               // Reuse MovieApi.Response
     cinemaHall: CinemaHallApi.Response;     // Reuse CinemaHallApi.Response
     createdAt: string;
   }

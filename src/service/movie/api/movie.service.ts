@@ -17,9 +17,9 @@ export class MovieService {
       .set('take', take.toString())
       .set('sortBy', sortBy);
 
-    return this.httpClient.get(`${environment.API_DOMAIN}/api/movie/search`, { params });
+    return this.httpClient.get(`${environment.API_DOMAIN}/movie/search`, { params });
   }
   getMovieDetail(id: string | null) {
-    return this.httpClient.get<ResponseResult<MovieApi.Response>>(`${environment.API_DOMAIN}/api/movie/${id}`)
+    return this.httpClient.get<ResponseResult<MovieApi.Response>>(`${environment.API_DOMAIN}/movie/${id}`)
   }
 }

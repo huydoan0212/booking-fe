@@ -14,7 +14,8 @@ export namespace CinemaHallApi {
     totalSeats: number;
     screenType: string;
     soundSystem: string;
-    createdAt: string;          // ISO date string, ví dụ: "2025-06-01T09:30:00Z"
+    createdAt: string;
+    cinema: CinemaHallApi.Response;// ISO date string, ví dụ: "2025-06-01T09:30:00Z"
     seats: SeatApi.Response[];  // Sử dụng lại interface SeatApi.Response đã định nghĩa trước đó
   }
 }

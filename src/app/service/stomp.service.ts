@@ -10,7 +10,7 @@ export class StompService {
 
   constructor() {
     this.client = new Client({
-      webSocketFactory: () => new SockJS('http://localhost:8080/api/ws-ticket'), // KHÔNG có `/websocket`
+      webSocketFactory: () => new SockJS(`${environment.API_DOMAIN}/ws-ticket`), // KHÔNG có `/websocket`
       reconnectDelay: 5000,
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,

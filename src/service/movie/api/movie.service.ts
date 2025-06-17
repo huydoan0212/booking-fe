@@ -1,5 +1,5 @@
 import {inject, Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {environment} from '../../../environments/environment.development';
 import {MovieApi} from '../model/movie.model';
 import {ResponseResult} from '../../../app/shared/data-access/interface/response.type';
@@ -14,7 +14,7 @@ export class MovieService {
   constructor(private httpClient: HttpClient) {
   }
 
-  getMovies(filter: string, page: number, take: number, sortBy: string) {
+  getMovies(filter: string, page: number, take: number, sortBy: string): Observable<any>  {
     const params = new HttpParams()
       .set('filter', filter)
       .set('page', page.toString())
@@ -62,6 +62,16 @@ export class MovieService {
 
     return this.httpClient.get(`${environment.API_DOMAIN}/movie/search`, {params});
   }
+  deleteMovie(movieId: string): Observable<ResponseResult<any>> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
 
+    return this.httpClient.delete<ResponseResult<any>>(
+      `${environment.API_DOMAIN}/movie/${movieId}`,
+      { headers }
+    );
+  }
 
 }

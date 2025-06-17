@@ -1,10 +1,11 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpContext} from '@angular/common/http';
+import {HttpClient, HttpContext, HttpHeaders, HttpParams} from '@angular/common/http';
 import {CinemaApi} from '../model/cinema.model';
-
-import * as querystring from 'querystring';
 import {ResponseResult, Rows} from '../../../app/shared/data-access/interface/response.type';
 import {REQUIRE_AUTH} from '../../../app/shared/utils/interceptor/interceptors';
+import {map, Observable} from 'rxjs';
+import {CategoryApi} from '../../category/model/category.model';
+import {environment} from '../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
@@ -16,10 +17,15 @@ export class CinemaService {
     this._http = _http;
   }
 
-  getAllCinema() {
-    return this._http.get<ResponseResult<CinemaApi.Response>>('cinema/', {
-      context: new HttpContext().set(REQUIRE_AUTH, false)
-    })
+  // getAllCinema() {
+  //   return this._http.get<ResponseResult<CinemaApi.Response>>('cinema/', {
+  //     context: new HttpContext().set(REQUIRE_AUTH, false)
+  //   })
+  // }
+  getAllCinema(): Observable<any> {
+    return this._http
+      .get<ResponseResult<Rows<CategoryApi.Response[]>>>(`${environment.API_DOMAIN}/cinema/`)
+      .pipe(map((res) => res.responseData));
   }
 
   getCinemaListPagination(page: number, take: number, searchString: string) {
@@ -52,9 +58,33 @@ export class CinemaService {
     );
   }
 
-  deleteCinema(cinemaId: string){
+  deleteCinema(cinemaId: string): Observable<ResponseResult<any>> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
     return this._http.delete<ResponseResult<any>>(
-      `cinema/${cinemaId}`
-    )
+      `${environment.API_DOMAIN}/cinema/${cinemaId}`,
+      { headers }
+    );
   }
+
+  searchCinema(name: string = '', page: number, take: number, sortDirection: string): Observable<any> {
+    const filter = name ? `name ~ '${name}'` : '';
+
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('take', take.toString())
+      .set('sortDirection', sortDirection);
+
+    if (filter) {
+      params = params.set('filter', filter);
+    }
+
+    return this._http.get(`${environment.API_DOMAIN}/cinema/search`, {params});
+  }
+
+
+
 }

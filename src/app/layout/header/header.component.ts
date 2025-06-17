@@ -6,6 +6,8 @@ import { AuthService } from '../../../service/auth/auth.service';
 import {CategoryService} from '../../../service/category/api/category.service';
 import {CategoryApi} from '../../../service/category/model/category.model';
 import {Rows} from '../../shared/data-access/interface/response.type';
+import {CinemaService} from '../../../service/cinema/api/cinema.service';
+import {CinemaApi} from '../../../service/cinema/model/cinema.model';
 
 @Component({
   selector: 'app-header',
@@ -17,11 +19,27 @@ import {Rows} from '../../shared/data-access/interface/response.type';
 export class HeaderComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly categoryService = inject(CategoryService);
+  private readonly cinemaService = inject(CinemaService);
   private readonly router = inject(Router);
   categories: CategoryApi.Response[] = [];
+  cinemas: CinemaApi.Response[] = [];
   ngOnInit(): void {
-    this.getCategories()
+    this.getCategories();
+    this.getCinemas();
   }
+
+  getCinemas(): void {
+    this.cinemaService.getAllCinema().subscribe({
+      next: (data) => {
+        this.cinemas = data ?? [];
+      },
+      error: (error) => {
+        console.error('Lỗi khi lấy thể loại:', error);
+      }
+    });
+  }
+
+
   dropdownOpen = false;
   toggleDropdown(): void {
     this.dropdownOpen = !this.dropdownOpen;
@@ -158,19 +176,21 @@ export class HeaderComponent implements OnInit {
     return Math.floor(1000000 + Math.random() * 9000000).toString();
   }
   isLoading = false;
+
   onLoginSubmit(): void {
     this.isLoading = true;
     this.authService.sendLoginForm(this.loginCredentials).subscribe({
       next: (response) => {
         const token = response?.responseData?.token;
         this.isLoading = false;
+
         if (token) {
           localStorage.setItem('token', token);
           this.authService.saveUserInfo();
+            this.router.navigate(['/home']);
+          this.closeAllModals();
+          console.log('Login success', response);
         }
-        this.router.navigate(['/home']);
-        this.closeAllModals();
-        console.log('Login success', response);
       },
       error: (error) => {
         console.error('Login failed', error);
@@ -178,6 +198,7 @@ export class HeaderComponent implements OnInit {
       }
     });
   }
+
 
 
   onRegisterSubmit(): void {

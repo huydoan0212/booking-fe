@@ -13,7 +13,7 @@
   </div>
   <div *ngIf="movies.length > 0" class="tw-grid tw-grid-cols-[repeat(auto-fill,_minmax(250px,_1fr))] tw-gap-6">
     <div *ngFor="let movie of movies">
-      <div (click)="goToDetail(movie)" class="tw-cursor-pointer hover:tw-shadow-lg tw-transition tw-rounded-xl tw-bg-white">
+      <div (click)="goToDetail(movie)" class="tw-cursor-pointer">
         <app-movie-card [movie]="movie"></app-movie-card>
       </div>
     </div>

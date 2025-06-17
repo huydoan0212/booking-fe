@@ -1,0 +1,37 @@
+<div
+  class="tw-relative tw-flex tw-flex-col tw-min-w-0 tw-break-words tw-w-full tw-mb-6
+         tw-shadow-lg tw-rounded tw-overflow-x-auto tw-max-w-[1200px] tw-bg-white"
+>
+  <div class="tw-rounded-t tw-mb-0 tw-px-4 tw-py-3 tw-border-0">
+    <div class="tw-flex tw-flex-wrap tw-items-center tw-justify-between">
+      <div class="tw-px-4">
+        <h3 class="tw-font-semibold tw-text-lg tw-text-orange">Thống kê doanh thu</h3>
+        <div class="tw-pt-2">
+          <label for="cinema" class="tw-mr-2">Chọn rạp:</label>
+          <select
+            id="cinema"
+            [(ngModel)]="selectedCinema"
+            (change)="onCinemaChange()"
+            class="tw-border tw-rounded tw-px-2 tw-py-1"
+          >
+            <option *ngFor="let cinema of cinemas" [value]="cinema.id">
+              {{ cinema.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tw-p-4">
+    <apx-chart
+      [series]="chartOptions.series"
+      [chart]="chartOptions.chart"
+      [xaxis]="chartOptions.xaxis"
+      [stroke]="chartOptions.stroke"
+      [dataLabels]="chartOptions.dataLabels"
+      [title]="chartOptions.title"
+    >
+    </apx-chart>
+  </div>
+</div>

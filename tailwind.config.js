@@ -40,6 +40,9 @@ module.exports = {
       'bg-light': '#F9F9F9',
       softYellow: '#F2C94C',
       red: '#FF0000',
+      'softRed': '#FF4D4D',
+      green: '#22C55E',
+      'softGreen': '#16A34A',
     },
     fontFamily: {
       "roboto-black": ["Roboto-Black", "sans-serif"],

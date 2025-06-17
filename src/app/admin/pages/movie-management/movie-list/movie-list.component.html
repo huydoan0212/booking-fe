@@ -1,0 +1,409 @@
+<div
+  class="tw-relative tw-flex tw-flex-col tw-min-w-0 tw-break-words tw-w-full tw-mb-6
+         tw-shadow-lg tw-rounded tw-overflow-x-auto tw-max-w-[1200px] tw-bg-white"
+>
+  <div class="tw-rounded-t tw-mb-0 tw-px-4 tw-py-3 tw-border-0">
+    <div class="tw-flex tw-flex-wrap tw-items-center">
+      <div class="tw-relative tw-w-full tw-px-4 tw-max-w-full tw-flex-grow tw-flex-1">
+        <h3
+          class="tw-font-semibold tw-text-lg tw-text-orange"
+        >
+          Quản Lý Phim
+        </h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="tw-flex tw-items-center tw-space-x-4 tw-px-4 tw-pb-4">
+
+    <div class="tw-relative tw-w-1/3">
+      <input
+        type="text"
+        placeholder="Tìm kiếm phim..."
+        [ngModel]="name"
+        (ngModelChange)="searchInputChanged.next($event)"
+        class="tw-bg-white tw-border tw-border-darkGray tw-text-sm tw-rounded tw-px-3 tw-py-2 tw-pl-10 tw-w-full focus:tw-outline-none focus:tw-ring focus:tw-ring-blue-300"
+      />
+
+
+      <div class="tw-absolute tw-left-0 tw-top-0 tw-mt-2 tw-ml-3">
+        <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 512 512">
+          <!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+          <path fill="#e97007"
+                d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/>
+        </svg>
+      </div>
+    </div>
+    <button (click)="exportExcel()"
+            class="tw-bg-orange hover:tw-bg-orange-brand tw-text-white tw-px-4 tw-py-2 tw-rounded">
+      Xuất Excel
+    </button>
+    <button (click)="exportCSV()"
+            class="tw-bg-orange hover:tw-bg-orange-brand  tw-text-white tw-px-4 tw-py-2 tw-rounded">
+      Xuất CSV
+    </button>
+    <div (click)=" showModalAddMovie = true" class="tw-relative tw-w-full tw-px-1 tw-max-w-full tw-flex-grow tw-flex-1 tw-text-right">
+      <button
+        class="tw-bg-orange hover:tw-bg-orange-brand tw-text-white tw-px-4 tw-py-2 tw-rounded"
+      >
+        Thêm Phim
+      </button>
+    </div>
+
+  </div>
+  <div class="tw-w-full tw-overflow-x-auto tw-pl-4">
+    <div class="tw-bg tw-max-h-[600px] tw-overflow-y-auto tw-rounded-md tw-border tw-shadow">
+      <table
+        class="tw-bg-white tw-min-w-full tw-table-auto tw-border-collapse"
+        id="exportTable"
+      >
+        <thead class="tw-sticky tw-top-0 tw-z-10 tw-bg-white">
+        <tr>
+          <th class="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-semibold tw-uppercase tw-text-black tw-border-b tw-border-darkGray">
+            Tên Phim
+          </th>
+          <th class="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-semibold tw-uppercase tw-text-black tw-border-b tw-border-darkGray">
+            Ảnh
+          </th>
+          <th class="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-semibold tw-uppercase tw-text-black tw-border-b tw-border-darkGray">
+            Thể Loại
+          </th>
+          <th class="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-semibold tw-uppercase tw-text-black tw-border-b tw-border-darkGray">
+            Thời Lượng
+          </th>
+          <th class="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-semibold tw-uppercase tw-text-black tw-border-b tw-border-darkGray">
+            Ngày khởi chiếu
+          </th>
+          <th class="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-semibold tw-uppercase tw-text-black tw-border-b tw-border-darkGray">
+            Ngày kết thúc
+          </th>
+          <th class="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-semibold tw-uppercase tw-text-black tw-border-b tw-border-darkGray">
+            Lượt Xem
+          </th>
+          <th class="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-semibold tw-uppercase tw-text-black tw-border-b tw-border-darkGray">
+            Hành động
+          </th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr *ngFor="let movie of movies">
+          <td class="tw-px-6 tw-py-4 tw-border-b tw-border-darkGray">
+              <span class="tw-font-bold tw-text-black tw-text-sm">
+                {{ movie.name }}
+              </span>
+          </td>
+
+          <td class="tw-px-6 tw-py-4 tw-border-b tw-border-darkGray">
+            <img
+              [src]="movie.imageLandscape"
+              alt="Ảnh Phim"
+              class="tw-h-12 tw-w-12 tw-bg-white tw-rounded-md tw-border tw-object-cover"
+            />
+          </td>
+
+          <td class="tw-px-6 tw-py-4 tw-border-b tw-border-darkGray tw-whitespace-normal tw-text-sm tw-text-black">
+            <ul>
+              <li *ngFor="let category of movie.categories">{{ category.name }}</li>
+            </ul>
+          </td>
+
+          <td class="tw-px-6 tw-py-4 tw-border-b tw-border-darkGray">
+              <span class="tw-text-sm tw-text-black">
+                {{ movie.duration }} phút
+              </span>
+          </td>
+
+          <td class="tw-px-6 tw-py-4 tw-border-b tw-border-darkGray">
+              <span class="tw-text-sm tw-text-black">
+                {{ movie.startDate | date: 'dd/MM/yyyy' }}
+              </span>
+          </td>
+
+          <td class="tw-px-6 tw-py-4 tw-border-b tw-border-darkGray">
+              <span class="tw-text-sm tw-text-black">
+                {{ movie.endDate | date: 'dd/MM/yyyy' }}
+              </span>
+          </td>
+
+          <td class="tw-px-6 tw-py-4 tw-border-b tw-border-darkGray">
+              <span class="tw-text-sm tw-text-black">
+                {{ movie.views | number }}
+              </span>
+          </td>
+
+          <td class="tw-px-6 tw-py-4 tw-border-b tw-border-darkGray">
+            <div class="tw-flex tw-items-center tw-space-x-2">
+
+              <button (click)="showModalShowtime = true" class="tw-flex tw-items-center tw-gap-2 tw-text-orange hover:tw-opacity-80">
+                <svg xmlns="http://www.w3.org/2000/svg" height="20" width="17.5" viewBox="0 0 448 512" fill="#f97316">
+                  <path d="M96 32l0 32L48 64C21.5 64 0 85.5 0 112l0 48 448 0 0-48c0-26.5-21.5-48-48-48l-48 0 0-32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 32L160 64l0-32c0-17.7-14.3-32-32-32S96 14.3 96 32zM448 192L0 192 0 464c0 26.5 21.5 48 48 48l352 0c26.5 0 48-21.5 48-48l0-272zM224 248c13.3 0 24 10.7 24 24l0 56 56 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-56 0 0 56c0 13.3-10.7 24-24 24s-24-10.7-24-24l0-56-56 0c-13.3 0-24-10.7-24-24s10.7-24 24-24l56 0 0-56c0-13.3 10.7-24 24-24z"/>
+                </svg>
+              </button>
+
+              <button (click)="openEditMovieModal(getMockMovie())"
+                class=" tw-flex tw-items-center tw-gap-1 tw-text-deepBlue hover:tw-text-softBlue tw-text-sm tw-cursor-pointer"
+                title="Chỉnh sửa"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512" fill="currentColor">
+                  <path d="M362.7 19.3l45.3 45.3c12.5 12.5 12.5 32.8 0 45.3L223.4 294.6 160 309.3l14.7-63.4L317.3 64c12.5-12.5 32.8-12.5 45.3 0zM64 64C28.7 64 0 92.7 0 128V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V224h-64v224H64V128h224V64H64z"/>
+                </svg>
+              </button>
+
+              <button
+                class="tw-flex tw-items-center tw-gap-1 tw-text-red hover:tw-text-softRed tw-text-sm tw-cursor-pointer"
+                title="Xoá"
+                (click)="openDeleteModal(movie.id, movie.name)"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 448 512" fill="currentColor">
+                  <path d="M135.2 17.7C140.1 7.2 150.7 0 162.6 0h122.7c11.9 0 22.5 7.2 27.4 17.7L320 32h80c17.7 0 32 14.3 32 32s-14.3 32-32 32H48C30.3 96 16 81.7 16 64s14.3-32 32-32h80l7.2-14.3zM64 160h320l-21.8 306.3C360.4 489.5 341.6 512 317.3 512H130.7c-24.3 0-43.1-22.5-44.9-45.7L64 160z"/>
+                </svg>
+              </button>
+
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="tw-flex tw-justify-end tw-items-center tw-gap-2 tw-m-2">
+    <button
+      (click)="previousPage()"
+      [disabled]="!hasPreviousPage"
+      class="tw-px-3 tw-py-1 tw-bg-orange hover:tw-bg-orange-brand tw-text-white tw-rounded disabled:tw-opacity-50"
+    >
+      Trước
+    </button>
+
+    <span class="tw-text-sm tw-font-medium">
+    Trang {{ page }} / {{ pageCount }}
+  </span>
+
+    <button
+      (click)="nextPage()"
+      [disabled]="!hasNextPage"
+      class="tw-px-3 tw-py-1 tw-bg-orange hover:tw-bg-orange-brand tw-text-white tw-rounded disabled:tw-opacity-50"
+    >
+      Sau
+    </button>
+  </div>
+</div>
+<!-- Modal xác nhận xoá -->
+<div
+  class="tw-fixed tw-inset-0 tw-flex tw-items-center tw-justify-center"
+  *ngIf="modalVisible">
+  <div class="tw-bg-white tw-rounded-lg tw-p-6 tw-w-full tw-max-w-lg tw-shadow-lg">
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-4">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="20"
+        width="20"
+        viewBox="0 0 512 512"
+        class="tw-text-blue-400 tw-animate-bounce"
+      >
+        <path fill="#FF0000"
+              d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3
+              480 472 480L40 480c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7
+              39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24l0 112c0 13.3 10.7 24 24
+              24s24-10.7 24-24l0-112c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32
+               0 1 0 64 0z" />
+      </svg>
+      <h2 class="tw-text-lg tw-font-semibold">Xác nhận</h2>
+    </div>
+    <p>Bạn có chắc chắn muốn xoá rạp "<strong>{{ selectedMovieName }}</strong>"?</p>
+    <p class="tw-text-red tw-mt-2">Tất cả thông tin liên quan cũng sẽ bị xoá.</p>
+
+    <div class="tw-mt-6 tw-flex tw-justify-end tw-gap-2">
+      <button
+        class="tw-px-4 tw-py-2 tw-rounded tw-bg-lightGray hover:tw-bg-gray"
+        (click)="modalVisible = false"
+      >
+        Huỷ
+      </button>
+      <button
+        class="tw-px-4 tw-py-2 tw-rounded tw-bg-red tw-text-white hover:tw-bg-softRed"
+        (click)="confirmDeleteMovie()"
+      >
+        Xoá
+      </button>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+<div *ngIf="showModalShowtime" class="tw-fixed tw-inset-0 tw-bg-black tw-bg-opacity-50 tw-z-[1000] tw-flex tw-items-center tw-justify-center">
+  <div class="tw-bg-white tw-rounded-lg tw-shadow-lg tw-p-6 tw-w-full tw-max-w-xl">
+    <h2 class="tw-text-xl tw-font-semibold tw-mb-4">Thêm suất chiếu</h2>
+
+    <!-- Chọn rạp -->
+    <label class="tw-block tw-mb-1">Rạp:</label>
+    <select [(ngModel)]="selectedCinemaId" (change)="onCinemaChange()" class="tw-w-full tw-border tw-rounded tw-mb-4 tw-p-2">
+      <option *ngFor="let cinema of cinemas" [value]="cinema.id">{{ cinema.name }}</option>
+    </select>
+
+    <!-- Chọn phòng -->
+    <label class="tw-block tw-mb-1">Phòng chiếu:</label>
+    <select [(ngModel)]="form.cinemaHallId" class="tw-w-full tw-border tw-rounded tw-mb-4 tw-p-2">
+      <option *ngFor="let hall of cinemaHalls" [value]="hall.id">{{ hall.name }}</option>
+    </select>
+
+    <!-- Các trường còn lại -->
+    <label class="tw-block tw-mb-1">Thời gian chiếu:</label>
+    <input type="datetime-local" [(ngModel)]="form.showTime" class="tw-w-full tw-border tw-rounded tw-mb-4 tw-p-2" />
+
+    <label class="tw-block tw-mb-1">Ngôn ngữ:</label>
+    <input type="text" [(ngModel)]="form.language" class="tw-w-full tw-border tw-rounded tw-mb-4 tw-p-2" />
+
+    <label class="tw-block tw-mb-1">Phụ đề:</label>
+    <input type="text" [(ngModel)]="form.subtitle" class="tw-w-full tw-border tw-rounded tw-mb-4 tw-p-2" />
+
+    <label class="tw-block tw-mb-1">Định dạng màn hình:</label>
+    <input type="text" [(ngModel)]="form.screenFormat" class="tw-w-full tw-border tw-rounded tw-mb-6 tw-p-2" />
+
+    <!-- Hành động -->
+    <div class="tw-flex tw-justify-end tw-gap-4">
+      <button (click)="showModalShowtime = false" class="tw-px-4 tw-py-2 tw-border tw-rounded">Hủy</button>
+      <button (click)="submitShowtime()" class="tw-bg-orange-brand tw-text-white tw-px-4 tw-py-2 tw-rounded">Thêm</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showModalAddMovie" class="tw-fixed tw-inset-0 tw-bg-black tw-bg-opacity-50 tw-z-[1000] tw-flex tw-items-center tw-justify-center">
+  <div class="tw-bg-white tw-rounded-lg tw-shadow-lg tw-w-full tw-max-w-2xl tw-max-h-[80vh] tw-overflow-y-auto tw-p-6">
+    <h2 class="tw-text-xl tw-font-semibold tw-mb-4">Thêm phim</h2>
+
+    <!-- Nội dung rút gọn một chút -->
+    <div>
+      <label class="tw-block tw-mb-1">Tên phim:</label>
+      <input type="text" [(ngModel)]="movieForm.name" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
+
+      <label class="tw-block tw-mb-1">Thời lượng (phút):</label>
+      <input type="number" [(ngModel)]="movieForm.duration" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
+
+      <label class="tw-block tw-mb-1">Ảnh ngang:</label>
+      <input type="file" (change)="onImageSelect($event, 'landscape')" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
+
+      <label class="tw-block tw-mb-1">Ảnh dọc:</label>
+      <input type="file" (change)="onImageSelect($event, 'landscape')" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
+
+      <label class="tw-block tw-mb-1">Ngày khởi chiếu:</label>
+      <input type="date" [(ngModel)]="movieForm.startDate" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
+      <label class="tw-block tw-mb-1">Ngày kết thúc:</label>
+      <input type="date" [(ngModel)]="movieForm.startDate" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
+
+      <label class="tw-block tw-mb-1">Thể loại:</label>
+      <select [(ngModel)]="movieForm.categoryIds" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2">
+<!--        <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>-->
+      </select>
+
+      <label class="tw-block tw-mb-1">Mô tả:</label>
+      <textarea [(ngModel)]="movieForm.description" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" rows="2"></textarea>
+
+      <label class="tw-block tw-mb-1">Diễn viên:</label>
+      <input type="text" [(ngModel)]="movieForm.name" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
+
+      <label class="tw-block tw-mb-1">Trailer:</label>
+      <input type="text" [(ngModel)]="movieForm.trailer" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
+
+
+    </div>
+
+    <!-- Nút -->
+    <div class="tw-flex tw-justify-end tw-gap-4 tw-mt-4">
+      <button (click)="showModalAddMovie = false" class="tw-px-4 tw-py-2 tw-border tw-rounded">Hủy</button>
+      <button class="tw-bg-orange-brand tw-text-white tw-px-4 tw-py-2 tw-rounded">Thêm</button>
+    </div>
+  </div>
+</div>
+
+
+<div *ngIf="showModalEditMovie" class="tw-fixed tw-inset-0 tw-bg-black tw-bg-opacity-50 tw-z-[1000] tw-flex tw-items-center tw-justify-center">
+  <div class="tw-bg-white tw-rounded-lg tw-shadow-lg tw-w-full tw-max-w-2xl tw-max-h-[80vh] tw-overflow-y-auto tw-p-6">
+    <h2 class="tw-text-xl tw-font-semibold tw-mb-4">Chỉnh sửa phim</h2>
+
+    <!-- Tên phim -->
+    <label class="tw-block tw-mb-1">Tên phim:</label>
+    <input type="text" [(ngModel)]="editMovieForm.name" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
+
+    <!-- Độ tuổi -->
+    <label class="tw-block tw-mb-1">Độ tuổi:</label>
+    <input type="number" [(ngModel)]="editMovieForm.age" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
+
+    <!-- Thời lượng -->
+    <label class="tw-block tw-mb-1">Thời lượng (phút):</label>
+    <input type="number" [(ngModel)]="editMovieForm.duration" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
+
+    <!-- Ảnh ngang -->
+    <label class="tw-block tw-mb-1">Ảnh ngang:</label>
+    <input type="file" (change)="onImageSelect($event, 'landscape')" class="tw-w-full tw-border tw-rounded tw-mb-2 tw-p-2" />
+    <img *ngIf="editMovieForm.imageLandscape" [src]="editMovieForm.imageLandscape" class="tw-w-full tw-max-h-40 tw-object-cover tw-rounded tw-mb-3" />
+
+    <!-- Ảnh dọc -->
+    <label class="tw-block tw-mb-1">Ảnh dọc:</label>
+    <input type="file" (change)="onImageSelect($event, 'portrait')" class="tw-w-full tw-border tw-rounded tw-mb-2 tw-p-2" />
+    <img *ngIf="editMovieForm.imagePortrait" [src]="editMovieForm.imagePortrait" class="tw-w-24 tw-h-36 tw-object-cover tw-rounded tw-mb-3" />
+
+    <!-- Slug -->
+    <label class="tw-block tw-mb-1">Slug:</label>
+    <input type="text" [(ngModel)]="editMovieForm.slug" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
+
+    <!-- Ngày khởi chiếu -->
+    <label class="tw-block tw-mb-1">Ngày khởi chiếu:</label>
+    <input type="date" [(ngModel)]="editMovieForm.startDate" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
+
+    <!-- Ngày kết thúc -->
+    <label class="tw-block tw-mb-1">Ngày kết thúc:</label>
+    <input type="date" [(ngModel)]="editMovieForm.endDate" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
+
+    <!-- Mô tả -->
+    <label class="tw-block tw-mb-1">Mô tả:</label>
+    <textarea [(ngModel)]="editMovieForm.description" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" rows="2"></textarea>
+
+    <!-- Trailer -->
+    <label class="tw-block tw-mb-1">Trailer:</label>
+    <input type="text" [(ngModel)]="editMovieForm.trailer" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
+
+    <!-- Diễn viên -->
+    <label class="tw-block tw-mb-1">Diễn viên:</label>
+    <input type="text" [(ngModel)]="editMovieForm.actors" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
+
+    <!-- Đạo diễn -->
+    <label class="tw-block tw-mb-1">Đạo diễn:</label>
+    <input type="text" [(ngModel)]="editMovieForm.director" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
+
+    <!-- Nhà sản xuất -->
+    <label class="tw-block tw-mb-1">Nhà sản xuất:</label>
+    <input type="text" [(ngModel)]="editMovieForm.producers" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
+
+    <!-- Quốc gia -->
+    <label class="tw-block tw-mb-1">Quốc gia:</label>
+    <input type="text" [(ngModel)]="editMovieForm.country" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
+
+    <!-- Rate, votes, views -->
+    <label class="tw-block tw-mb-1">Đánh giá (rate):</label>
+    <input type="number" step="0.1" [(ngModel)]="editMovieForm.rate" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
+
+    <label class="tw-block tw-mb-1">Lượt bình chọn:</label>
+    <input type="number" [(ngModel)]="editMovieForm.totalVotes" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
+
+    <label class="tw-block tw-mb-1">Lượt xem:</label>
+    <input type="number" [(ngModel)]="editMovieForm.views" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
+
+    <!-- Thể loại -->
+    <label class="tw-block tw-mb-1">Thể loại:</label>
+    <select [(ngModel)]="editMovieForm.categoryIds" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" multiple>
+
+    </select>
+
+    <!-- Nút hành động -->
+    <div class="tw-flex tw-justify-end tw-gap-4 tw-mt-4">
+      <button (click)="showModalEditMovie = false" class="tw-px-4 tw-py-2 tw-border tw-rounded">Hủy</button>
+      <button class="tw-bg-orange-brand tw-text-white tw-px-4 tw-py-2 tw-rounded">Cập nhật</button>
+    </div>
+  </div>
+</div>
+
+
+
+

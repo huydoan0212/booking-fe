@@ -1,0 +1,227 @@
+<div
+  class="tw-relative tw-flex tw-flex-col tw-min-w-0 tw-break-words tw-w-full tw-mb-6
+         tw-shadow-lg tw-rounded tw-overflow-x-auto tw-max-w-[1200px] tw-bg-white"
+>
+  <div class="tw-rounded-t tw-mb-0 tw-px-4 tw-py-3 tw-border-0">
+    <div class="tw-flex tw-flex-wrap tw-items-center">
+      <div class="tw-relative tw-w-full tw-px-4 tw-max-w-full tw-flex-grow tw-flex-1">
+        <h3
+          class="tw-font-semibold tw-text-lg tw-text-orange"
+        >
+          Quản Lý Thể Loại
+        </h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="tw-flex tw-items-center tw-space-x-4 tw-px-4 tw-pb-4">
+
+    <div class="tw-relative tw-w-1/3">
+      <input
+        type="text"
+        placeholder="Tìm kiếm thể loại..."
+        [ngModel]="name"
+        (ngModelChange)="searchInputChanged.next($event)"
+        class="tw-bg-white tw-border tw-border-darkGray tw-text-sm tw-rounded tw-px-3 tw-py-2 tw-pl-10 tw-w-full focus:tw-outline-none focus:tw-ring focus:tw-ring-blue-300"
+      />
+
+
+      <div class="tw-absolute tw-left-0 tw-top-0 tw-mt-2 tw-ml-3">
+        <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 512 512">
+          <!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+          <path fill="#e97007"
+                d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/>
+        </svg>
+      </div>
+    </div>
+    <button (click)="exportExcel()"
+            class="tw-bg-orange hover:tw-bg-orange-brand tw-text-white tw-px-4 tw-py-2 tw-rounded">
+      Xuất Excel
+    </button>
+    <button (click)="exportCSV()"
+            class="tw-bg-orange hover:tw-bg-orange-brand  tw-text-white tw-px-4 tw-py-2 tw-rounded">
+      Xuất CSV
+    </button>
+    <div (click)=" showModalAddCategory = true" class="tw-relative tw-w-full tw-px-1 tw-max-w-full tw-flex-grow tw-flex-1 tw-text-right">
+      <button
+        class="tw-bg-orange hover:tw-bg-orange-brand tw-text-white tw-px-4 tw-py-2 tw-rounded"
+      >
+        Thêm Thể Loại
+      </button>
+    </div>
+
+  </div>
+  <div class="tw-w-full tw-overflow-x-auto tw-pl-4">
+    <div class="tw-bg tw-max-h-[600px] tw-overflow-y-auto tw-rounded-md tw-border tw-shadow">
+      <table
+        class="tw-bg-white tw-min-w-full tw-table-auto tw-border-collapse"
+        id="exportTable"
+      >
+        <thead class="tw-sticky tw-top-0 tw-z-10 tw-bg-white">
+        <tr>
+          <th class="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-semibold tw-uppercase tw-text-black tw-border-b tw-border-darkGray">
+            Tên Thể loại
+          </th>
+          <th class="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-semibold tw-uppercase tw-text-black tw-border-b tw-border-darkGray">
+            slug
+          </th>
+          <th class="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-semibold tw-uppercase tw-text-black tw-border-b tw-border-darkGray">
+            Mô tả
+          </th>
+          <th class="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-semibold tw-uppercase tw-text-black tw-border-b tw-border-darkGray">
+            Hành động
+          </th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr *ngFor="let category of categories">
+          <td class="tw-px-6 tw-py-4 tw-border-b tw-border-darkGray">
+              <span class="tw-font-bold tw-text-black tw-text-sm">
+                {{ category.name }}
+              </span>
+          </td>
+
+          <td class="tw-px-6 tw-py-4 tw-border-b tw-border-darkGray">
+              <span class="tw-text-sm tw-text-black">
+                {{ category.slug }}
+              </span>
+          </td>
+
+          <td class="tw-px-6 tw-py-4 tw-border-b tw-border-darkGray">
+              <span class="tw-text-sm tw-text-black">
+                {{ category.description }}
+              </span>
+          </td>
+
+          <td class="tw-px-6 tw-py-4 tw-border-b tw-border-darkGray">
+            <div class="tw-flex tw-items-center tw-space-x-2">
+              <button (click)="openEditModal()"
+                class="tw-flex tw-items-center tw-gap-1 tw-text-deepBlue hover:tw-text-softBlue tw-text-sm tw-cursor-pointer"
+                title="Chỉnh sửa"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512" fill="currentColor">
+                  <path d="M362.7 19.3l45.3 45.3c12.5 12.5 12.5 32.8 0 45.3L223.4 294.6 160 309.3l14.7-63.4L317.3 64c12.5-12.5 32.8-12.5 45.3 0zM64 64C28.7 64 0 92.7 0 128V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V224h-64v224H64V128h224V64H64z"/>
+                </svg>
+              </button>
+
+              <button
+                class="tw-flex tw-items-center tw-gap-1 tw-text-red hover:tw-text-softRed tw-text-sm tw-cursor-pointer"
+                title="Xoá"
+                (click)="openDeleteModal(category.id, category.name)"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 448 512" fill="currentColor">
+                  <path d="M135.2 17.7C140.1 7.2 150.7 0 162.6 0h122.7c11.9 0 22.5 7.2 27.4 17.7L320 32h80c17.7 0 32 14.3 32 32s-14.3 32-32 32H48C30.3 96 16 81.7 16 64s14.3-32 32-32h80l7.2-14.3zM64 160h320l-21.8 306.3C360.4 489.5 341.6 512 317.3 512H130.7c-24.3 0-43.1-22.5-44.9-45.7L64 160z"/>
+                </svg>
+              </button>
+
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="tw-flex tw-justify-end tw-items-center tw-gap-2 tw-m-2">
+    <button
+      (click)="previousPage()"
+      [disabled]="!hasPreviousPage"
+      class="tw-px-3 tw-py-1 tw-bg-orange hover:tw-bg-orange-brand tw-text-white tw-rounded disabled:tw-opacity-50"
+    >
+      Trước
+    </button>
+
+    <span class="tw-text-sm tw-font-medium">
+    Trang {{ page }} / {{ pageCount }}
+  </span>
+
+    <button
+      (click)="nextPage()"
+      [disabled]="!hasNextPage"
+      class="tw-px-3 tw-py-1 tw-bg-orange hover:tw-bg-orange-brand tw-text-white tw-rounded disabled:tw-opacity-50"
+    >
+      Sau
+    </button>
+  </div>
+</div>
+<!-- Modal xác nhận xoá -->
+<div
+  class="tw-fixed tw-inset-0 tw-flex tw-items-center tw-justify-center"
+  *ngIf="modalVisible">
+  <div class="tw-bg-white tw-rounded-lg tw-p-6 tw-w-full tw-max-w-lg tw-shadow-lg">
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-4">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="20"
+        width="20"
+        viewBox="0 0 512 512"
+        class="tw-text-blue-400 tw-animate-bounce"
+      >
+        <path fill="#FF0000"
+              d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3
+              480 472 480L40 480c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7
+              39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24l0 112c0 13.3 10.7 24 24
+              24s24-10.7 24-24l0-112c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32
+               0 1 0 64 0z" />
+      </svg>
+      <h2 class="tw-text-lg tw-font-semibold">Xác nhận</h2>
+    </div>
+    <p>Bạn có chắc chắn muốn xoá thể loại "<strong>{{ selectedCategoryName }}</strong>"?</p>
+    <p class="tw-text-red tw-mt-2">Tất cả thông tin liên quan cũng sẽ bị xoá.</p>
+
+    <div class="tw-mt-6 tw-flex tw-justify-end tw-gap-2">
+      <button
+        class="tw-px-4 tw-py-2 tw-rounded tw-bg-lightGray hover:tw-bg-gray"
+        (click)="modalVisible = false"
+      >
+        Huỷ
+      </button>
+      <button
+        class="tw-px-4 tw-py-2 tw-rounded tw-bg-red tw-text-white hover:tw-bg-softRed"
+        (click)="confirmDeleteCategory()"
+      >
+        Xoá
+      </button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showModalAddCategory" class="tw-fixed tw-inset-0 tw-bg-black tw-bg-opacity-50 tw-z-[1000] tw-flex tw-items-center tw-justify-center">
+  <div class="tw-bg-white tw-rounded-lg tw-shadow-lg tw-p-6 tw-w-full tw-max-w-md">
+    <h2 class="tw-text-xl tw-font-semibold tw-mb-4">Thêm thể loại phim</h2>
+
+    <label class="tw-block tw-mb-1">Tên thể loại:</label>
+    <input type="text" [(ngModel)]="categoryForm.name" class="tw-w-full tw-border tw-rounded tw-mb-4 tw-p-2" />
+
+    <label class="tw-block tw-mb-1">Slug (đường dẫn):</label>
+    <input type="text" [(ngModel)]="categoryForm.slug" class="tw-w-full tw-border tw-rounded tw-mb-4 tw-p-2" />
+
+    <label class="tw-block tw-mb-1">Mô tả:</label>
+    <textarea [(ngModel)]="categoryForm.description" class="tw-w-full tw-border tw-rounded tw-mb-6 tw-p-2" rows="3"></textarea>
+
+    <div class="tw-flex tw-justify-end tw-gap-4">
+      <button (click)="closeAddModal()" class="tw-px-4 tw-py-2 tw-border tw-rounded">Hủy</button>
+      <button (click)="submitCategory()" class="tw-bg-orange-brand tw-text-white tw-px-4 tw-py-2 tw-rounded">Thêm</button>
+    </div>
+  </div>
+</div>
+<div *ngIf="showModalEditCategory" class="tw-fixed tw-inset-0 tw-bg-black tw-bg-opacity-50 tw-z-[1000] tw-flex tw-items-center tw-justify-center">
+  <div class="tw-bg-white tw-rounded-lg tw-shadow-lg tw-p-6 tw-w-full tw-max-w-md">
+    <h2 class="tw-text-xl tw-font-semibold tw-mb-4">Chỉnh sửa thể loại</h2>
+
+    <label class="tw-block tw-mb-1">Tên thể loại:</label>
+    <input type="text" [(ngModel)]="categoryForm2.name" class="tw-w-full tw-border tw-rounded tw-mb-4 tw-p-2" />
+
+    <label class="tw-block tw-mb-1">Slug (đường dẫn):</label>
+    <input type="text" [(ngModel)]="categoryForm2.slug" class="tw-w-full tw-border tw-rounded tw-mb-4 tw-p-2" />
+
+    <label class="tw-block tw-mb-1">Mô tả:</label>
+    <textarea [(ngModel)]="categoryForm2.description" class="tw-w-full tw-border tw-rounded tw-mb-6 tw-p-2" rows="3"></textarea>
+
+    <div class="tw-flex tw-justify-end tw-gap-4">
+      <button (click)="closeEditModal()" class="tw-px-4 tw-py-2 tw-border tw-rounded">Hủy</button>
+      <button (click)="submitEditCategory()" class="tw-bg-orange-brand tw-text-white tw-px-4 tw-py-2 tw-rounded">Lưu</button>
+    </div>
+  </div>
+</div>

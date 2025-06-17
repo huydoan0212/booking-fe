@@ -14,27 +14,27 @@ export class AuthService {
   userData: any = {};
   sendLoginForm(data: object): Observable<any> {
     return this.httpClient.post(
-      `${environment.API_DOMAIN}/api/auth/login`,
+      `${environment.API_DOMAIN}/auth/login`,
       data
     );
   }
   sendRegisterForm(data: object): Observable<any> {
     return this.httpClient.post(
-      `${environment.API_DOMAIN}/api/user/register`,
+      `${environment.API_DOMAIN}/user/register`,
       data
     )
   }
 
   sendOTPForm(username: string, otp: string, otpType: string): Observable<any> {
     return this.httpClient.post(
-      `${environment.API_DOMAIN}/api/user/check-otp?username=${username}&otp=${otp}&otpType=${otpType}`,
+      `${environment.API_DOMAIN}/user/check-otp?username=${username}&otp=${otp}&otpType=${otpType}`,
       null
     );
   }
 
   sendForgotPassword(username: string): Observable<any> {
     return this.httpClient.post(
-      `${environment.API_DOMAIN}/api/user/forgot-password?username=${username}`,
+      `${environment.API_DOMAIN}/user/forgot-password?username=${username}`,
       null
     );
   }
@@ -47,19 +47,21 @@ export class AuthService {
     };
 
     return this.httpClient.post(
-      `${environment.API_DOMAIN}/api/user/reset-password`,
+      `${environment.API_DOMAIN}/user/reset-password`,
       body
     );
   }
-
 
   saveUserInfo() {
     if (localStorage.getItem('token') !== null) {
       this.userData = jwtDecode(localStorage.getItem('token')!);
     }
   }
+
   signOut(): void {
     localStorage.removeItem('token');
-    this.router.navigate(['/login']);
+    this.router.navigate(['/home']);
   }
+
+
 }

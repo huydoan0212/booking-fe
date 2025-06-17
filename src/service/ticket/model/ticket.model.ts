@@ -37,3 +37,34 @@ export namespace LockTicket {
     userId: string;
   }
 }
+
+export namespace LockTicketRequest {
+  export interface Request {
+    showTimeId: string;
+    ticketId: string;
+    userId: string;
+    price: number;
+    seatLabel: string;
+    seatType: string;
+  }
+}
+export namespace UnlockTicketRequest {
+  export interface Request {
+    showTimeId: string;
+    ticketId: string;
+    userId: string;
+  }
+}
+export namespace AllHoldInfo {
+  export interface Response {
+    heldTickets: HeldTicket[];
+    otherHeldTickets: HeldTicket[];
+    secondsRemaining: number;
+  }
+}
+export interface HeldTicket {
+  ticketId: string;
+  price: number;
+  seatLabel: string;
+  seatType: string;
+}

@@ -1,8 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { AuthService } from '../../../service/auth/auth.service';
+import { AuthService } from '../../../../service/auth/auth.service';
 import { Router } from '@angular/router';
-import { ProfileService } from '../../../service/profile/api/profile.service';
-import { UserProfile } from '../../../service/profile/model/user-profile.model';
+import { ProfileService } from '../../../../service/profile/api/profile.service';
+import { UserProfile } from '../../../../service/profile/model/user-profile.model';
 import { FormsModule } from '@angular/forms';
 import { DatePipe, NgIf } from '@angular/common';
 

@@ -1,10 +1,10 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {ActivatedRoute, Router, Routes} from '@angular/router';
-import {TicketService} from '../../../service/ticket/api/ticket.service';
-import {LockTicket, TicketApi} from '../../../service/ticket/model/ticket.model';
-import {StompService} from '../../service/stomp.service';
+import {TicketService} from '../../../../service/ticket/api/ticket.service';
+import {LockTicket, TicketApi} from '../../../../service/ticket/model/ticket.model';
+import {StompService} from '../../../service/stomp.service';
 import {CommonModule} from '@angular/common';
-import {TicketSummaryComponent} from '../../shared/ui/components/ticket-summary/ticket-summary.component';
+import {TicketSummaryComponent} from '../../../shared/ui/components/ticket-summary/ticket-summary.component';
 import {Message} from '@stomp/stompjs';
 
 @Component({

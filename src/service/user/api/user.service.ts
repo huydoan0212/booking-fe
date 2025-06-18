@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {environment} from '../../../environments/environment.development';
 import {ResponseResult} from '../../../app/shared/data-access/interface/response.type';
+import {AuthService} from '../../auth/auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,9 @@ import {ResponseResult} from '../../../app/shared/data-access/interface/response
 export class UserService {
   http: HttpClient;
 
-  constructor(http: HttpClient) {
+  constructor(http: HttpClient,
+              private authService: AuthService
+  ) {
     this.http = http;
   }
 
@@ -26,7 +29,7 @@ export class UserService {
       params = params.set('filter', filter);
     }
 
-    const token = localStorage.getItem('token');
+    const token = this.authService.getToken();
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`
     });
@@ -36,8 +39,9 @@ export class UserService {
       headers
     });
   }
+
   deleteUser(userId: string): Observable<ResponseResult<any>> {
-    const token = localStorage.getItem('token');
+    const token = this.authService.getToken();
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });

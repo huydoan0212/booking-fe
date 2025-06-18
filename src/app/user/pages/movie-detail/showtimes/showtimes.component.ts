@@ -1,10 +1,10 @@
 import {Component, ElementRef, inject, OnInit, ViewChild} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {ShowtimeService} from '../../../../service/showtime/api/showtime.service';
-import {ShowTimeApi} from '../../../../service/showtime/model/showtime.model';
-import {ResponseResult, Rows} from '../../../shared/data-access/interface/response.type';
-import {routes} from '../../../app.routes';
+import {ShowtimeService} from '../../../../../service/showtime/api/showtime.service';
+import {ShowTimeApi} from '../../../../../service/showtime/model/showtime.model';
+import {ResponseResult, Rows} from '../../../../shared/data-access/interface/response.type';
+import {routes} from '../../../../app.routes';
 import {Router} from '@angular/router';
 
 interface ShowtimeDisplay {
@@ -52,7 +52,7 @@ export class ShowtimesComponent implements OnInit {
   private rawShowTimes: ShowTimeApi.Response[] = [];
   private readonly showtimeService = inject(ShowtimeService);
 
-  private readonly movieId = 'c060c5fa-0d30-4476-9e1d-fa8ced95fcb4';
+  private readonly movieId = '3e4e6db0-70e0-4616-bd2f-4c20d8590400';
   private readonly page = 1;
   private readonly take = 200;
 

@@ -2,12 +2,12 @@ import {Component, ElementRef, inject, OnInit, PLATFORM_ID, ViewChild} from '@an
 import {CommonModule, isPlatformBrowser, NgClass, NgForOf, NgIf} from '@angular/common';
 import {Router, RouterLink} from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../../../service/auth/auth.service';
-import {CategoryService} from '../../../service/category/api/category.service';
-import {CategoryApi} from '../../../service/category/model/category.model';
-import {Rows} from '../../shared/data-access/interface/response.type';
-import {CinemaService} from '../../../service/cinema/api/cinema.service';
-import {CinemaApi} from '../../../service/cinema/model/cinema.model';
+import { AuthService } from '../../../../service/auth/auth.service';
+import {CategoryService} from '../../../../service/category/api/category.service';
+import {CategoryApi} from '../../../../service/category/model/category.model';
+import {Rows} from '../../../shared/data-access/interface/response.type';
+import {CinemaService} from '../../../../service/cinema/api/cinema.service';
+import {CinemaApi} from '../../../../service/cinema/model/cinema.model';
 
 @Component({
   selector: 'app-header',
@@ -26,6 +26,10 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
     this.getCategories();
     this.getCinemas();
+  }
+
+  isLoggedIn(): boolean {
+    return this.authService.isLoggedIn();
   }
 
   getCinemas(): void {
@@ -78,7 +82,6 @@ export class HeaderComponent implements OnInit {
   isOtpForgotModalOpen = false;
   isResetPasswordModalOpen = false;
 
-  // lấy token từ localStorage
   private readonly pLATFORM_ID = inject(PLATFORM_ID);
   getToken(): string | null {
     if (isPlatformBrowser(this.pLATFORM_ID)) {
@@ -183,11 +186,9 @@ export class HeaderComponent implements OnInit {
       next: (response) => {
         const token = response?.responseData?.token;
         this.isLoading = false;
-
         if (token) {
-          localStorage.setItem('token', token);
-          this.authService.saveUserInfo();
-            this.router.navigate(['/home']);
+          this.authService.setToken(token);
+          this.authService.redirectToBasedOnRole();
           this.closeAllModals();
           console.log('Login success', response);
         }

@@ -1,6 +1,5 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {UserService} from '../../../../../service/user/api/user.service';
-import {CinemaApi} from '../../../../../service/cinema/model/cinema.model';
 import {UserApi} from '../../../../../service/user/model/user.model';
 import * as XLSX from 'xlsx';
 import {saveAs} from 'file-saver';
@@ -30,6 +29,10 @@ export class UserListComponent implements OnInit {
           this.page = 1;
           this.getUsers();
         });
+      this.userService.deleteUser('20ff9530-140f-4140-85fb-81436b9d22ed').subscribe({
+        next: res => console.log('Xoá thành công:', res),
+        error: err => console.error('Lỗi khi xoá:', err)
+      });
     }
   users: UserApi.Response[] = [];
   name: string = '';
@@ -65,7 +68,7 @@ export class UserListComponent implements OnInit {
     this.selectedUserName = name;
     this.modalVisible = true;
   }
-  confirmDeleteCinema(): void {
+  confirmDeleteUser(): void {
     this.userService.deleteUser(this.selectedUserId).subscribe({
       next: () => {
         this.modalVisible = false;

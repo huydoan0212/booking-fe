@@ -1,12 +1,12 @@
 import { Component, AfterViewInit, OnInit, inject } from '@angular/core';
 import { NgClass, NgForOf } from '@angular/common';
-import { MovieCardComponent } from '../../../shared/ui/components/card-movie/movie-card.component';
+import { MovieCardComponent } from '../../../../shared/ui/components/card-movie/movie-card.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { Router } from '@angular/router';
 import Swiper from 'swiper';
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
-import { MovieService } from '../../../../service/movie/api/movie.service';
-import { MovieApi } from '../../../../service/movie/model/movie.model';
+import { MovieService } from '../../../../../service/movie/api/movie.service';
+import { MovieApi } from '../../../../../service/movie/model/movie.model';
 
 @Component({
   selector: 'app-home',

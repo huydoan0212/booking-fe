@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 import { ShowTimeApi } from '../model/showtime.model';
 import { ResponseResult, Rows } from '../../../app/shared/data-access/interface/response.type';
+import {MovieApi} from '../../movie/model/movie.model';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +12,7 @@ export class ShowtimeService {
   constructor(private http: HttpClient) {}
 
   searchShowTime(
-    movieId: string,
+    movieId: string | undefined,
     page: number,
     take: number,
     location?: string,
@@ -58,5 +59,9 @@ export class ShowtimeService {
     return this.http.get<
       ResponseResult<Rows<ShowTimeApi.Response>>
     >(`${environment.API_DOMAIN}/show-time/search`, { params });
+  }
+
+  getShowTimeById(showTimeId: string | null){
+    return this.http.get<ResponseResult<ShowTimeApi.Response>>(`${environment.API_DOMAIN}/show-time/${showTimeId}`);
   }
 }

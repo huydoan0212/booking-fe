@@ -46,6 +46,38 @@ export class CategoryService {
     );
   }
 
+  createCategory(data: { name: string; slug: string; description: string }) {
+    const token = this.authService.getToken();
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    });
+
+    return this.http.post(`${environment.API_DOMAIN}/category/`, data, { headers });
+  }
+
+  getCategoryById(id: string): Observable<ResponseResult<CategoryApi.Response>> {
+    const token = this.authService.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.get<ResponseResult<CategoryApi.Response>>(`${environment.API_DOMAIN}/category/${id}`, { headers });
+  }
+
+
+  updateCategory(id: string, data: { name: string; slug: string; description: string }) {
+    const token = this.authService.getToken();
+    console.log(id);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    });
+
+    return this.http.put(`${environment.API_DOMAIN}/category/${id}`, data, { headers });
+  }
+
+
 
 
 

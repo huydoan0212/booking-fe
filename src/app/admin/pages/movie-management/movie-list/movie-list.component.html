@@ -141,7 +141,7 @@
                 </svg>
               </button>
 
-              <button (click)="openEditMovieModal(getMockMovie())"
+              <button
                 class=" tw-flex tw-items-center tw-gap-1 tw-text-deepBlue hover:tw-text-softBlue tw-text-sm tw-cursor-pointer"
                 title="Chỉnh sửa"
               >
@@ -244,22 +244,22 @@
 
     <!-- Chọn phòng -->
     <label class="tw-block tw-mb-1">Phòng chiếu:</label>
-    <select [(ngModel)]="form.cinemaHallId" class="tw-w-full tw-border tw-rounded tw-mb-4 tw-p-2">
+    <select [(ngModel)]="form" class="tw-w-full tw-border tw-rounded tw-mb-4 tw-p-2">
       <option *ngFor="let hall of cinemaHalls" [value]="hall.id">{{ hall.name }}</option>
     </select>
 
     <!-- Các trường còn lại -->
     <label class="tw-block tw-mb-1">Thời gian chiếu:</label>
-    <input type="datetime-local" [(ngModel)]="form.showTime" class="tw-w-full tw-border tw-rounded tw-mb-4 tw-p-2" />
+    <input type="datetime-local" [(ngModel)]="form" class="tw-w-full tw-border tw-rounded tw-mb-4 tw-p-2" />
 
     <label class="tw-block tw-mb-1">Ngôn ngữ:</label>
-    <input type="text" [(ngModel)]="form.language" class="tw-w-full tw-border tw-rounded tw-mb-4 tw-p-2" />
+    <input type="text" [(ngModel)]="form" class="tw-w-full tw-border tw-rounded tw-mb-4 tw-p-2" />
 
     <label class="tw-block tw-mb-1">Phụ đề:</label>
-    <input type="text" [(ngModel)]="form.subtitle" class="tw-w-full tw-border tw-rounded tw-mb-4 tw-p-2" />
+    <input type="text" [(ngModel)]="form" class="tw-w-full tw-border tw-rounded tw-mb-4 tw-p-2" />
 
     <label class="tw-block tw-mb-1">Định dạng màn hình:</label>
-    <input type="text" [(ngModel)]="form.screenFormat" class="tw-w-full tw-border tw-rounded tw-mb-6 tw-p-2" />
+    <input type="text" [(ngModel)]="form" class="tw-w-full tw-border tw-rounded tw-mb-6 tw-p-2" />
 
     <!-- Hành động -->
     <div class="tw-flex tw-justify-end tw-gap-4">
@@ -285,23 +285,23 @@
       <input type="file" (change)="onImageSelect($event, 'landscape')" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
 
       <label class="tw-block tw-mb-1">Ảnh dọc:</label>
-      <input type="file" (change)="onImageSelect($event, 'landscape')" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
+      <input type="file" (change)="onImageSelect($event, 'portrait')" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
 
       <label class="tw-block tw-mb-1">Ngày khởi chiếu:</label>
       <input type="date" [(ngModel)]="movieForm.startDate" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
       <label class="tw-block tw-mb-1">Ngày kết thúc:</label>
-      <input type="date" [(ngModel)]="movieForm.startDate" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
+      <input type="date" [(ngModel)]="movieForm.endDate" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
 
-      <label class="tw-block tw-mb-1">Thể loại:</label>
-      <select [(ngModel)]="movieForm.categoryIds" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2">
-<!--        <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>-->
+      <select multiple [(ngModel)]="movieForm.categoryIds" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2">
+        <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
       </select>
+
 
       <label class="tw-block tw-mb-1">Mô tả:</label>
       <textarea [(ngModel)]="movieForm.description" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" rows="2"></textarea>
 
       <label class="tw-block tw-mb-1">Diễn viên:</label>
-      <input type="text" [(ngModel)]="movieForm.name" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
+      <input type="text" [(ngModel)]="movieForm.actors" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
 
       <label class="tw-block tw-mb-1">Trailer:</label>
       <input type="text" [(ngModel)]="movieForm.trailer" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
@@ -312,7 +312,7 @@
     <!-- Nút -->
     <div class="tw-flex tw-justify-end tw-gap-4 tw-mt-4">
       <button (click)="showModalAddMovie = false" class="tw-px-4 tw-py-2 tw-border tw-rounded">Hủy</button>
-      <button class="tw-bg-orange-brand tw-text-white tw-px-4 tw-py-2 tw-rounded">Thêm</button>
+      <button (click)="submitMovie()" class="tw-bg-orange-brand tw-text-white tw-px-4 tw-py-2 tw-rounded">Thêm</button>
     </div>
   </div>
 </div>

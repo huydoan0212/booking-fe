@@ -76,4 +76,19 @@ export class MovieService {
     );
   }
 
+  createMovie(data: MovieApi.Request): Observable<ResponseResult<MovieApi.Response>> {
+    const token = this.authService.getToken();
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.httpClient.post<ResponseResult<MovieApi.Response>>(
+      `${environment.API_DOMAIN}/movie/`,
+      data,
+      { headers }
+    );
+  }
+
 }

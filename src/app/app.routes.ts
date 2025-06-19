@@ -50,6 +50,8 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./user/pages/profile/profile.component').then(m => m.ProfileComponent),
         title: 'Hồ sơ',
+        canActivate: [AuthGuard],
+        data: { role: 'ROLE_USER' }
       },
       {
         path: 'search',
@@ -68,6 +70,8 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: AdminLayoutComponent,
+    canActivate: [AuthGuard],
+    data: { role: 'ROLE_ADMIN' },
     children: [
       {
         path: '',

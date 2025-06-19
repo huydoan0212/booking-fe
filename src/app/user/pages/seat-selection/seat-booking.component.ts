@@ -12,7 +12,7 @@ import {Message} from '@stomp/stompjs';
   templateUrl: './seat-booking.component.html',
   standalone: true,
   styleUrls: ['./seat-booking.component.scss'],
-  imports: [CommonModule, TicketSummaryComponent]
+  imports: [CommonModule]
 })
 export class SeatBookingComponent implements OnInit {
   private readonly activatedRoute = inject(ActivatedRoute);

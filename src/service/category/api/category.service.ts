@@ -4,12 +4,14 @@ import { Observable, map } from 'rxjs';
 import { CategoryApi } from '../model/category.model';
 import { environment } from '../../../environments/environment.development';
 import { ResponseResult, Rows } from '../../../app/shared/data-access/interface/response.type';
+import {AuthService} from '../../auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,
+              private authService: AuthService) {}
 
   getAllCategories(): Observable<any> {
     return this.http
@@ -33,15 +35,51 @@ export class CategoryService {
   }
 
   deleteCategory(categoryId: string): Observable<ResponseResult<any>> {
-    const token = localStorage.getItem('token');
+    const token = this.authService.getToken();
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
 
     return this.http.delete<ResponseResult<any>>(
       `${environment.API_DOMAIN}/category/${categoryId}`,
-      { headers }
+      {headers}
     );
   }
+
+  createCategory(data: { name: string; slug: string; description: string }) {
+    const token = this.authService.getToken();
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    });
+
+    return this.http.post(`${environment.API_DOMAIN}/category/`, data, { headers });
+  }
+
+  getCategoryById(id: string): Observable<ResponseResult<CategoryApi.Response>> {
+    const token = this.authService.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.get<ResponseResult<CategoryApi.Response>>(`${environment.API_DOMAIN}/category/${id}`, { headers });
+  }
+
+
+  updateCategory(id: string, data: { name: string; slug: string; description: string }) {
+    const token = this.authService.getToken();
+    console.log(id);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    });
+
+    return this.http.put(`${environment.API_DOMAIN}/category/${id}`, data, { headers });
+  }
+
+
+
+
+
 
 }

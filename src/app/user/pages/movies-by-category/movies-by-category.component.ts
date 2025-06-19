@@ -1,8 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { MovieApi } from '../../../service/movie/model/movie.model';
-import { MovieService } from '../../../service/movie/api/movie.service';
+import { MovieApi } from '../../../../service/movie/model/movie.model';
+import { MovieService } from '../../../../service/movie/api/movie.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MovieCardComponent } from '../../shared/ui/components/card-movie/movie-card.component';
+import { MovieCardComponent } from '../../../shared/ui/components/card-movie/movie-card.component';
 import { NgForOf, NgIf } from '@angular/common';
 
 @Component({

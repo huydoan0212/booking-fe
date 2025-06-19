@@ -1,28 +1,47 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {debounceTime, distinctUntilChanged, Subject} from 'rxjs';
-import {CategoryService} from '../../../../../service/category/api/category.service';
-import {MovieApi} from '../../../../../service/movie/model/movie.model';
-import {CategoryApi} from '../../../../../service/category/model/category.model';
+import { Component, inject, OnInit } from '@angular/core';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { CategoryService } from '../../../../../service/category/api/category.service';
+import { CategoryApi } from '../../../../../service/category/model/category.model';
 import * as XLSX from 'xlsx';
-import {saveAs} from 'file-saver';
-import {DatePipe, DecimalPipe, NgForOf, NgIf} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+import { saveAs } from 'file-saver';
+import { FormsModule } from '@angular/forms';
+import { NgForOf, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-category-list',
   templateUrl: './category-list.component.html',
+  styleUrls: ['./category-list.component.scss'],
   imports: [
     FormsModule,
     NgForOf,
     NgIf
-  ],
-  styleUrls: ['./category-list.component.scss']
+  ]
 })
 export class CategoriesListComponent implements OnInit {
   private readonly categoryService = inject(CategoryService);
+
+  categoryForm = {
+    name: '',
+    slug: '',
+    description: ''
+  };
+
+  categoryFormEdit = {
+    name: '',
+    slug: '',
+    description: ''
+  };
+
+  showModalAddCategory = false;
+  showModalEditCategory = false;
+  modalVisible = false;
+
+  selectedCategoryId: string = '';
+  selectedCategoryName: string = '';
+
   categories: CategoryApi.Response[] = [];
+  name: string = '';
   searchInputChanged = new Subject<string>();
-  name: string = "";
   page: number = 1;
   take: number = 10;
   pageCount: number = 0;
@@ -40,29 +59,76 @@ export class CategoriesListComponent implements OnInit {
       });
   }
 
-  getCategories() {
-    this.categoryService.searchCategory(this.name, this.page, this.take, 'ASC')
-      .subscribe({
-          next: (res) => {
-            const data = res.responseData;
-            this.categories = data.rows ?? [];
-            this.page = data.page;
-            this.take = data.take;
-            this.pageCount = data.pageCount;
-            this.hasPreviousPage = data.hasPreviousPage;
-            this.hasNextPage = data.hasNextPage;
-            console.log(this.categories)
-          },
-          error: (error) => {
-            console.error('Lỗi khi lấy danh sách phim:', error);
-          }
-        }
-      )
+  openAddModal() {
+    this.showModalAddCategory = true;
   }
 
-  modalVisible = false;
-  selectedCategoryId: string = '';
-  selectedCategoryName: string = '';
+  closeAddModal() {
+    this.showModalAddCategory = false;
+    this.resetForm();
+  }
+
+  resetForm() {
+    this.categoryForm = {
+      name: '',
+      slug: '',
+      description: ''
+    };
+  }
+
+  submitCategory() {
+    this.categoryService.createCategory(this.categoryForm).subscribe({
+      next: (response) => {
+        this.closeAddModal();
+        this.getCategories();
+      },
+      error: (error) => {
+        console.error('Lỗi khi tạo category:', error);
+      }
+    });
+  }
+
+  closeEditModal() {
+    this.showModalEditCategory = false;
+  }
+  openEditModal(id: string) {
+    this.selectedCategoryId = id;
+
+    this.categoryService.getCategoryById(id).subscribe({
+      next: (res) => {
+        const category = res.responseData;
+        if (category) {
+          this.categoryFormEdit = {
+            name: category.name,
+            slug: category.slug,
+            description: category.description
+          };
+          this.showModalEditCategory = true;
+        } else {
+          console.warn('Không có dữ liệu thể loại');
+        }
+      },
+      error: (err) => {
+        console.error('Lỗi khi lấy chi tiết category:', err);
+      }
+    });
+  }
+
+  submitEditCategory() {
+    this.categoryService.updateCategory(this.selectedCategoryId, this.categoryFormEdit).subscribe({
+      next: (res) => {
+        console.log('Cập nhật thành công:', res);
+        this.closeEditModal();
+        this.getCategories();
+      },
+      error: (err) => {
+        console.error('Lỗi khi cập nhật:', err);
+      }
+    });
+  }
+
+
+
 
   openDeleteModal(id: string, name: string): void {
     this.selectedCategoryId = id;
@@ -83,6 +149,23 @@ export class CategoriesListComponent implements OnInit {
     });
   }
 
+  getCategories() {
+    this.categoryService.searchCategory(this.name, this.page, this.take, 'ASC').subscribe({
+      next: (res) => {
+        const data = res.responseData;
+        this.categories = data.rows ?? [];
+        this.page = data.page;
+        this.take = data.take;
+        this.pageCount = data.pageCount;
+        this.hasPreviousPage = data.hasPreviousPage;
+        this.hasNextPage = data.hasNextPage;
+      },
+      error: (error) => {
+        console.error('Lỗi khi lấy danh sách thể loại:', error);
+      }
+    });
+  }
+
   nextPage(): void {
     if (this.hasNextPage) {
       this.page++;
@@ -97,14 +180,13 @@ export class CategoriesListComponent implements OnInit {
     }
   }
 
-
   exportExcel(): void {
     const table = document.querySelector('table') as HTMLTableElement;
     const worksheet = XLSX.utils.table_to_sheet(table);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'DanhSachDanhMuc');
-    const excelBuffer = XLSX.write(workbook, {bookType: 'xlsx', type: 'array'});
-    const file = new Blob([excelBuffer], {type: 'application/octet-stream'});
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const file = new Blob([excelBuffer], { type: 'application/octet-stream' });
     saveAs(file, 'danhsachdanhmuc.xlsx');
   }
 
@@ -112,69 +194,7 @@ export class CategoriesListComponent implements OnInit {
     const table = document.querySelector('table') as HTMLTableElement;
     const worksheet = XLSX.utils.table_to_sheet(table);
     const csv = XLSX.utils.sheet_to_csv(worksheet);
-    const file = new Blob([csv], {type: 'text/csv'});
+    const file = new Blob([csv], { type: 'text/csv' });
     saveAs(file, 'danhsachdanhmuc.csv');
   }
-
-
-  showModalAddCategory = false;
-
-  categoryForm = {
-    name: '',
-    slug: '',
-    description: ''
-  };
-
-  openAddModal() {
-    this.showModalAddCategory = true;
-  }
-
-  closeAddModal() {
-    this.showModalAddCategory = false;
-    this.resetForm();
-  }
-
-  resetForm() {
-    this.categoryForm = {
-      name: '',
-      slug: '',
-      description: ''
-    };
-  }
-
-  submitCategory() {
-
-    console.log('Thêm thể loại:', this.categoryForm);
-    this.closeAddModal();
-  }
-
-
-  showModalEditCategory = false;
-
-  categoryForm2 = {
-    name: '',
-    slug: '',
-    description: ''
-  };
-
-  openEditModal() {
-    // Gán dữ liệu sẵn để demo
-    this.categoryForm2 = {
-      name: 'Kinh dị',
-      slug: 'kinh-di',
-      description: 'Thể loại phim mang đến cảm giác hồi hộp, sợ hãi.'
-    };
-    this.showModalEditCategory = true;
-  }
-
-  closeEditModal() {
-    this.showModalEditCategory = false;
-  }
-
-  submitEditCategory() {
-    // TODO: Gửi dữ liệu cập nhật lên API
-    console.log('Dữ liệu chỉnh sửa:', this.categoryForm);
-    this.closeEditModal();
-  }
-
 }

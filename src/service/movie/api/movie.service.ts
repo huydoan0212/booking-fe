@@ -5,13 +5,15 @@ import {MovieApi} from '../model/movie.model';
 import {ResponseResult} from '../../../app/shared/data-access/interface/response.type';
 import {Observable} from 'rxjs';
 import {ShowTimeApi} from '../../showtime/model/showtime.model';
+import {AuthService} from '../../auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MovieService {
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient,
+              private authService: AuthService) {
   }
 
   getMovies(filter: string, page: number, take: number, sortBy: string): Observable<any>  {
@@ -63,13 +65,28 @@ export class MovieService {
     return this.httpClient.get(`${environment.API_DOMAIN}/movie/search`, {params});
   }
   deleteMovie(movieId: string): Observable<ResponseResult<any>> {
-    const token = localStorage.getItem('token');
+    const token = this.authService.getToken();
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
 
     return this.httpClient.delete<ResponseResult<any>>(
       `${environment.API_DOMAIN}/movie/${movieId}`,
+      { headers }
+    );
+  }
+
+  createMovie(data: MovieApi.Request): Observable<ResponseResult<MovieApi.Response>> {
+    const token = this.authService.getToken();
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.httpClient.post<ResponseResult<MovieApi.Response>>(
+      `${environment.API_DOMAIN}/movie/`,
+      data,
       { headers }
     );
   }

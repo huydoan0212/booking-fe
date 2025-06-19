@@ -112,8 +112,8 @@
 
           <td class="tw-px-6 tw-py-4 tw-border-b tw-border-darkGray">
           <span
-           class="tw-text-sm"
-           [ngClass]="{
+            class="tw-text-sm"
+            [ngClass]="{
            'tw-text-green': user.userStatus === 'ACTIVATE',
             'tw-text-red': user.userStatus === 'NOT_ACTIVATED'
            }"
@@ -124,20 +124,30 @@
 
           <td class="tw-px-6 tw-py-4 tw-border-b tw-border-darkGray">
             <div class="tw-flex tw-items-center tw-space-x-2">
+
               <button
-                class="tw-text-deepBlue hover:tw-text-softBlue tw-text-sm tw-cursor-pointer"
+                class=" tw-flex tw-items-center tw-gap-1 tw-text-deepBlue hover:tw-text-softBlue tw-text-sm tw-cursor-pointer"
                 title="Chỉnh sửa"
               >
-                Sửa
+                <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"
+                     fill="currentColor">
+                  <path
+                    d="M362.7 19.3l45.3 45.3c12.5 12.5 12.5 32.8 0 45.3L223.4 294.6 160 309.3l14.7-63.4L317.3 64c12.5-12.5 32.8-12.5 45.3 0zM64 64C28.7 64 0 92.7 0 128V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V224h-64v224H64V128h224V64H64z"/>
+                </svg>
               </button>
 
               <button
-                class="tw-text-red hover:tw-text-softRed tw-text-sm tw-cursor-pointer"
+                class="tw-flex tw-items-center tw-gap-1 tw-text-red hover:tw-text-softRed tw-text-sm tw-cursor-pointer"
                 title="Xoá"
                 (click)="openDeleteModal(user.id, user.name)"
               >
-                Xoá
+                <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 448 512"
+                     fill="currentColor">
+                  <path
+                    d="M135.2 17.7C140.1 7.2 150.7 0 162.6 0h122.7c11.9 0 22.5 7.2 27.4 17.7L320 32h80c17.7 0 32 14.3 32 32s-14.3 32-32 32H48C30.3 96 16 81.7 16 64s14.3-32 32-32h80l7.2-14.3zM64 160h320l-21.8 306.3C360.4 489.5 341.6 512 317.3 512H130.7c-24.3 0-43.1-22.5-44.9-45.7L64 160z"/>
+                </svg>
               </button>
+
             </div>
           </td>
         </tr>
@@ -202,7 +212,7 @@
       </button>
       <button
         class="tw-px-4 tw-py-2 tw-rounded tw-bg-red tw-text-white hover:tw-bg-softRed"
-        (click)="confirmDeleteCinema()"
+        (click)="confirmDeleteUser()"
       >
         Xoá
       </button>

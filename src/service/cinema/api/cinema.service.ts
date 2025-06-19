@@ -6,6 +6,7 @@ import {REQUIRE_AUTH} from '../../../app/shared/utils/interceptor/interceptors';
 import {map, Observable} from 'rxjs';
 import {CategoryApi} from '../../category/model/category.model';
 import {environment} from '../../../environments/environment.development';
+import {AuthService} from '../../auth/auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +14,8 @@ import {environment} from '../../../environments/environment.development';
 export class CinemaService {
   _http: HttpClient;
 
-  constructor(_http: HttpClient) {
+  constructor(_http: HttpClient,
+              private authService: AuthService) {
     this._http = _http;
   }
 
@@ -59,7 +61,7 @@ export class CinemaService {
   }
 
   deleteCinema(cinemaId: string): Observable<ResponseResult<any>> {
-    const token = localStorage.getItem('token');
+    const token = this.authService.getToken();
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });

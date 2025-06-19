@@ -42,7 +42,7 @@
             class="tw-bg-orange hover:tw-bg-orange-brand  tw-text-white tw-px-4 tw-py-2 tw-rounded">
       Xuất CSV
     </button>
-    <div (click)=" showModalAddCategory = true" class="tw-relative tw-w-full tw-px-1 tw-max-w-full tw-flex-grow tw-flex-1 tw-text-right">
+    <div (click)="openAddModal()" class="tw-relative tw-w-full tw-px-1 tw-max-w-full tw-flex-grow tw-flex-1 tw-text-right">
       <button
         class="tw-bg-orange hover:tw-bg-orange-brand tw-text-white tw-px-4 tw-py-2 tw-rounded"
       >
@@ -96,7 +96,7 @@
 
           <td class="tw-px-6 tw-py-4 tw-border-b tw-border-darkGray">
             <div class="tw-flex tw-items-center tw-space-x-2">
-              <button (click)="openEditModal()"
+              <button (click)="openEditModal(category.id)"
                 class="tw-flex tw-items-center tw-gap-1 tw-text-deepBlue hover:tw-text-softBlue tw-text-sm tw-cursor-pointer"
                 title="Chỉnh sửa"
               >
@@ -211,13 +211,13 @@
     <h2 class="tw-text-xl tw-font-semibold tw-mb-4">Chỉnh sửa thể loại</h2>
 
     <label class="tw-block tw-mb-1">Tên thể loại:</label>
-    <input type="text" [(ngModel)]="categoryForm2.name" class="tw-w-full tw-border tw-rounded tw-mb-4 tw-p-2" />
+    <input type="text" [(ngModel)]="categoryFormEdit.name" class="tw-w-full tw-border tw-rounded tw-mb-4 tw-p-2" />
 
     <label class="tw-block tw-mb-1">Slug (đường dẫn):</label>
-    <input type="text" [(ngModel)]="categoryForm2.slug" class="tw-w-full tw-border tw-rounded tw-mb-4 tw-p-2" />
+    <input type="text" [(ngModel)]="categoryFormEdit.slug" class="tw-w-full tw-border tw-rounded tw-mb-4 tw-p-2" />
 
     <label class="tw-block tw-mb-1">Mô tả:</label>
-    <textarea [(ngModel)]="categoryForm2.description" class="tw-w-full tw-border tw-rounded tw-mb-6 tw-p-2" rows="3"></textarea>
+    <textarea [(ngModel)]="categoryFormEdit.description" class="tw-w-full tw-border tw-rounded tw-mb-6 tw-p-2" rows="3"></textarea>
 
     <div class="tw-flex tw-justify-end tw-gap-4">
       <button (click)="closeEditModal()" class="tw-px-4 tw-py-2 tw-border tw-rounded">Hủy</button>
@@ -225,3 +225,4 @@
     </div>
   </div>
 </div>
+

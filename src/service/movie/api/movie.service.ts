@@ -76,7 +76,7 @@ export class MovieService {
     );
   }
 
-  createMovie(data: MovieApi.Request): Observable<ResponseResult<MovieApi.Response>> {
+  createMovie(data: MovieApi.Request): Observable<ResponseResult<MovieApi.Request>> {
     const token = this.authService.getToken();
 
     const headers = new HttpHeaders({
@@ -84,8 +84,21 @@ export class MovieService {
       'Content-Type': 'application/json'
     });
 
-    return this.httpClient.post<ResponseResult<MovieApi.Response>>(
+    return this.httpClient.post<ResponseResult<MovieApi.Request>>(
       `${environment.API_DOMAIN}/movie/`,
+      data,
+      { headers }
+    );
+  }
+
+  updateMovie(id: string,data: MovieApi.Request): Observable<ResponseResult<any>> {
+    const token = this.authService.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.httpClient.put<ResponseResult<MovieApi.Request>>(
+      `${environment.API_DOMAIN}/movie/${id}`,
       data,
       { headers }
     );

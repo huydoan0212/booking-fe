@@ -1,0 +1,636 @@
+<div
+  class="tw-relative tw-flex tw-flex-col tw-min-w-0 tw-break-words tw-w-full tw-mb-6 tw-shadow-lg tw-rounded-lg tw-border-0 tw-max-w-[1250px] tw-ml-auto"
+>
+  <div class="tw-rounded-t tw-bg-white tw-mb-0 tw-px-6 tw-py-6">
+    <div class="tw-text-center tw-flex tw-justify-between">
+      <h6 class="tw-text-orange tw-text-xl tw-font-bold">Chi tiết Rạp</h6>
+      <button
+        class="tw-bg-red tw-text-white tw-active:bg-softRed tw-font-bold tw-uppercase tw-text-xs tw-px-4 tw-py-2 tw-rounded tw-shadow hover:tw-shadow-md tw-outline-none focus:tw-outline-none tw-mr-1 tw-ease-linear tw-transition-all tw-duration-150"
+        type="button"
+        (click)="submitEditMovie()"
+      >
+        Lưu chỉnh sửa
+      </button>
+    </div>
+  </div>
+  <div class="tw-flex-auto tw-px-4 lg:tw-px-10 tw-py-10 tw-pt-0">
+    <form #movieFormRef="ngForm">
+      <h6 class="tw-text-black tw-text-sm tw-mt-3 tw-mb-6 tw-font-bold tw-uppercase">
+        Thông tin cơ bản về rạp
+      </h6>
+      <div class="tw-flex tw-flex-wrap">
+        <div class="tw-w-full lg:tw-w-6/12 tw-px-4">
+          <!-- Ảnh ngang & dọc cạnh nhau -->
+          <div class="tw-flex tw-gap-4 tw-mb-4">
+            <!-- Ảnh ngang -->
+            <div class="tw-relative">
+              <label
+                class="tw-block tw-uppercase tw-text-blueGray-600 tw-text-xs tw-font-bold tw-mb-2"
+                for="image-landscape"
+              >
+                Ảnh dọc
+              </label>
+              <img
+                [src]="cinemaForm.imagePortrait || 'assets/placeholder-landscape.jpg'"
+                alt="Ảnh ngang"
+                class="tw-rounded tw-shadow-md tw-w-48 tw-h-62 tw-object-cover tw-border"
+              />
+              <input
+                type="file"
+                accept="image/*"
+                (change)="onImageSelect($event, 'portrait')"
+                class="tw-mt-2"
+              />
+            </div>
+
+            <!-- Ảnh dọc -->
+            <div class="tw-relative">
+              <label
+                class="tw-block tw-uppercase tw-text-blueGray-600 tw-text-xs tw-font-bold tw-mb-2"
+                for="image-portrait"
+              >
+                Ảnh Ngang
+              </label>
+              <img
+                [src]="cinemaForm.imageLandscape || 'assets/placeholder-portrait.jpg'"
+                alt="Ảnh dọc"
+                class="tw-rounded tw-shadow-md tw-w-62 tw-h-48 tw-object-cover tw-border"
+              />
+              <input
+                type="file"
+                accept="image/*"
+                (change)="onImageSelect($event, 'landscape')"
+                class="tw-mt-2"
+              />
+            </div>
+          </div>
+
+          <!-- Tên phim -->
+          <div class="tw-relative tw-w-full tw-mb-3">
+            <label
+              class="tw-block tw-uppercase tw-text-blueGray-600 tw-text-xs tw-font-bold tw-mb-2"
+              for="movie-name"
+            >
+              Tên Rạp
+            </label>
+            <input
+              type="text"
+              class="tw-border-0 tw-px-3 tw-py-3 tw-placeholder-blueGray-300 tw-text-blueGray-600 tw-bg-white tw-rounded tw-text-sm tw-shadow focus:tw-outline-none focus:tw-ring tw-w-full tw-ease-linear tw-transition-all tw-duration-150"
+              [(ngModel)]="cinemaForm.name"
+              name="name"
+              required
+              #name="ngModel"
+            />
+            <span *ngIf="name.invalid && (name.dirty || name.touched)" class="tw-text-red-500 tw-text-xs">
+              Tên phim là bắt buộc
+            </span>
+          </div>
+
+          <!-- Slug -->
+          <div class="tw-relative tw-w-full tw-mb-3">
+            <label
+              class="tw-block tw-uppercase tw-text-blueGray-600 tw-text-xs tw-font-bold tw-mb-2"
+              for="slug"
+            >
+              Slug
+            </label>
+            <input
+              type="text"
+              class="tw-border-0 tw-px-3 tw-py-3 tw-placeholder-blueGray-300 tw-text-blueGray-600 tw-bg-white tw-rounded tw-text-sm tw-shadow focus:tw-outline-none focus:tw-ring tw-w-full tw-ease-linear tw-transition-all tw-duration-150"
+              [(ngModel)]="cinemaForm.slug"
+              name="slug"
+              required
+              #slug="ngModel"
+            />
+            <span *ngIf="slug.invalid && (slug.dirty || slug.touched)" class="tw-text-red-500 tw-text-xs">
+              Slug là bắt buộc
+            </span>
+          </div>
+        </div>
+      </div>
+      <hr class="tw-mt-6 tw-border-b-1 tw-border-blueGray-300"/>
+      <h6 class="tw-text-blueGray-400 tw-text-sm tw-mt-3 tw-mb-6 tw-font-bold tw-uppercase">
+        Địa chỉ
+      </h6>
+      <div class="tw-flex tw-flex-wrap">
+        <div class="tw-w-full lg:tw-w-9/12 tw-px-4">
+          <textarea
+            class="tw-border-0 tw-px-3 tw-py-3 tw-placeholder-blueGray-300 tw-text-blueGray-600 tw-bg-white tw-rounded tw-text-sm tw-shadow focus:tw-outline-none focus:tw-ring tw-w-full tw-ease-linear tw-transition-all tw-duration-150"
+            [(ngModel)]="cinemaForm.address"
+            name="description"
+            rows="5"
+          ></textarea>
+        </div>
+      </div>
+      <hr class="tw-mt-6 tw-border-b-1 tw-border-black"/>
+      <h6 class="tw-text-blueGray-400 tw-text-sm tw-mt-3 tw-mb-6 tw-font-bold tw-uppercase">
+        Thông tin
+      </h6>
+      <div class="tw-flex tw-flex-wrap">
+        <div class="tw-w-full lg:tw-w-4/12 tw-px-4">
+          <div class="tw-relative tw-w-full tw-mb-3">
+            <label
+              class="tw-block tw-uppercase tw-text-blueGray-600 tw-text-xs tw-font-bold tw-mb-2"
+              for="duration"
+            >
+              Kinh độ
+            </label>
+            <input
+              type="text"
+              class="tw-border-0 tw-px-3 tw-py-3 tw-placeholder-blueGray-300 tw-text-blueGray-600 tw-bg-white tw-rounded tw-text-sm tw-shadow focus:tw-outline-none focus:tw-ring tw-w-full tw-ease-linear tw-transition-all tw-duration-150"
+              [(ngModel)]="cinemaForm.latitude"
+              name="duration"
+              min="0"
+            />
+          </div>
+        </div>
+        <div class="tw-w-full lg:tw-w-4/12 tw-px-4">
+          <div class="tw-relative tw-w-full tw-mb-3">
+            <label
+              class="tw-block tw-uppercase tw-text-blueGray-600 tw-text-xs tw-font-bold tw-mb-2"
+              for="age"
+            >
+              Vĩ độ
+            </label>
+            <input
+              type="text"
+              class="tw-border-0 tw-px-3 tw-py-3 tw-placeholder-blueGray-300 tw-text-blueGray-600 tw-bg-white tw-rounded tw-text-sm tw-shadow focus:tw-outline-none focus:tw-ring tw-w-full tw-ease-linear tw-transition-all tw-duration-150"
+              [(ngModel)]="cinemaForm.longitude"
+              name="age"
+              min="0"
+            />
+          </div>
+        </div>
+        <div class="tw-w-full lg:tw-w-4/12 tw-px-4">
+          <div class="tw-relative tw-w-full tw-mb-3">
+            <label
+              class="tw-block tw-uppercase tw-text-blueGray-600 tw-text-xs tw-font-bold tw-mb-2"
+              for="rate"
+            >
+              Số điện thoại
+            </label>
+            <input
+              type="text"
+              class="tw-border-0 tw-px-3 tw-py-3 tw-placeholder-blueGray-300 tw-text-blueGray-600 tw-bg-white tw-rounded tw-text-sm tw-shadow focus:tw-outline-none focus:tw-ring tw-w-full tw-ease-linear tw-transition-all tw-duration-150"
+              [(ngModel)]="cinemaForm.phone"
+              name="rate"
+              min="0"
+              max="10"
+              step="0.1"
+            />
+          </div>
+        </div>
+        <div class="tw-w-full lg:tw-w-4/12 tw-px-4">
+          <div class="tw-relative tw-w-full tw-mb-3">
+            <label
+              class="tw-block tw-uppercase tw-text-blueGray-600 tw-text-xs tw-font-bold tw-mb-2"
+              for="sortOrder"
+            >
+              Thứ tự
+            </label>
+            <input
+              type="number"
+              class="tw-border-0 tw-px-3 tw-py-3 tw-placeholder-blueGray-300 tw-text-blueGray-600 tw-bg-white tw-rounded tw-text-sm tw-shadow focus:tw-outline-none focus:tw-ring tw-w-full tw-ease-linear tw-transition-all tw-duration-150"
+              [(ngModel)]="cinemaForm.sortOrder"
+              name="sortOrder"
+              min="0"
+            />
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="tw-w-full tw-overflow-x-auto tw-pl-4">
+    <hr class="tw-mt-6 tw-border-b-1 tw-border-black"/>
+    <h6 class="tw-text-blueGray-400 tw-text-sm tw-mt-3 tw-mb-6 tw-font-bold tw-uppercase">
+      Danh sách phòng của rạp {{ cinemaDetail?.name }}
+    </h6>
+    <div (click)="openAddModal()"
+         class=" tw-pb-1 tw-relative tw-w-full tw-px-1 tw-max-w-full tw-flex-grow tw-flex-1 tw-text-right">
+      <button
+        class="tw-bg-orange hover:tw-bg-orange-brand tw-text-white tw-px-2 tw-py-1 tw-rounded"
+      >
+        Thêm Phòng Chiếu
+      </button>
+    </div>
+    <div class="tw-bg tw-max-h-[600px] tw-overflow-y-auto tw-rounded-md tw-border tw-shadow">
+      <table
+        class="tw-bg-white tw-min-w-full tw-table-auto tw-border-collapse"
+        id="exportTable"
+      >
+        <thead class="tw-sticky tw-top-0 tw-z-10 tw-bg-white">
+        <tr>
+          <th
+            class="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-semibold tw-uppercase tw-text-black tw-border-b tw-border-darkGray">
+            Phòng
+          </th>
+          <th
+            class="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-semibold tw-uppercase tw-text-black tw-border-b tw-border-darkGray">
+            Số chỗ
+          </th>
+          <th
+            class="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-semibold tw-uppercase tw-text-black tw-border-b tw-border-darkGray">
+            Màn hình
+          </th>
+          <th
+            class="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-semibold tw-uppercase tw-text-black tw-border-b tw-border-darkGray">
+            Loại âm thanh
+          <th
+            class="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-semibold tw-uppercase tw-text-black tw-border-b tw-border-darkGray">
+            Hành động
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let cinemaHall of cinemaHalls">
+          <td class="tw-px-6 tw-py-4 tw-border-b tw-border-darkGray">
+              <span class="tw-font-bold tw-text-black tw-text-sm">
+                {{ cinemaHall.name }}
+              </span>
+          </td>
+
+          <td class="tw-px-6 tw-py-4 tw-border-b tw-border-darkGray tw-whitespace-normal tw-text-sm tw-text-black">
+            {{ cinemaHall.totalSeats }}
+          </td>
+
+          <td class="tw-px-6 tw-py-4 tw-border-b tw-border-darkGray">
+              <span class="tw-text-sm tw-text-black">
+                {{ cinemaHall.screenType }}
+              </span>
+          </td>
+
+          <td class="tw-px-6 tw-py-4 tw-border-b tw-border-darkGray">
+              <span class="tw-text-sm tw-text-black">
+                {{ cinemaHall.soundSystem }}
+              </span>
+          </td>
+          <td class="tw-px-6 tw-py-4 tw-border-b tw-border-darkGray">
+            <div class="tw-flex tw-items-center tw-space-x-2">
+              <button (click)="openAddShowtime(cinemaHall.id)" class="tw-flex tw-items-center tw-gap-2 tw-text-orange hover:tw-opacity-80">
+                <svg xmlns="http://www.w3.org/2000/svg" height="20" width="17.5" viewBox="0 0 448 512" fill="#f97316">
+                  <path d="M96 32l0 32L48 64C21.5 64 0 85.5 0 112l0 48 448 0 0-48c0-26.5-21.5-48-48-48l-48 0 0-32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 32L160 64l0-32c0-17.7-14.3-32-32-32S96 14.3 96 32zM448 192L0 192 0 464c0 26.5 21.5 48 48 48l352 0c26.5 0 48-21.5 48-48l0-272zM224 248c13.3 0 24 10.7 24 24l0 56 56 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-56 0 0 56c0 13.3-10.7 24-24 24s-24-10.7-24-24l0-56-56 0c-13.3 0-24-10.7-24-24s10.7-24 24-24l56 0 0-56c0-13.3 10.7-24 24-24z"/>
+                </svg>
+              </button>
+              <button
+                class=" tw-flex tw-items-center tw-gap-1 tw-text-deepBlue hover:tw-text-softBlue tw-text-sm tw-cursor-pointer"
+                title="Chỉnh sửa"
+                (click)="openEditCinemaHallModal(cinemaHall.id)"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"
+                     fill="currentColor">
+                  <path
+                    d="M362.7 19.3l45.3 45.3c12.5 12.5 12.5 32.8 0 45.3L223.4 294.6 160 309.3l14.7-63.4L317.3 64c12.5-12.5 32.8-12.5 45.3 0zM64 64C28.7 64 0 92.7 0 128V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V224h-64v224H64V128h224V64H64z"/>
+                </svg>
+              </button>
+
+              <button (click)="openDeleteCinemaHallModal(cinemaHall.id, cinemaHall.name)"
+                class="tw-flex tw-items-center tw-gap-1 tw-text-red hover:tw-text-softRed tw-text-sm tw-cursor-pointer"
+                title="Xoá"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 448 512"
+                     fill="currentColor">
+                  <path
+                    d="M135.2 17.7C140.1 7.2 150.7 0 162.6 0h122.7c11.9 0 22.5 7.2 27.4 17.7L320 32h80c17.7 0 32 14.3 32 32s-14.3 32-32 32H48C30.3 96 16 81.7 16 64s14.3-32 32-32h80l7.2-14.3zM64 160h320l-21.8 306.3C360.4 489.5 341.6 512 317.3 512H130.7c-24.3 0-43.1-22.5-44.9-45.7L64 160z"/>
+                </svg>
+              </button>
+
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <hr class="tw-mt-6 tw-border-b-1 tw-border-black"/>
+    <h6 class="tw-text-blueGray-400 tw-text-sm tw-mt-3 tw-mb-6 tw-font-bold tw-uppercase">
+      Danh sách suất chiếu của rạp {{ cinemaDetail?.name }}
+    </h6>
+    <div class="tw-bg tw-max-h-[600px] tw-overflow-y-auto tw-rounded-md tw-border tw-shadow">
+      <table
+        class="tw-bg-white tw-min-w-full tw-table-auto tw-border-collapse"
+        id="exportTable"
+      >
+        <thead class="tw-sticky tw-top-0 tw-z-10 tw-bg-white">
+        <tr>
+          <th
+            class="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-semibold tw-uppercase tw-text-black tw-border-b tw-border-darkGray">
+            Phim
+          </th>
+          <th
+            class="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-semibold tw-uppercase tw-text-black tw-border-b tw-border-darkGray">
+            Thời gian
+          </th>
+          <th
+            class="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-semibold tw-uppercase tw-text-black tw-border-b tw-border-darkGray">
+            Ngôn ngữ
+          </th>
+          <th
+            class="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-semibold tw-uppercase tw-text-black tw-border-b tw-border-darkGray">
+            Phụ đề
+          </th>
+          <th
+            class="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-semibold tw-uppercase tw-text-black tw-border-b tw-border-darkGray">
+            Màn hình
+          </th>
+          <th
+            class="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-semibold tw-uppercase tw-text-black tw-border-b tw-border-darkGray">
+            Phòng
+          </th>
+          <th
+            class="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-semibold tw-uppercase tw-text-black tw-border-b tw-border-darkGray">
+            Hành động
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let showtime of showTimes">
+          <td class="tw-px-6 tw-py-4 tw-border-b tw-border-darkGray">
+              <span class="tw-font-bold tw-text-black tw-text-sm">
+                {{ showtime.movie.name }}
+              </span>
+          </td>
+          <td class="tw-px-6 tw-py-4 tw-border-b tw-border-darkGray">
+              <span class="tw-text-sm tw-text-black">
+                {{ showtime.showTime | date: 'HH:mm dd/MM/yyyy' }}
+              </span>
+          </td>
+          <td class="tw-px-6 tw-py-4 tw-border-b tw-border-darkGray tw-whitespace-normal tw-text-sm tw-text-black">
+            {{ showtime.language }}
+          </td>
+
+          <td class="tw-px-6 tw-py-4 tw-border-b tw-border-darkGray">
+              <span class="tw-text-sm tw-text-black">
+                {{ showtime.subtitle }}
+              </span>
+          </td>
+
+          <td class="tw-px-6 tw-py-4 tw-border-b tw-border-darkGray">
+              <span class="tw-text-sm tw-text-black">
+                {{ showtime.screenFormat }}
+              </span>
+          </td>
+          <td class="tw-px-6 tw-py-4 tw-border-b tw-border-darkGray">
+              <span class="tw-text-sm tw-text-black">
+                {{ showtime.cinemaHall.name}}
+              </span>
+          </td>
+          <td class="tw-px-6 tw-py-4 tw-border-b tw-border-darkGray">
+            <div class="tw-flex tw-items-center tw-space-x-2">
+
+
+              <button (click)="openEditShowTimeModal(showtime.id)"
+                class=" tw-flex tw-items-center tw-gap-1 tw-text-deepBlue hover:tw-text-softBlue tw-text-sm tw-cursor-pointer"
+                title="Chỉnh sửa"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"
+                     fill="currentColor">
+                  <path
+                    d="M362.7 19.3l45.3 45.3c12.5 12.5 12.5 32.8 0 45.3L223.4 294.6 160 309.3l14.7-63.4L317.3 64c12.5-12.5 32.8-12.5 45.3 0zM64 64C28.7 64 0 92.7 0 128V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V224h-64v224H64V128h224V64H64z"/>
+                </svg>
+              </button>
+
+              <button (click)="openDeleteShowtimeModal(showtime.id, showtime.movie.name)"
+                class="tw-flex tw-items-center tw-gap-1 tw-text-red hover:tw-text-softRed tw-text-sm tw-cursor-pointer"
+                title="Xoá"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 448 512"
+                     fill="currentColor">
+                  <path
+                    d="M135.2 17.7C140.1 7.2 150.7 0 162.6 0h122.7c11.9 0 22.5 7.2 27.4 17.7L320 32h80c17.7 0 32 14.3 32 32s-14.3 32-32 32H48C30.3 96 16 81.7 16 64s14.3-32 32-32h80l7.2-14.3zM64 160h320l-21.8 306.3C360.4 489.5 341.6 512 317.3 512H130.7c-24.3 0-43.1-22.5-44.9-45.7L64 160z"/>
+                </svg>
+              </button>
+
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="tw-flex tw-justify-end tw-items-center tw-gap-2 tw-m-2">
+    <button
+      (click)="previousPage()"
+      [disabled]="!hasPreviousPage"
+      class="tw-px-3 tw-py-1 tw-bg-orange hover:tw-bg-orange-brand tw-text-white tw-rounded disabled:tw-opacity-50"
+    >
+      Trước
+    </button>
+
+    <span class="tw-text-sm tw-font-medium">
+    Trang {{ page }} / {{ pageCount }}
+  </span>
+
+    <button
+      (click)="nextPage()"
+      [disabled]="!hasNextPage"
+      class="tw-px-3 tw-py-1 tw-bg-orange hover:tw-bg-orange-brand tw-text-white tw-rounded disabled:tw-opacity-50"
+    >
+      Sau
+    </button>
+  </div>
+</div>
+<!-- Modal thông báo thành công -->
+<div *ngIf="showSuccessModal"
+     class="tw-fixed tw-inset-0 tw-bg-black/50 tw-z-50 tw-flex tw-items-center tw-justify-center tw-w-screen tw-h-screen tw-top-0 tw-left-0">
+  <div class="tw-bg-white tw-rounded-lg tw-shadow-lg tw-p-6 tw-w-full tw-max-w-md">
+    <h2 class="tw-text-lg tw-font-bold tw-mb-4">Cập nhật thành công</h2>
+    <p class="tw-text-gray-700">Thông tin hồ sơ của bạn đã được cập nhật.</p>
+    <div class="tw-mt-6 tw-text-right">
+      <button (click)="showSuccessModal = false"
+              class="tw-bg-orange tw-text-white tw-px-4 tw-py-2 tw-rounded hover:tw-bg-orange-600">
+        Đóng
+      </button>
+    </div>
+  </div>
+</div>
+<div *ngIf="showModalAddCinema"
+     class="tw-fixed tw-inset-0 tw-bg-black tw-bg-opacity-50 tw-z-[1000] tw-flex tw-items-center tw-justify-center">
+  <div class="tw-bg-white tw-rounded-lg tw-shadow-lg tw-p-6 tw-w-full tw-max-w-md">
+    <h2 class="tw-text-xl tw-font-semibold tw-mb-4">Thêm Phòng Chiếu</h2>
+
+    <label class="tw-block tw-mb-1">Tên Phòng Chiếu</label>
+    <input type="text" [(ngModel)]="cinemaHallForm.name" class="tw-w-full tw-border tw-rounded tw-mb-4 tw-p-2"/>
+
+    <label class="tw-block tw-mb-1">Loại Màn Hình</label>
+    <input type="text" [(ngModel)]="cinemaHallForm.screenType" class="tw-w-full tw-border tw-rounded tw-mb-4 tw-p-2"/>
+
+    <label class="tw-block tw-mb-1">Âm Thanh</label>
+    <textarea [(ngModel)]="cinemaHallForm.soundSystem" class="tw-w-full tw-border tw-rounded tw-mb-6 tw-p-2"
+              rows="3"></textarea>
+
+    <div class="tw-flex tw-justify-end tw-gap-4">
+      <button (click)="closeAddModal()" class="tw-px-4 tw-py-2 tw-border tw-rounded">Hủy</button>
+      <button (click)="submitCinemaHall()" class="tw-bg-orange-brand tw-text-white tw-px-4 tw-py-2 tw-rounded">Thêm
+      </button>
+    </div>
+  </div>
+</div>
+<div *ngIf="showModalEditCinemaHall"
+     class="tw-fixed tw-inset-0 tw-bg-black tw-bg-opacity-50 tw-z-[1000] tw-flex tw-items-center tw-justify-center">
+  <div class="tw-bg-white tw-rounded-lg tw-shadow-lg tw-p-6 tw-w-full tw-max-w-md">
+    <h2 class="tw-text-xl tw-font-semibold tw-mb-4">Thêm Phòng Chiếu</h2>
+
+    <label class="tw-block tw-mb-1">Tên Phòng Chiếu</label>
+    <input type="text" [(ngModel)]=" cinemaHallEditForm.name" class="tw-w-full tw-border tw-rounded tw-mb-4 tw-p-2"/>
+
+    <label class="tw-block tw-mb-1">Loại Màn Hình</label>
+    <input type="text" [(ngModel)]=" cinemaHallEditForm.screenType" class="tw-w-full tw-border tw-rounded tw-mb-4 tw-p-2"/>
+
+    <label class="tw-block tw-mb-1">Âm Thanh</label>
+    <textarea [(ngModel)]=" cinemaHallEditForm.soundSystem" class="tw-w-full tw-border tw-rounded tw-mb-6 tw-p-2"
+              rows="3"></textarea>
+
+    <div class="tw-flex tw-justify-end tw-gap-4">
+      <button (click)="closeEditCinemaHall()" class="tw-px-4 tw-py-2 tw-border tw-rounded">Hủy</button>
+      <button (click)="submitEditCategory()" class="tw-bg-orange-brand tw-text-white tw-px-4 tw-py-2 tw-rounded">Thêm
+      </button>
+    </div>
+  </div>
+</div>
+<div *ngIf="showModalAddShowtime" class="tw-fixed tw-inset-0 tw-bg-black tw-bg-opacity-50 tw-z-[1000] tw-flex tw-items-center tw-justify-center">
+  <div class="tw-bg-white tw-rounded-lg tw-shadow-lg tw-p-6 tw-w-full tw-max-w-xl">
+    <h2 class="tw-text-xl tw-font-semibold tw-mb-4">Thêm suất chiếu</h2>
+
+    <!-- Các trường còn lại -->
+    <label class="tw-block tw-mb-1">Thời gian chiếu:</label>
+    <input type="datetime-local" [(ngModel)]="showtimeForm.showTime" class="tw-w-full tw-border tw-rounded tw-mb-4 tw-p-2" />
+    <select [(ngModel)]="showtimeForm.movieId" class="tw-w-full tw-border tw-rounded tw-mb-4 tw-p-2">
+      <option value="" disabled selected>-- Chọn phim --</option>
+      <option *ngFor="let movie of movies" [value]="movie.id">{{ movie.name }}</option>
+    </select>
+    <label class="tw-block tw-mb-1">Ngôn ngữ:</label>
+    <input type="text" [(ngModel)]="showtimeForm.language" class="tw-w-full tw-border tw-rounded tw-mb-4 tw-p-2" />
+
+    <label class="tw-block tw-mb-1">Phụ đề:</label>
+    <input type="text" [(ngModel)]="showtimeForm.subtitle" class="tw-w-full tw-border tw-rounded tw-mb-4 tw-p-2" />
+
+    <label class="tw-block tw-mb-1">Định dạng màn hình:</label>
+    <input type="text" [(ngModel)]="showtimeForm.screenFormat" class="tw-w-full tw-border tw-rounded tw-mb-6 tw-p-2" />
+
+    <!-- Hành động -->
+    <div class="tw-flex tw-justify-end tw-gap-4">
+      <button (click)="showModalAddShowtime = false" class="tw-px-4 tw-py-2 tw-border tw-rounded">Hủy</button>
+      <button (click)="submitShowtime()" class="tw-bg-orange-brand tw-text-white tw-px-4 tw-py-2 tw-rounded">Thêm</button>
+    </div>
+  </div>
+</div>
+<div *ngIf="showModalEditShowtime" class="tw-fixed tw-inset-0 tw-bg-black tw-bg-opacity-50 tw-z-[1000] tw-flex tw-items-center tw-justify-center">
+  <div class="tw-bg-white tw-rounded-lg tw-shadow-lg tw-p-6 tw-w-full tw-max-w-xl">
+    <h2 class="tw-text-xl tw-font-semibold tw-mb-4">Chỉnh sửa suất chiếu</h2>
+
+    <!-- Thời gian chiếu -->
+    <label class="tw-block tw-mb-1">Thời gian chiếu:</label>
+    <input
+      type="datetime-local"
+      [(ngModel)]="showtimeEditForm.showTime"
+      class="tw-w-full tw-border tw-rounded tw-mb-4 tw-p-2"
+    />
+
+    <!-- Chọn phim -->
+    <label class="tw-block tw-mb-1">Chọn phim:</label>
+    <select
+      [(ngModel)]="showtimeEditForm.movieId"
+      class="tw-w-full tw-border tw-rounded tw-mb-4 tw-p-2"
+    >
+      <option value="" disabled>-- Chọn phim --</option>
+      <option *ngFor="let movie of movies" [value]="movie.id">{{ movie.name }}</option>
+    </select>
+
+    <!-- Ngôn ngữ -->
+    <label class="tw-block tw-mb-1">Ngôn ngữ:</label>
+    <input type="text" [(ngModel)]="showtimeEditForm.language" class="tw-w-full tw-border tw-rounded tw-mb-4 tw-p-2" />
+
+    <!-- Phụ đề -->
+    <label class="tw-block tw-mb-1">Phụ đề:</label>
+    <input type="text" [(ngModel)]="showtimeEditForm.subtitle" class="tw-w-full tw-border tw-rounded tw-mb-4 tw-p-2" />
+
+    <!-- Định dạng màn hình -->
+    <label class="tw-block tw-mb-1">Định dạng màn hình:</label>
+    <input type="text" [(ngModel)]="showtimeEditForm.screenFormat" class="tw-w-full tw-border tw-rounded tw-mb-6 tw-p-2" />
+
+    <!-- Hành động -->
+    <div class="tw-flex tw-justify-end tw-gap-4">
+      <button (click)="showModalEditShowtime = false" class="tw-px-4 tw-py-2 tw-border tw-rounded">Hủy</button>
+      <button (click)="submitEditShowtime()" class="tw-bg-orange-brand tw-text-white tw-px-4 tw-py-2 tw-rounded">Lưu</button>
+    </div>
+  </div>
+</div>
+<div
+  class="tw-fixed tw-inset-0 tw-flex tw-items-center tw-justify-center"
+  *ngIf="modalVisible">
+  <div class="tw-bg-white tw-rounded-lg tw-p-6 tw-w-full tw-max-w-lg tw-shadow-lg">
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-4">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="20"
+        width="20"
+        viewBox="0 0 512 512"
+        class="tw-text-blue-400 tw-animate-bounce"
+      >
+        <path fill="#FF0000"
+              d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3
+              480 472 480L40 480c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7
+              39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24l0 112c0 13.3 10.7 24 24
+              24s24-10.7 24-24l0-112c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32
+               0 1 0 64 0z" />
+      </svg>
+      <h2 class="tw-text-lg tw-font-semibold">Xác nhận</h2>
+    </div>
+    <p>Bạn có chắc chắn muốn xoá thể loại "<strong>{{ selectedCinemaHallName}}</strong>"?</p>
+    <p class="tw-text-red tw-mt-2">Tất cả thông tin liên quan cũng sẽ bị xoá.</p>
+
+    <div class="tw-mt-6 tw-flex tw-justify-end tw-gap-2">
+      <button
+        class="tw-px-4 tw-py-2 tw-rounded tw-bg-lightGray hover:tw-bg-gray"
+        (click)="modalVisible = false"
+      >
+        Huỷ
+      </button>
+      <button
+        class="tw-px-4 tw-py-2 tw-rounded tw-bg-red tw-text-white hover:tw-bg-softRed"
+        (click)="confirmDeleteCinemaHall()"
+      >
+        Xoá
+      </button>
+    </div>
+  </div>
+</div>
+<div
+  class="tw-fixed tw-inset-0 tw-flex tw-items-center tw-justify-center"
+  *ngIf="modalVisibleShowtime">
+  <div class="tw-bg-white tw-rounded-lg tw-p-6 tw-w-full tw-max-w-lg tw-shadow-lg">
+    <div class="tw-flex tw-items-center tw-gap-2 tw-mb-4">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="20"
+        width="20"
+        viewBox="0 0 512 512"
+        class="tw-text-blue-400 tw-animate-bounce"
+      >
+        <path fill="#FF0000"
+              d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3
+              480 472 480L40 480c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7
+              39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24l0 112c0 13.3 10.7 24 24
+              24s24-10.7 24-24l0-112c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32
+               0 1 0 64 0z" />
+      </svg>
+      <h2 class="tw-text-lg tw-font-semibold">Xác nhận</h2>
+    </div>
+    <p>Bạn có chắc chắn muốn xoá xuất chiếu "<strong>{{ selectedShowtimeName}}</strong>"?</p>
+    <p class="tw-text-red tw-mt-2">Tất cả thông tin liên quan cũng sẽ bị xoá.</p>
+
+    <div class="tw-mt-6 tw-flex tw-justify-end tw-gap-2">
+      <button
+        class="tw-px-4 tw-py-2 tw-rounded tw-bg-lightGray hover:tw-bg-gray"
+        (click)="modalVisibleShowtime = false"
+      >
+        Huỷ
+      </button>
+      <button
+        class="tw-px-4 tw-py-2 tw-rounded tw-bg-red tw-text-white hover:tw-bg-softRed"
+        (click)="confirmDeleteShowtime()"
+      >
+        Xoá
+      </button>
+    </div>
+  </div>
+</div>

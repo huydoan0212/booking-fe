@@ -87,6 +87,35 @@ export class CinemaService {
     return this._http.get(`${environment.API_DOMAIN}/cinema/search`, {params});
   }
 
+  createCinema(data: CinemaApi.Request): Observable<any> {
+    const token = this.authService.getToken();
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    });
+
+    return this._http.post(`${environment.API_DOMAIN}/cinema/`, data, { headers });
+  }
+
+  updateCinema(id: string,data: CinemaApi.Request ) {
+    const token = this.authService.getToken();
+    console.log(id);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    });
+
+    return this._http.put(`${environment.API_DOMAIN}/cinema/${id}`, data, { headers });
+  }
+
+  getCinemaDetail(id: string | null) {
+    return this._http.get<ResponseResult<CinemaApi.Response>>
+    (`${environment.API_DOMAIN}/cinema/${id}`)
+  }
+
+
+
 
 
 }

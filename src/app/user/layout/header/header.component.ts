@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../../service/auth/auth.service';
 import {CategoryService} from '../../../../service/category/api/category.service';
 import {CategoryApi} from '../../../../service/category/model/category.model';
-import {Rows} from '../../../shared/data-access/interface/response.type';
 import {CinemaService} from '../../../../service/cinema/api/cinema.service';
 import {CinemaApi} from '../../../../service/cinema/model/cinema.model';
 

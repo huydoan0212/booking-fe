@@ -144,6 +144,7 @@
               <button
                 class=" tw-flex tw-items-center tw-gap-1 tw-text-deepBlue hover:tw-text-softBlue tw-text-sm tw-cursor-pointer"
                 title="Chỉnh sửa"
+                (click)="goToEditMovie(movie.id)"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512" fill="currentColor">
                   <path d="M362.7 19.3l45.3 45.3c12.5 12.5 12.5 32.8 0 45.3L223.4 294.6 160 309.3l14.7-63.4L317.3 64c12.5-12.5 32.8-12.5 45.3 0zM64 64C28.7 64 0 92.7 0 128V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V224h-64v224H64V128h224V64H64z"/>
@@ -212,7 +213,7 @@
       </svg>
       <h2 class="tw-text-lg tw-font-semibold">Xác nhận</h2>
     </div>
-    <p>Bạn có chắc chắn muốn xoá rạp "<strong>{{ selectedMovieName }}</strong>"?</p>
+    <p>Bạn có chắc chắn muốn xoá phim "<strong>{{ selectedMovieName }}</strong>"?</p>
     <p class="tw-text-red tw-mt-2">Tất cả thông tin liên quan cũng sẽ bị xoá.</p>
 
     <div class="tw-mt-6 tw-flex tw-justify-end tw-gap-2">
@@ -268,18 +269,18 @@
     </div>
   </div>
 </div>
-
 <div *ngIf="showModalAddMovie" class="tw-fixed tw-inset-0 tw-bg-black tw-bg-opacity-50 tw-z-[1000] tw-flex tw-items-center tw-justify-center">
   <div class="tw-bg-white tw-rounded-lg tw-shadow-lg tw-w-full tw-max-w-2xl tw-max-h-[80vh] tw-overflow-y-auto tw-p-6">
     <h2 class="tw-text-xl tw-font-semibold tw-mb-4">Thêm phim</h2>
-
-    <!-- Nội dung rút gọn một chút -->
     <div>
       <label class="tw-block tw-mb-1">Tên phim:</label>
       <input type="text" [(ngModel)]="movieForm.name" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
 
       <label class="tw-block tw-mb-1">Thời lượng (phút):</label>
       <input type="number" [(ngModel)]="movieForm.duration" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
+
+      <label class="tw-block tw-mb-1">Độ tuổi:</label>
+      <input type="number" [(ngModel)]="movieForm.age" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
 
       <label class="tw-block tw-mb-1">Ảnh ngang:</label>
       <input type="file" (change)="onImageSelect($event, 'landscape')" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
@@ -296,20 +297,23 @@
         <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
       </select>
 
+      <label class="tw-block tw-mb-1">Diễn viên:</label>
+      <input type="text" [(ngModel)]="movieForm.actors" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
+
+      <label class="tw-block tw-mb-1">Đạo diễn:</label>
+      <input type="text" [(ngModel)]="movieForm.director" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
+
+      <label class="tw-block tw-mb-1">Nhà sản xuất:</label>
+      <input type="text" [(ngModel)]="movieForm.producers" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
 
       <label class="tw-block tw-mb-1">Mô tả:</label>
       <textarea [(ngModel)]="movieForm.description" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" rows="2"></textarea>
 
-      <label class="tw-block tw-mb-1">Diễn viên:</label>
-      <input type="text" [(ngModel)]="movieForm.actors" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
-
       <label class="tw-block tw-mb-1">Trailer:</label>
       <input type="text" [(ngModel)]="movieForm.trailer" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
 
-
     </div>
 
-    <!-- Nút -->
     <div class="tw-flex tw-justify-end tw-gap-4 tw-mt-4">
       <button (click)="showModalAddMovie = false" class="tw-px-4 tw-py-2 tw-border tw-rounded">Hủy</button>
       <button (click)="submitMovie()" class="tw-bg-orange-brand tw-text-white tw-px-4 tw-py-2 tw-rounded">Thêm</button>
@@ -317,92 +321,6 @@
   </div>
 </div>
 
-
-<div *ngIf="showModalEditMovie" class="tw-fixed tw-inset-0 tw-bg-black tw-bg-opacity-50 tw-z-[1000] tw-flex tw-items-center tw-justify-center">
-  <div class="tw-bg-white tw-rounded-lg tw-shadow-lg tw-w-full tw-max-w-2xl tw-max-h-[80vh] tw-overflow-y-auto tw-p-6">
-    <h2 class="tw-text-xl tw-font-semibold tw-mb-4">Chỉnh sửa phim</h2>
-
-    <!-- Tên phim -->
-    <label class="tw-block tw-mb-1">Tên phim:</label>
-    <input type="text" [(ngModel)]="editMovieForm.name" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
-
-    <!-- Độ tuổi -->
-    <label class="tw-block tw-mb-1">Độ tuổi:</label>
-    <input type="number" [(ngModel)]="editMovieForm.age" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
-
-    <!-- Thời lượng -->
-    <label class="tw-block tw-mb-1">Thời lượng (phút):</label>
-    <input type="number" [(ngModel)]="editMovieForm.duration" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
-
-    <!-- Ảnh ngang -->
-    <label class="tw-block tw-mb-1">Ảnh ngang:</label>
-    <input type="file" (change)="onImageSelect($event, 'landscape')" class="tw-w-full tw-border tw-rounded tw-mb-2 tw-p-2" />
-    <img *ngIf="editMovieForm.imageLandscape" [src]="editMovieForm.imageLandscape" class="tw-w-full tw-max-h-40 tw-object-cover tw-rounded tw-mb-3" />
-
-    <!-- Ảnh dọc -->
-    <label class="tw-block tw-mb-1">Ảnh dọc:</label>
-    <input type="file" (change)="onImageSelect($event, 'portrait')" class="tw-w-full tw-border tw-rounded tw-mb-2 tw-p-2" />
-    <img *ngIf="editMovieForm.imagePortrait" [src]="editMovieForm.imagePortrait" class="tw-w-24 tw-h-36 tw-object-cover tw-rounded tw-mb-3" />
-
-    <!-- Slug -->
-    <label class="tw-block tw-mb-1">Slug:</label>
-    <input type="text" [(ngModel)]="editMovieForm.slug" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
-
-    <!-- Ngày khởi chiếu -->
-    <label class="tw-block tw-mb-1">Ngày khởi chiếu:</label>
-    <input type="date" [(ngModel)]="editMovieForm.startDate" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
-
-    <!-- Ngày kết thúc -->
-    <label class="tw-block tw-mb-1">Ngày kết thúc:</label>
-    <input type="date" [(ngModel)]="editMovieForm.endDate" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
-
-    <!-- Mô tả -->
-    <label class="tw-block tw-mb-1">Mô tả:</label>
-    <textarea [(ngModel)]="editMovieForm.description" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" rows="2"></textarea>
-
-    <!-- Trailer -->
-    <label class="tw-block tw-mb-1">Trailer:</label>
-    <input type="text" [(ngModel)]="editMovieForm.trailer" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
-
-    <!-- Diễn viên -->
-    <label class="tw-block tw-mb-1">Diễn viên:</label>
-    <input type="text" [(ngModel)]="editMovieForm.actors" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
-
-    <!-- Đạo diễn -->
-    <label class="tw-block tw-mb-1">Đạo diễn:</label>
-    <input type="text" [(ngModel)]="editMovieForm.director" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
-
-    <!-- Nhà sản xuất -->
-    <label class="tw-block tw-mb-1">Nhà sản xuất:</label>
-    <input type="text" [(ngModel)]="editMovieForm.producers" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
-
-    <!-- Quốc gia -->
-    <label class="tw-block tw-mb-1">Quốc gia:</label>
-    <input type="text" [(ngModel)]="editMovieForm.country" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
-
-    <!-- Rate, votes, views -->
-    <label class="tw-block tw-mb-1">Đánh giá (rate):</label>
-    <input type="number" step="0.1" [(ngModel)]="editMovieForm.rate" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
-
-    <label class="tw-block tw-mb-1">Lượt bình chọn:</label>
-    <input type="number" [(ngModel)]="editMovieForm.totalVotes" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
-
-    <label class="tw-block tw-mb-1">Lượt xem:</label>
-    <input type="number" [(ngModel)]="editMovieForm.views" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" />
-
-    <!-- Thể loại -->
-    <label class="tw-block tw-mb-1">Thể loại:</label>
-    <select [(ngModel)]="editMovieForm.categoryIds" class="tw-w-full tw-border tw-rounded tw-mb-3 tw-p-2" multiple>
-
-    </select>
-
-    <!-- Nút hành động -->
-    <div class="tw-flex tw-justify-end tw-gap-4 tw-mt-4">
-      <button (click)="showModalEditMovie = false" class="tw-px-4 tw-py-2 tw-border tw-rounded">Hủy</button>
-      <button class="tw-bg-orange-brand tw-text-white tw-px-4 tw-py-2 tw-rounded">Cập nhật</button>
-    </div>
-  </div>
-</div>
 
 
 

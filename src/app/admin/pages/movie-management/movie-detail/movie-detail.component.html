@@ -1,0 +1,355 @@
+<div
+  class="tw-relative tw-flex tw-flex-col tw-min-w-0 tw-break-words tw-w-full tw-mb-6 tw-shadow-lg tw-rounded-lg tw-border-0 tw-max-w-[1250px] tw-ml-auto"
+>
+  <div class="tw-rounded-t tw-bg-white tw-mb-0 tw-px-6 tw-py-6">
+    <div class="tw-text-center tw-flex tw-justify-between">
+      <h6 class="tw-text-orange tw-text-xl tw-font-bold">Chi tiết sản phẩm</h6>
+      <button
+        class="tw-bg-red tw-text-white tw-active:bg-softRed tw-font-bold tw-uppercase tw-text-xs tw-px-4 tw-py-2 tw-rounded tw-shadow hover:tw-shadow-md tw-outline-none focus:tw-outline-none tw-mr-1 tw-ease-linear tw-transition-all tw-duration-150"
+        type="button"
+        (click)="submitEditMovie()"
+      >
+        Lưu chỉnh sửa
+      </button>
+    </div>
+  </div>
+  <div class="tw-flex-auto tw-px-4 lg:tw-px-10 tw-py-10 tw-pt-0">
+    <form #movieFormRef="ngForm">
+      <h6 class="tw-text-black tw-text-sm tw-mt-3 tw-mb-6 tw-font-bold tw-uppercase">
+        Thông tin cơ bản về sản phẩm
+      </h6>
+      <div class="tw-flex tw-flex-wrap">
+        <div class="tw-w-full lg:tw-w-6/12 tw-px-4">
+          <!-- Ảnh ngang & dọc cạnh nhau -->
+          <div class="tw-flex tw-gap-4 tw-mb-4">
+            <!-- Ảnh ngang -->
+            <div class="tw-relative">
+              <label
+                class="tw-block tw-uppercase tw-text-blueGray-600 tw-text-xs tw-font-bold tw-mb-2"
+                for="image-landscape"
+              >
+                Ảnh dọc
+              </label>
+              <img
+                [src]="movieForm.imageLandscape || 'assets/placeholder-landscape.jpg'"
+                alt="Ảnh ngang"
+                class="tw-rounded tw-shadow-md tw-w-48 tw-h-62 tw-object-cover tw-border"
+              />
+              <input
+                type="file"
+                accept="image/*"
+                (change)="onImageSelect($event, 'landscape')"
+                class="tw-mt-2"
+              />
+            </div>
+
+            <!-- Ảnh dọc -->
+            <div class="tw-relative">
+              <label
+                class="tw-block tw-uppercase tw-text-blueGray-600 tw-text-xs tw-font-bold tw-mb-2"
+                for="image-portrait"
+              >
+                Ảnh Ngang
+              </label>
+              <img
+                [src]="movieForm.imagePortrait || 'assets/placeholder-portrait.jpg'"
+                alt="Ảnh dọc"
+                class="tw-rounded tw-shadow-md tw-w-62 tw-h-48 tw-object-cover tw-border"
+              />
+              <input
+                type="file"
+                accept="image/*"
+                (change)="onImageSelect($event, 'portrait')"
+                class="tw-mt-2"
+              />
+            </div>
+          </div>
+
+          <!-- Tên phim -->
+          <div class="tw-relative tw-w-full tw-mb-3">
+            <label
+              class="tw-block tw-uppercase tw-text-blueGray-600 tw-text-xs tw-font-bold tw-mb-2"
+              for="movie-name"
+            >
+              Tên phim
+            </label>
+            <input
+              type="text"
+              class="tw-border-0 tw-px-3 tw-py-3 tw-placeholder-blueGray-300 tw-text-blueGray-600 tw-bg-white tw-rounded tw-text-sm tw-shadow focus:tw-outline-none focus:tw-ring tw-w-full tw-ease-linear tw-transition-all tw-duration-150"
+              [(ngModel)]="movieForm.name"
+              name="name"
+              required
+              #name="ngModel"
+            />
+            <span *ngIf="name.invalid && (name.dirty || name.touched)" class="tw-text-red-500 tw-text-xs">
+              Tên phim là bắt buộc
+            </span>
+          </div>
+
+          <!-- Slug -->
+          <div class="tw-relative tw-w-full tw-mb-3">
+            <label
+              class="tw-block tw-uppercase tw-text-blueGray-600 tw-text-xs tw-font-bold tw-mb-2"
+              for="slug"
+            >
+              Slug
+            </label>
+            <input
+              type="text"
+              class="tw-border-0 tw-px-3 tw-py-3 tw-placeholder-blueGray-300 tw-text-blueGray-600 tw-bg-white tw-rounded tw-text-sm tw-shadow focus:tw-outline-none focus:tw-ring tw-w-full tw-ease-linear tw-transition-all tw-duration-150"
+              [(ngModel)]="movieForm.slug"
+              name="slug"
+              required
+              #slug="ngModel"
+            />
+            <span *ngIf="slug.invalid && (slug.dirty || slug.touched)" class="tw-text-red-500 tw-text-xs">
+              Slug là bắt buộc
+            </span>
+          </div>
+        </div>
+      </div>
+      <hr class="tw-mt-6 tw-border-b-1 tw-border-blueGray-300" />
+      <h6 class="tw-text-blueGray-400 tw-text-sm tw-mt-3 tw-mb-6 tw-font-bold tw-uppercase">
+        Mô tả sản phẩm
+      </h6>
+      <div class="tw-flex tw-flex-wrap">
+        <div class="tw-w-full lg:tw-w-9/12 tw-px-4">
+          <textarea
+            class="tw-border-0 tw-px-3 tw-py-3 tw-placeholder-blueGray-300 tw-text-blueGray-600 tw-bg-white tw-rounded tw-text-sm tw-shadow focus:tw-outline-none focus:tw-ring tw-w-full tw-ease-linear tw-transition-all tw-duration-150"
+            [(ngModel)]="movieForm.description"
+            name="description"
+            rows="5"
+          ></textarea>
+        </div>
+      </div>
+      <hr class="tw-mt-6 tw-border-b-1 tw-border-black" />
+      <h6 class="tw-text-blueGray-400 tw-text-sm tw-mt-3 tw-mb-6 tw-font-bold tw-uppercase">
+        Thông tin
+      </h6>
+      <div class="tw-flex tw-flex-wrap">
+        <div class="tw-w-full lg:tw-w-4/12 tw-px-4">
+          <div class="tw-relative tw-w-full tw-mb-3">
+            <label
+              class="tw-block tw-uppercase tw-text-blueGray-600 tw-text-xs tw-font-bold tw-mb-2"
+              for="duration"
+            >
+              Thời lượng (phút)
+            </label>
+            <input
+              type="number"
+              class="tw-border-0 tw-px-3 tw-py-3 tw-placeholder-blueGray-300 tw-text-blueGray-600 tw-bg-white tw-rounded tw-text-sm tw-shadow focus:tw-outline-none focus:tw-ring tw-w-full tw-ease-linear tw-transition-all tw-duration-150"
+              [(ngModel)]="movieForm.duration"
+              name="duration"
+              min="0"
+            />
+          </div>
+        </div>
+        <div class="tw-w-full lg:tw-w-4/12 tw-px-4">
+          <div class="tw-relative tw-w-full tw-mb-3">
+            <label
+              class="tw-block tw-uppercase tw-text-blueGray-600 tw-text-xs tw-font-bold tw-mb-2"
+              for="age"
+            >
+              Tuổi
+            </label>
+            <input
+              type="number"
+              class="tw-border-0 tw-px-3 tw-py-3 tw-placeholder-blueGray-300 tw-text-blueGray-600 tw-bg-white tw-rounded tw-text-sm tw-shadow focus:tw-outline-none focus:tw-ring tw-w-full tw-ease-linear tw-transition-all tw-duration-150"
+              [(ngModel)]="movieForm.age"
+              name="age"
+              min="0"
+            />
+          </div>
+        </div>
+        <div class="tw-w-full lg:tw-w-4/12 tw-px-4">
+          <div class="tw-relative tw-w-full tw-mb-3">
+            <label
+              class="tw-block tw-uppercase tw-text-blueGray-600 tw-text-xs tw-font-bold tw-mb-2"
+              for="rate"
+            >
+              Đánh giá
+            </label>
+            <input
+              type="number"
+              class="tw-border-0 tw-px-3 tw-py-3 tw-placeholder-blueGray-300 tw-text-blueGray-600 tw-bg-white tw-rounded tw-text-sm tw-shadow focus:tw-outline-none focus:tw-ring tw-w-full tw-ease-linear tw-transition-all tw-duration-150"
+              [(ngModel)]="movieForm.rate"
+              name="rate"
+              min="0"
+              max="10"
+              step="0.1"
+            />
+          </div>
+        </div>
+        <div class="tw-w-full lg:tw-w-4/12 tw-px-4">
+          <div class="tw-relative tw-w-full tw-mb-3">
+            <label
+              class="tw-block tw-uppercase tw-text-blueGray-600 tw-text-xs tw-font-bold tw-mb-2"
+              for="totalVotes"
+            >
+              Bình chọn
+            </label>
+            <input
+              type="number"
+              class="tw-border-0 tw-px-3 tw-py-3 tw-placeholder-blueGray-300 tw-text-blueGray-600 tw-bg-white tw-rounded tw-text-sm tw-shadow focus:tw-outline-none focus:tw-ring tw-w-full tw-ease-linear tw-transition-all tw-duration-150"
+              [(ngModel)]="movieForm.totalVotes"
+              name="totalVotes"
+              min="0"
+            />
+          </div>
+        </div>
+        <div class="tw-w-full lg:tw-w-4/12 tw-px-4">
+          <div class="tw-relative tw-w-full tw-mb-3">
+            <label
+              class="tw-block tw-uppercase tw-text-blueGray-600 tw-text-xs tw-font-bold tw-mb-2"
+              for="sortOrder"
+            >
+              Thứ tự
+            </label>
+            <input
+              type="number"
+              class="tw-border-0 tw-px-3 tw-py-3 tw-placeholder-blueGray-300 tw-text-blueGray-600 tw-bg-white tw-rounded tw-text-sm tw-shadow focus:tw-outline-none focus:tw-ring tw-w-full tw-ease-linear tw-transition-all tw-duration-150"
+              [(ngModel)]="movieForm.sortOrder"
+              name="sortOrder"
+              min="0"
+            />
+          </div>
+        </div>
+        <div class="tw-w-full lg:tw-w-4/12 tw-px-4">
+          <div class="tw-relative tw-w-full tw-mb-3">
+            <label
+              class="tw-block tw-uppercase tw-text-blueGray-600 tw-text-xs tw-font-bold tw-mb-2"
+              for="categories"
+            >
+              Danh mục
+            </label>
+            <select
+              multiple
+              class="tw-border-0 tw-px-3 tw-py-3 tw-placeholder-blueGray-300 tw-text-blueGray-600 tw-bg-white tw-rounded tw-text-sm tw-shadow focus:tw-outline-none focus:tw-ring tw-w-full tw-ease-linear tw-transition-all tw-duration-150"
+              [(ngModel)]="movieForm.categoryIds"
+              name="categoryIds"
+            >
+              <option *ngFor="let category of categories" [value]="category.id">
+                {{ category.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <hr class="tw-mt-6 tw-border-b-1 tw-border-black" />
+      <h6 class="tw-text-blueGray-400 tw-text-sm tw-mt-3 tw-mb-6 tw-font-bold tw-uppercase">
+        Nhà sản xuất/ Diễn viên
+      </h6>
+      <div class="tw-flex tw-flex-wrap">
+        <div class="tw-w-full lg:tw-w-4/12 tw-px-4">
+          <div class="tw-relative tw-w-full tw-mb-3">
+            <label
+              class="tw-block tw-uppercase tw-text-blueGray-600 tw-text-xs tw-font-bold tw-mb-2"
+              for="actors"
+            >
+              Diễn viên
+            </label>
+            <input
+              type="text"
+              class="tw-border-0 tw-px-3 tw-py-3 tw-placeholder-blueGray-300 tw-text-blueGray-600 tw-bg-white tw-rounded tw-text-sm tw-shadow focus:tw-outline-none focus:tw-ring tw-w-full tw-ease-linear tw-transition-all tw-duration-150"
+              [(ngModel)]="movieForm.actors"
+              name="actors"
+            />
+          </div>
+        </div>
+        <div class="tw-w-full lg:tw-w-4/12 tw-px-4">
+          <div class="tw-relative tw-w-full tw-mb-3">
+            <label
+              class="tw-block tw-uppercase tw-text-blueGray-600 tw-text-xs tw-font-bold tw-mb-2"
+              for="director"
+            >
+              Đạo diễn
+            </label>
+            <input
+              type="text"
+              class="tw-border-0 tw-px-3 tw-py-3 tw-placeholder-blueGray-300 tw-text-blueGray-600 tw-bg-white tw-rounded tw-text-sm tw-shadow focus:tw-outline-none focus:tw-ring tw-w-full tw-ease-linear tw-transition-all tw-duration-150"
+              [(ngModel)]="movieForm.director"
+              name="director"
+            />
+          </div>
+        </div>
+        <div class="tw-w-full lg:tw-w-4/12 tw-px-4">
+          <div class="tw-relative tw-w-full tw-mb-3">
+            <label
+              class="tw-block tw-uppercase tw-text-blueGray-600 tw-text-xs tw-font-bold tw-mb-2"
+              for="producers"
+            >
+              Nhà sản xuất
+            </label>
+            <input
+              type="text"
+              class="tw-border-0 tw-px-3 tw-py-3 tw-placeholder-blueGray-300 tw-text-blueGray-600 tw-bg-white tw-rounded tw-text-sm tw-shadow focus:tw-outline-none focus:tw-ring tw-w-full tw-ease-linear tw-transition-all tw-duration-150"
+              [(ngModel)]="movieForm.producers"
+              name="producers"
+            />
+          </div>
+        </div>
+        <div class="tw-w-full lg:tw-w-4/12 tw-px-4">
+          <div class="tw-relative tw-w-full tw-mb-3">
+            <label
+              class="tw-block tw-uppercase tw-text-blueGray-600 tw-text-xs tw-font-bold tw-mb-2"
+              for="country"
+            >
+              Quốc gia
+            </label>
+            <input
+              type="text"
+              class="tw-border-0 tw-px-3 tw-py-3 tw-placeholder-blueGray-300 tw-text-blueGray-600 tw-bg-white tw-rounded tw-text-sm tw-shadow focus:tw-outline-none focus:tw-ring tw-w-full tw-ease-linear tw-transition-all tw-duration-150"
+              [(ngModel)]="movieForm.country"
+              name="country"
+            />
+          </div>
+        </div>
+        <div class="tw-w-full lg:tw-w-4/12 tw-px-4">
+          <div class="tw-relative tw-w-full tw-mb-3">
+            <label
+              class="tw-block tw-uppercase tw-text-blueGray-600 tw-text-xs tw-font-bold tw-mb-2"
+              for="startDate"
+            >
+              Ngày khởi chiếu
+            </label>
+            <input
+              type="date"
+              class="tw-border-0 tw-px-3 tw-py-3 tw-placeholder-blueGray-300 tw-text-blueGray-600 tw-bg-white tw-rounded tw-text-sm tw-shadow focus:tw-outline-none focus:tw-ring tw-w-full tw-ease-linear tw-transition-all tw-duration-150"
+              [(ngModel)]="movieForm.startDate"
+              name="startDate"
+            />
+          </div>
+        </div>
+        <div class="tw-w-full lg:tw-w-4/12 tw-px-4">
+          <div class="tw-relative tw-w-full tw-mb-3">
+            <label
+              class="tw-block tw-uppercase tw-text-blueGray-600 tw-text-xs tw-font-bold tw-mb-2"
+              for="endDate"
+            >
+              Ngày kết thúc
+            </label>
+            <input
+              type="date"
+              class="tw-border-0 tw-px-3 tw-py-3 tw-placeholder-blueGray-300 tw-text-blueGray-600 tw-bg-white tw-rounded tw-text-sm tw-shadow focus:tw-outline-none focus:tw-ring tw-w-full tw-ease-linear tw-transition-all tw-duration-150"
+              [(ngModel)]="movieForm.endDate"
+              name="endDate"
+            />
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- Modal thông báo thành công -->
+<div *ngIf="showSuccessModal" class="tw-fixed tw-inset-0 tw-bg-black/50 tw-z-50 tw-flex tw-items-center tw-justify-center tw-w-screen tw-h-screen tw-top-0 tw-left-0">
+  <div class="tw-bg-white tw-rounded-lg tw-shadow-lg tw-p-6 tw-w-full tw-max-w-md">
+    <h2 class="tw-text-lg tw-font-bold tw-mb-4">Cập nhật thành công</h2>
+    <p class="tw-text-gray-700">Thông tin hồ sơ của bạn đã được cập nhật.</p>
+    <div class="tw-mt-6 tw-text-right">
+      <button (click)="showSuccessModal = false"
+              class="tw-bg-orange tw-text-white tw-px-4 tw-py-2 tw-rounded hover:tw-bg-orange-600">
+        Đóng
+      </button>
+    </div>
+  </div>
+</div>

@@ -31,7 +31,6 @@ export const routes: Routes = [
           import('./user/pages/seat-selection/seat-booking.component').then(m => m.SeatBookingComponent),
         title: 'Đặt ghế',
         canActivate: [AuthGuard],
-        data: { role: 'ROLE_USER' }
       },
       {
         path: 'food-combo-selection',
@@ -107,6 +106,20 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./admin/pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
         title: 'Thống kê',
+      },
+      {
+        path: 'movie-detail/:id',
+        loadComponent: () =>
+          import('./admin/pages/movie-management/movie-detail/movie-detail.component')
+            .then(m => m.MovieDetailComponent),
+        title: 'Chi tiết phim',
+      },
+      {
+        path: 'cinema-detail/:id',
+        loadComponent: () =>
+          import('./admin/pages/cinema-management/cinema-detail/cinema-detail.component')
+            .then(m => m.CinemaDetailComponent),
+        title: 'Chi tiết rạp',
       },
     ],
   },

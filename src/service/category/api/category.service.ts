@@ -46,7 +46,7 @@ export class CategoryService {
     );
   }
 
-  createCategory(data: { name: string; slug: string; description: string }) {
+  createCategory(data: CategoryApi.Request): Observable<any> {
     const token = this.authService.getToken();
 
     const headers = new HttpHeaders({
@@ -66,7 +66,7 @@ export class CategoryService {
   }
 
 
-  updateCategory(id: string, data: { name: string; slug: string; description: string }) {
+  updateCategory(id: string, data: CategoryApi.Request) {
     const token = this.authService.getToken();
     console.log(id);
     const headers = new HttpHeaders({

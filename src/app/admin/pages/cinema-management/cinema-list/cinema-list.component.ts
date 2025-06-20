@@ -7,6 +7,8 @@ import {CinemaApi} from '../../../../../service/cinema/model/cinema.model';
 import {NgForOf, NgIf} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {debounceTime, distinctUntilChanged, Subject} from 'rxjs';
+import {MovieApi} from '../../../../../service/movie/model/movie.model';
+import {UploadService} from '../../../../../service/upload/upload.service';
 
 @Component({
   selector: 'app-cinema-list',
@@ -15,12 +17,12 @@ import {debounceTime, distinctUntilChanged, Subject} from 'rxjs';
     NgForOf,
     FormsModule,
     NgIf,
-
   ],
   styleUrls: ['./cinema-management.component.css']
 })
 export class CinemaListComponent implements OnInit {
   private readonly cinemaService = inject(CinemaService);
+  private readonly uploadService = inject(UploadService);
   private readonly router = inject(Router);
   searchInputChanged = new Subject<string>();
 
@@ -33,7 +35,6 @@ export class CinemaListComponent implements OnInit {
         this.page = 1;
         this.getCinemas();
       });
-
   }
 
   cinemas: CinemaApi.Response[] = [];
@@ -86,6 +87,47 @@ export class CinemaListComponent implements OnInit {
     });
   }
 
+  cinemaForm: CinemaApi.Request = {
+    name: '',
+    slug: '',
+    latitude: 0,
+    longitude: 0,
+    address: '',
+    phone: '',
+    imageLandscape: '',
+    imagePortrait: '',
+    imgUrls: [],
+    sortOrder: 0
+  };
+  showModalAddCinema = false;
+
+  submitAddCinema() {
+    this.cinemaService.createCinema(this.cinemaForm).subscribe({
+      next: () => {
+        this.getCinemas();
+        this.showModalAddCinema = false;
+      },
+      error: (err) => {
+        console.error('Lỗi khi thêm rạp:', err);
+      }
+    });
+  }
+
+  onImageSelect(event: any, type: 'landscape' | 'portrait') {
+    const file = event.target.files[0];
+    if (file) {
+      this.uploadService.uploadFile(file).subscribe({
+        next: (res) => {
+          const url = res.responseData?.url;
+          if (type === 'landscape') {
+            this.cinemaForm.imageLandscape = url;
+          } else {
+            this.cinemaForm.imagePortrait = url;
+          }
+        },
+      });
+    }
+  }
 
   nextPage(): void {
     if (this.hasNextPage) {
@@ -99,6 +141,10 @@ export class CinemaListComponent implements OnInit {
       this.page--;
       this.getCinemas();
     }
+  }
+
+  goToEditCinema(cinemaId: string): void {
+    this.router.navigate(['/admin/cinema-detail', cinemaId]);
   }
 
   exportExcel(): void {
@@ -118,61 +164,4 @@ export class CinemaListComponent implements OnInit {
     const file = new Blob([csv], {type: 'text/csv'});
     saveAs(file, 'danhsachrap.csv');
   }
-
-  cinemaForm = {
-    name: '',
-    slug: '',
-    latitude: 0,
-    longitude: 0,
-    address: '',
-    phone: '',
-    imageLandscape: '',
-    imagePortrait: '',
-    imgUrlsString: '',
-    sortOrder: 0,
-  };
-  showModalAddCinema = false
-
-  onImageSelect(event: any, type: 'landscape' | 'portrait') {
-    const file = event.target.files[0];
-    // Xử lý upload file tại đây hoặc tạo URL giả để demo
-    const fakeUrl = URL.createObjectURL(file);
-    if (type === 'landscape') {
-      this.cinemaForm.imageLandscape = fakeUrl;
-    } else {
-      this.cinemaForm.imagePortrait = fakeUrl;
-    }
-  }
-
-  submitAddCinema() {
-    const imgUrlsArray = this.cinemaForm.imgUrlsString
-      ? this.cinemaForm.imgUrlsString.split(',').map(url => url.trim())
-      : [];
-
-    const payload = {
-      ...this.cinemaForm,
-      imgUrls: imgUrlsArray
-    };
-
-    console.log('Dữ liệu gửi đi:', payload);
-    // Gửi API tại đây
-    this.showModalAddCinema = false;
-  }
-  showModalEditCinema = false;
-  editCinemaForm = {
-    name: "Galaxy Nguyễn Du",
-    slug: "galaxy-nguyen-du",
-    latitude: 10.77339,
-    longitude: 106.69329,
-    address: "116 Nguyễn Du, Quận 1, Tp.HCM",
-    phone: "1900 2224",
-    imageLandscape: "https://cdn.galaxycine.vn/media/2023/10/23/galaxy-nguyen-du-3_1698051874807.jpg",
-    imagePortrait: "https://cdn.galaxycine.vn/media/2023/10/23/galaxy-nguyen-du-1_1698051870157.jpg",
-    sortOrder: 1,
-    imgUrlsText: `https://cdn.galaxycine.vn/media/2023/10/23/galaxy-nguyen-du-1_1698051240852.jpg
-                  https://cdn.galaxycine.vn/media/2023/10/23/galaxy-nguyen-du-4_1698051246666.jpg
-                  https://cdn.galaxycine.vn/media/2023/10/23/galaxy-nguyen-du-2_1698051251352.jpg
-                  https://cdn.galaxycine.vn/media/2023/10/23/galaxy-nguyen-du-3_1698051255427.jpg`
-  };
-
 }

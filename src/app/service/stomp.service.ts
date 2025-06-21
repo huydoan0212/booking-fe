@@ -1,8 +1,9 @@
 // src/app/service/websocket/stomp.service.ts
 import { Injectable } from '@angular/core';
-import { Client, Message, Stomp, StompConfig, StompSubscription, frameCallbackType } from '@stomp/stompjs';
+import {Client, Message, Stomp, StompConfig, StompSubscription, frameCallbackType, IMessage} from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import {environment} from '../../environments/environment.development';
+import {PaymentNotification} from '../../service/booking/model/booking.model';
 
 @Injectable({ providedIn: 'root' })
 export class StompService {
@@ -51,5 +52,12 @@ export class StompService {
    */
   subscribeUserQueue(callback: (message: Message) => void): StompSubscription {
     return this.client.subscribe(`${environment.API_DOMAIN}/user/queue/errors`, callback);
+  }
+  subscribePayment(txnRef: string, callback: (notif: PaymentNotification) => void) {
+    const topic = `/topic/payment-status/${txnRef}`;
+    return this.client.subscribe(topic, (msg: IMessage) => {
+      const payload: PaymentNotification = JSON.parse(msg.body);
+      callback(payload);
+    });
   }
 }

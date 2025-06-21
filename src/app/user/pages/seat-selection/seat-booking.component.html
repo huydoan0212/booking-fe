@@ -8,9 +8,9 @@
     <li>
       <div class="tw-text-deepBlue "> Chọn ghế</div>
     </li>
-<!--    <li>-->
-<!--      <div class="tw-text-lightGray">Chọn thức ăn</div>-->
-<!--    </li>-->
+    <!--    <li>-->
+    <!--      <div class="tw-text-lightGray">Chọn thức ăn</div>-->
+    <!--    </li>-->
     <li>
       <div href="" class="tw-text-lightGray">Thanh toán</div>
     </li>
@@ -197,17 +197,26 @@
       </div>
     </div>
     <!-- Thông tin phim (TicketSummaryComponent) -->
-<!--    <app-ticket-summary class="tw-mb-6" [totalSeconds]="holdExpiresIn"-->
-<!--                        [totalAmount]="totalAmount"-->
-<!--                        [showTimeId]="showTimeId"-->
-<!--                        [numStandard]="numStandard"-->
-<!--                        [numCouple]="numCouple"-->
-<!--                        [labelsStandard]="labelsStandard"-->
-<!--                        [labelsCouple]="labelsCouple"-->
-<!--                        [totalAmountCouple]="totalAmountCouple"-->
-<!--                        [totalAmountStandard]="totalAmountStandard"-->
-<!--                        [labelsAll]="labelsAll">-->
-<!--    </app-ticket-summary>-->
+    <app-ticket-summary class="tw-mb-6" [totalSeconds]="holdExpiresIn"
+                        [totalAmount]="totalAmount"
+                        [showTimeId]="showTimeId"
+                        [numStandard]="numStandard"
+                        [numCouple]="numCouple"
+                        [labelsStandard]="labelsStandard"
+                        [labelsCouple]="labelsCouple"
+                        [totalAmountCouple]="totalAmountCouple"
+                        [totalAmountStandard]="totalAmountStandard"
+                        [labelsAll]="labelsAll"
+                        (openPayment)="handleOpenPayment()">
+    </app-ticket-summary>
+
+    <app-payment
+      [visible]="showPaymentModal"
+      [userId]="userId"
+      [ticketIds]="selectedSeatIds"
+      (close)="handleClosePayment()"
+      (confirm)="handleConfirmPayment()"
+    ></app-payment>
   </div>
 </div>
 </body>

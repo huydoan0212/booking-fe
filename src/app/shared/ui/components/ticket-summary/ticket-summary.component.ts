@@ -1,4 +1,14 @@
-import {Component, inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges
+} from '@angular/core';
 import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {ShowTimeApi} from '../../../../../service/showtime/model/showtime.model';
 import {ShowtimeService} from '../../../../../service/showtime/api/showtime.service';
@@ -22,7 +32,8 @@ export class TicketSummaryComponent implements OnInit, OnDestroy, OnChanges {
   @Input() totalAmountCouple: number = 0;
   @Input() totalAmountStandard: number = 0;
   private readonly showtimeService = inject(ShowtimeService);
-
+  /** Emit khi user bấm Tiếp tục/Thanh toán */
+  @Output() openPayment = new EventEmitter<void>();
   minutes: number = 0;
   seconds: number = 0;
   showTime: ShowTimeApi.Response | null | undefined;
@@ -83,5 +94,9 @@ export class TicketSummaryComponent implements OnInit, OnDestroy, OnChanges {
   onCountdownFinished(): void {
     alert('Hết thời gian giữ ghế. Vui lòng chọn lại.');
     // Có thể emit sự kiện lên parent hoặc điều hướng
+  }
+
+  onContinue() {
+    this.openPayment.emit();
   }
 }

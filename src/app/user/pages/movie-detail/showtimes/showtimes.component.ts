@@ -52,7 +52,7 @@ export class ShowtimesComponent implements OnInit {
   private rawShowTimes: ShowTimeApi.Response[] = [];
   private readonly showtimeService = inject(ShowtimeService);
 
-  private readonly movieId = '3e4e6db0-70e0-4616-bd2f-4c20d8590400';
+  private readonly movieId = '8e4f1fbc-2d71-49a1-88a7-69b5dd4dc495';
   private readonly page = 1;
   private readonly take = 200;
 
@@ -165,6 +165,7 @@ export class ShowtimesComponent implements OnInit {
   }
   /** Thay thế selectTime bằng goToBooking */
   goToBooking(showId: string): void {
+    console.log(showId);
     this.routes.navigate(['/seat-booking', showId]);
   }
 }

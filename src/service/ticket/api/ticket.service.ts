@@ -40,7 +40,7 @@ export class TicketService {
    */
   getUserHold(
     showtimeId: string,
-    userId: string
+    userId: string | null
   ): Observable<AllHoldInfo.Response> {
     return this.http
       .get<ResponseResult<AllHoldInfo.Response>>(
@@ -54,14 +54,21 @@ export class TicketService {
   /**
    * Gửi lệnh lockSeat qua STOMP kèm price, seatLabel, seatType
    */
-  sendLockSeat(req: { showTimeId: string; ticketId: string; userId: string }): Observable<boolean> {
+  sendLockSeat(req: {
+    showTimeId: string;
+    ticketId: string;
+    userId: string | null;
+    price: number;
+    seatLabel: string;
+    seatType: string
+  }): Observable<boolean> {
     this.stompService.send('/app/lock-seat', {
       showTimeId: req.showTimeId,
       ticketId: req.ticketId,
       userId: req.userId,
-      // price: req.price,
-      // seatLabel: req.seatLabel,
-      // seatType: req.seatType
+      price: req.price,
+      seatLabel: req.seatLabel,
+      seatType: req.seatType
     });
     return of(true);
   }
@@ -69,7 +76,7 @@ export class TicketService {
   /**
    * Gửi lệnh unlockSeat
    */
-  sendUnlockSeat(req: { showTimeId: string; ticketId: string; userId: string }): Observable<boolean> {
+  sendUnlockSeat(req: { showTimeId: string; ticketId: string; userId: string | null }): Observable<boolean> {
     this.stompService.send('/app/unlock-seat', {
       showTimeId: req.showTimeId,
       ticketId: req.ticketId,

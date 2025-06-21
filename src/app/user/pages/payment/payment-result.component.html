@@ -1,0 +1,7 @@
+<ng-container>
+  <div class="payment-result-container tw-mb-40 tw-mt-56">
+    <h2 *ngIf="paymentStatus === 'success'">🎉 Thanh toán thành công!</h2>
+    <h2 *ngIf="paymentStatus === 'fail'">⚠️ Thanh toán thất bại!</h2>
+    <p>Bạn sẽ được chuyển về trang chủ sau {{ countdown }} giây.</p>
+  </div>
+</ng-container>

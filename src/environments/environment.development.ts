@@ -1,3 +1,3 @@
 export const environment = {
-  API_DOMAIN: 'http://localhost:8080/api',
+  API_DOMAIN: 'http://192.168.1.125:8080/api',
 };

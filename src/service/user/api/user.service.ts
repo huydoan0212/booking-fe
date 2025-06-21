@@ -40,6 +40,29 @@ export class UserService {
     });
   }
 
+  getUserByUsername(username: string | null, page: number, take: number, sortDirection: string): Observable<any> {
+    const filter = username ? `username ~ '${username}'` : '';
+
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('take', take.toString())
+      .set('sortDirection', sortDirection)
+
+    if (filter) {
+      params = params.set('filter', filter);
+    }
+
+    const token = this.authService.getToken();
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+
+    return this.http.get(`${environment.API_DOMAIN}/user/search`, {
+      params,
+      headers
+    });
+  }
+
   deleteUser(userId: string): Observable<ResponseResult<any>> {
     const token = this.authService.getToken();
     const headers = new HttpHeaders({

@@ -19,4 +19,13 @@ export namespace BookingApi {
     tickets: TicketApi.Response[];
     createdAt: string; // ISO Date string
   }
+
+  export interface ResponseUrl{
+    url: string;
+  }
+}
+export interface PaymentNotification {
+  txnRef: string;
+  success: boolean;
+  message: string;
 }

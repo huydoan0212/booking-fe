@@ -5,7 +5,7 @@ import {ShowtimeService} from '../../../../../service/showtime/api/showtime.serv
 import {ShowTimeApi} from '../../../../../service/showtime/model/showtime.model';
 import {ResponseResult, Rows} from '../../../../shared/data-access/interface/response.type';
 import {routes} from '../../../../app.routes';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 interface ShowtimeDisplay {
   id: string;
@@ -33,6 +33,7 @@ interface DayWithShowtimes {
 export class ShowtimesComponent implements OnInit {
   constructor(private routes: Router) {
   }
+  private readonly activatedRoute = inject(ActivatedRoute);
   @ViewChild('dayList', { static: true }) dayList!: ElementRef;
 
   public days: DayWithShowtimes[] = [];
@@ -52,7 +53,7 @@ export class ShowtimesComponent implements OnInit {
   private rawShowTimes: ShowTimeApi.Response[] = [];
   private readonly showtimeService = inject(ShowtimeService);
 
-  private readonly movieId = '8e4f1fbc-2d71-49a1-88a7-69b5dd4dc495';
+  private movieId = '8e4f1fbc-2d71-49a1-88a7-69b5dd4dc495';
   private readonly page = 1;
   private readonly take = 200;
 
@@ -78,6 +79,15 @@ export class ShowtimesComponent implements OnInit {
   }
 
   private loadShowTimes(): void {
+    this.activatedRoute.paramMap.subscribe(params => {
+      const id = params.get('id');
+      if (id) {
+        this.movieId = id;
+        // 2. Sau khi có id mới load và connect
+      } else {
+        console.error('No movie in URL');
+      }
+    });
     this.showtimeService
       .searchShowTime(
         this.movieId,

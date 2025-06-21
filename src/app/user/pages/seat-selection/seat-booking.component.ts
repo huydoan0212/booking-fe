@@ -25,7 +25,7 @@ export class SeatBookingComponent implements OnInit {
   holdSubscription?: Subscription;
   holdExpiresIn = 0;         // seconds remaining
   displayTimer = '07:00';
-  userId: string = 'c0773395-493c-4322-9caa-cdc296a8a16c';
+  userId: string = '1';
   showTimeId!: string;
   totalAmount = 0; // Tổng số tiền ghế đã chọn
   private readonly HOLD_DURATION_SECONDS = 420;
@@ -64,23 +64,23 @@ export class SeatBookingComponent implements OnInit {
 
   ngOnInit(): void {
     const username = this.authService.getUsername()
-    this.userService.getUserByUsername(username, 1, 1, 'username')
-      .subscribe({
-        next: res => {
-          const users = res.responseData;
-          if (users && users.length > 0) {
-            this.userId = users[0].id;
-            console.log('Fetched userId =', this.userId);
-            // 2. Sau khi đã có userId, mới gọi releaseAllHolds
-          } else {
-            console.warn('Không tìm thấy user với username', username);
-          }
-        },
-        error: err => {
-          console.error('Lỗi khi lấy user:', err);
-        }
-      });
-
+    // this.userService.getUserByUsername(username, 1, 1, 'username')
+    //   .subscribe({
+    //     next: res => {
+    //       const users = res.responseData;
+    //       if (users && users.length > 0) {
+    //         this.userId = users[0].id;
+    //         console.log('Fetched userId =', this.userId);
+    //         // 2. Sau khi đã có userId, mới gọi releaseAllHolds
+    //       } else {
+    //         console.warn('Không tìm thấy user với username', username);
+    //       }
+    //     },
+    //     error: err => {
+    //       console.error('Lỗi khi lấy user:', err);
+    //     }
+    //   });
+    this.userId = this.authService.userData.id;
     console.log(this.userId)
 // 1. Lấy showTimeId từ URL trước
     this.activatedRoute.paramMap.subscribe(params => {

@@ -107,12 +107,12 @@ export const routes: Routes = [
           import('./admin/pages/category-management/category-list/category-list.component').then(m => m.CategoriesListComponent),
         title: 'Quản lý Thể Loại',
       },
-      // {
-      //   path: 'dashboard-management',
-      //   loadComponent: () =>
-      //     import('./admin/pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
-      //   title: 'Thống kê',
-      // },
+      {
+        path: 'dashboard-management',
+        loadComponent: () =>
+          import('./admin/pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
+        title: 'Thống kê',
+      },
       {
         path: 'movie-detail/:id',
         loadComponent: () =>

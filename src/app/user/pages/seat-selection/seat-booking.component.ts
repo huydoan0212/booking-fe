@@ -10,6 +10,7 @@ import {StompService} from '../../../service/stomp.service';
 import {AllHoldInfo, HeldTicket, TicketApi} from '../../../../service/ticket/model/ticket.model';
 import {AuthService} from '../../../../service/auth/auth.service';
 import {UserService} from '../../../../service/user/api/user.service';
+import {UserApi} from '../../../../service/user/model/user.model';
 
 @Component({
   selector: 'app-seat-booking',
@@ -46,7 +47,7 @@ export class SeatBookingComponent implements OnInit {
   showPaymentModal = false;
   /** Mảng cập nhật realtime chứa id các ghế user đang chọn */
   selectedSeatIds: string[] = [];
-
+  users: UserApi.Response[] = [];
   private updateSelectedSeats() {
     this.selectedSeatIds = Array.from(this.mySelected);
   }
@@ -63,26 +64,6 @@ export class SeatBookingComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const username = this.authService.getUsername()
-    // this.userService.getUserByUsername(username, 1, 1, 'username')
-    //   .subscribe({
-    //     next: res => {
-    //       const users = res.responseData;
-    //       if (users && users.length > 0) {
-    //         this.userId = users[0].id;
-    //         console.log('Fetched userId =', this.userId);
-    //         // 2. Sau khi đã có userId, mới gọi releaseAllHolds
-    //       } else {
-    //         console.warn('Không tìm thấy user với username', username);
-    //       }
-    //     },
-    //     error: err => {
-    //       console.error('Lỗi khi lấy user:', err);
-    //     }
-    //   });
-    this.userId = this.authService.userData.id;
-    console.log(this.userId)
-// 1. Lấy showTimeId từ URL trước
     this.activatedRoute.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {
@@ -92,8 +73,36 @@ export class SeatBookingComponent implements OnInit {
         console.error('No showTimeId in URL');
       }
     });
-    this.loadTicketsAndHold();
-    this.connectWebSocket();
+    const username = this.authService.getUsername()
+    console.log('username', username);
+    this.userService.getUserByUsername(username, 1, 1, 'ASC')
+      .subscribe({
+        next: res => {
+          const data = res.responseData;
+          console.log('User search responseData =', data);
+          if (data?.rows?.length) {
+            this.users = data.rows;
+            this.userId = this.users[0].id;
+            console.log('Fetched userId =', this.userId);
+
+            // 4. Sau khi đã có showTimeId và userId, mới load tickets và connect WS
+            this.loadTicketsAndHold();
+            this.connectWebSocket();
+          } else {
+            console.warn('Không tìm thấy user với username', username);
+          }
+        },
+        error: err => {
+          console.error('Lỗi khi lấy user:', err);
+        }
+      });
+    // this.userId = this.authService.userData.id;
+    this.userId = this.users[0].id;
+    console.log(this.userId)
+// 1. Lấy showTimeId từ URL trước
+
+    // this.loadTicketsAndHold();
+    // this.connectWebSocket();
     // this.checkLockTicketOnServer();
   }
 

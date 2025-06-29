@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build --configuration development",
-    "watch": "ng build --watch --configuration development",
+    "build": "ng build --configuration=development",
+    "start": "http-server ./dist/booking-fe -p $PORT",
+    "watch": "ng build --watch --configuration=development",
     "test": "ng test"
   },
   "private": true,
@@ -35,7 +35,8 @@
     "swiper": "^11.2.6",
     "tslib": "^2.3.0",
     "xlsx": "^0.18.5",
-    "zone.js": "~0.15.0"
+    "zone.js": "~0.15.0",
+    "http-server": "^0.14.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^19.2.3",

@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "build": "ng build --configuration=development",
-    "start": "http-server ./dist/booking-fe -p $PORT",
+    "start": "ng serve",
     "watch": "ng build --watch --configuration=development",
     "test": "ng test"
   },

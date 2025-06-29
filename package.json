@@ -36,7 +36,7 @@
     "tslib": "^2.3.0",
     "xlsx": "^0.18.5",
     "zone.js": "~0.15.0",
-    "http-server": "^0.14.0"
+    "http-server": "^14.1.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^19.2.3",
